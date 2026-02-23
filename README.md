@@ -45,4 +45,4 @@ The repository includes a suite of Python-based drivers to manage the hypercube:
 
 ---
 
-**Would you like me to generate a `LICENSE` file (such as MIT or Apache 2.0) to accompany this README and clarify the open-source status of your global seed?**
+
