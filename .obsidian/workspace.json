@@ -97,12 +97,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "03_Registry/reg-namespaces-core.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "reg-namespaces-core"
+              "title": "README"
             }
           }
         ],
@@ -268,6 +268,9 @@
   },
   "active": "a220e7e020792328",
   "lastOpenFiles": [
+    "03_Registry/reg-namespaces-core.md",
+    "Licence.txt",
+    "New Text Document.txt",
     "README.md",
     "03_Registry/reg-authorities-trusted.md",
     "00_Architecture/JSON-LD_Frame.md",
@@ -283,7 +286,6 @@
     "__pycache__/logic.cpython-314.pyc",
     "__pycache__",
     "Change Directory.txt",
-    "New Text Document.txt",
     "l402_middleware.py",
     "01_Ontology/fact-cash-ledger-2026.md",
     "01_Ontology/fact-accumulated-depreciation-2026.md",
@@ -294,15 +296,12 @@
     "sync_signatures.py",
     "00_Architecture_Integrity_Scanner.py",
     "01_Ontology/def-sbrm-reporting-period.md",
-    "logic.py",
     "01_Ontology/fact-current-liabilities-2026.md",
     "LodgeiT_Global.md",
     "03_Registry/registry-sbrm-master-ruleset.md",
-    "03_Registry/reg-namespaces-core.md",
     "02_Rules/rule-sbrm-fixed-assets-net.md",
     "01_Ontology/fact-plant-at-cost-2026.md",
     "02_Rules/rule-wp-crossref-bank.md",
-    "01_Ontology/wp-bank-statement-2026.md",
-    "00_Architecture/Genesis Boot Node.md"
+    "01_Ontology/wp-bank-statement-2026.md"
   ]
 }
