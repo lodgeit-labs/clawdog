@@ -268,6 +268,14 @@
   },
   "active": "a220e7e020792328",
   "lastOpenFiles": [
+    "01_Ontology/fact-uplift-capital-introduced-2026.md",
+    "01_Ontology/fact-uplift-nab-5510-2026.md",
+    "01_Ontology/fact-uplift-operating-expenses-2026.md",
+    "01_Ontology/fact-uplift-sales-revenue-2026.md",
+    "01_Ontology/fact-uplift-retained-earnings-2026.md",
+    "01_Ontology/fact-uplift-accounts-payable-2026.md",
+    "01_Ontology/fact-uplift-accounts-receivable-2026.md",
+    "01_Ontology/fact-uplift-cash-at-bank-2026.md",
     "trial_balance.csv",
     "1st kedger rewrite.csv",
     "inject_hypercubes.py",
@@ -293,16 +301,8 @@
     "l402_middleware.py",
     "01_Ontology/fact-cash-ledger-2026.md",
     "01_Ontology/fact-accumulated-depreciation-2026.md",
-    "Uplift_Agent.py",
     "Links to.md",
     "01_Ontology/def-sbrm-reporting-entity.md",
-    "01_Ontology/def-sbrm-reporting-period.md",
-    "01_Ontology/fact-current-liabilities-2026.md",
-    "LodgeiT_Global.md",
-    "03_Registry/registry-sbrm-master-ruleset.md",
-    "02_Rules/rule-sbrm-fixed-assets-net.md",
-    "01_Ontology/fact-plant-at-cost-2026.md",
-    "02_Rules/rule-wp-crossref-bank.md",
-    "01_Ontology/wp-bank-statement-2026.md"
+    "01_Ontology/def-sbrm-reporting-period.md"
   ]
 }
