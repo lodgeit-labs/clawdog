@@ -55,3 +55,11 @@ validate_equity_rollforward(Entity, Period) :-
     sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-total-equity', Closing, _, 'RollForward'),
     Closing =:= Opening + PL - Div.
 
+ 
+%% Temporal Bridge Repair 
+validate_equity_rollforward_v2(Entity) :- 
+    sbrm_fact(Entity, _, 'urn:uuid:def-sbr-opening-equity', Opening, _, 'RollForward'), 
+    sbrm_fact(Entity, _, 'urn:uuid:def-sbr-profit-loss', PL, _, 'RollUp'), 
+    sbrm_fact(Entity, _, 'urn:uuid:def-sbr-dividends-paid', Div, _, 'RollForward'), 
+    sbrm_fact(Entity, _, 'urn:uuid:def-sbr-total-equity', Closing, _, 'RollForward'), 
+    Closing =:= Opening + PL - Div. 
