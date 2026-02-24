@@ -125,12 +125,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "00_Architecture/Architecture_System_Manifest.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "Architecture_System_Manifest"
             }
           }
         ],
@@ -296,6 +296,10 @@
   },
   "active": "149e5b48c995e2cc",
   "lastOpenFiles": [
+    "00_Architecture/Architecture_Service_Distribution.md",
+    "00_Architecture/Architecture_SBRM.md",
+    "00_Architecture/Architecture_Cryptographic_Sovereignty.md",
+    "README.md",
     "03_Registry/registry-sbrm-master-ruleset.md",
     "03_Registry/reg-namespaces-core.md",
     "03_Registry/reg-authorities-trusted.md",
@@ -316,7 +320,6 @@
     "01_Ontology/fact-current-liabilities-2026.md",
     "00_Architecture/journal-phase2-semantic-uplift.md",
     "00_Architecture/Genesis_Node.md",
-    "README.md",
     "01_Ontology/fact-uplift-capital-introduced-2026.md",
     "01_Ontology/fact-uplift-nab-5510-2026.md",
     "01_Ontology/fact-uplift-operating-expenses-2026.md",
@@ -324,13 +327,10 @@
     "01_Ontology/fact-uplift-retained-earnings-2026.md",
     "01_Ontology/fact-uplift-accounts-payable-2026.md",
     "01_Ontology/fact-uplift-accounts-receivable-2026.md",
-    "01_Ontology/fact-uplift-cash-at-bank-2026.md",
     "trial_balance.csv",
     "1st kedger rewrite.csv",
     "inject_hypercubes.py",
     "view_hypercube.py",
-    "Licence.txt",
-    "00_Architecture/JSON-LD_Frame.md",
-    "03_Registry/registry_reg-access-control.md"
+    "Licence.txt"
   ]
 }
