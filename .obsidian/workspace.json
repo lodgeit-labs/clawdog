@@ -268,8 +268,9 @@
   },
   "active": "a220e7e020792328",
   "lastOpenFiles": [
-    "view_hypercube.py",
+    "inject_hypercubes.py",
     "New Text Document.txt",
+    "view_hypercube.py",
     "03_Registry/reg-namespaces-core.md",
     "Licence.txt",
     "README.md",
@@ -295,7 +296,6 @@
     "Links to.md",
     "01_Ontology/def-sbrm-reporting-entity.md",
     "sync_signatures.py",
-    "00_Architecture_Integrity_Scanner.py",
     "01_Ontology/def-sbrm-reporting-period.md",
     "01_Ontology/fact-current-liabilities-2026.md",
     "LodgeiT_Global.md",
