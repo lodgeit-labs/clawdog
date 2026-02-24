@@ -296,6 +296,11 @@
   },
   "active": "123ad21752713224",
   "lastOpenFiles": [
+    "02_Rules/sbrm_kb.pl",
+    "prolog_bridge.py",
+    "New Text Document.txt",
+    "vault_state_export.json",
+    "extract_vault_state.py",
     "01_Ontology/fact-current-liabilities-2026.md",
     "00_Architecture/Journal_phase-1-.md.md",
     "00_Architecture/journal-phase2-semantic-uplift.md",
@@ -312,7 +317,6 @@
     "trial_balance.csv",
     "1st kedger rewrite.csv",
     "inject_hypercubes.py",
-    "New Text Document.txt",
     "view_hypercube.py",
     "03_Registry/reg-namespaces-core.md",
     "Licence.txt",
@@ -327,10 +331,6 @@
     "00_Architecture/00_Architecture_System_Manifest2.md",
     "03_Registry/reg-access-control.md",
     "__pycache__/logic.cpython-314.pyc",
-    "__pycache__",
-    "Change Directory.txt",
-    "l402_middleware.py",
-    "01_Ontology/fact-cash-ledger-2026.md",
-    "01_Ontology/fact-accumulated-depreciation-2026.md"
+    "01_Ontology/fact-cash-ledger-2026.md"
   ]
 }
