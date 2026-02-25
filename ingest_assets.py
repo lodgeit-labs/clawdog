@@ -11,10 +11,13 @@ def mint_node(asset_id, label, attribute, value, metadata, concept_suffix):
     body = f"# {label} ({attribute})\n{metadata}\n"
     content_hash = hashlib.sha256(body.encode('utf-8')).hexdigest()
     
+    # Strip spaces for the Ontological Class definition
+    onto_class = attribute.replace(' ', '')
+    
     frontmatter = f"""---
 "@context": "ipfs://bafkreifcontext...[Base_Context]"
 "@id": "urn:uuid:fact-asset-{asset_id}-{concept_suffix}-001"
-ontological_class: "FixedAsset{attribute}"
+ontological_class: "FixedAsset{onto_class}"
 gist_equivalent: "gist:Magnitude"
 value: {value}
 edges:
@@ -31,7 +34,7 @@ content_hash: "{content_hash}"
     print(f"[MINTED] {filename} -> ${value}")
 
 def ingest():
-    print("=== INITIATING SUB-LEDGER ASSET INGESTION ===")
+    print("=== INITIATING SUB-LEDGER ASSET INGESTION (v2) ===")
     if not os.path.exists('asset_register.json'):
         print("[ERROR] asset_register.json not found.")
         return
@@ -44,14 +47,16 @@ def ingest():
         label = asset['label']
         cost = asset['cost']['value']
         accdep = asset['accumulatedDepreciation']['value']
+        depexp = asset['depreciationExpense']['value'] # <-- NEW P&L EXTRACTION
         
-        # Mint Cost Node
+        # Mint Balance Sheet Nodes
         mint_node(asset_id, label, "Cost", cost, f"Purchase Date: {asset.get('purchaseDate')}", "cost")
-        
-        # Mint Accumulated Depreciation Node
         mint_node(asset_id, label, "Accumulated Depreciation", accdep, f"Method: {asset.get('depreciationMethod')}", "accumulated")
+        
+        # Mint P&L Node
+        mint_node(asset_id, label, "Depreciation Expense", depexp, f"Method: {asset.get('depreciationMethod')}\nRate: {asset.get('depreciationRate')}", "expense")
 
-    print("=== FIXED ASSETS INGESTED INTO SBRM GRAPH ===")
+    print("=== FIXED ASSETS & P&L DEPRECIATION INGESTED INTO SBRM GRAPH ===")
 
 if __name__ == '__main__':
     ingest()
