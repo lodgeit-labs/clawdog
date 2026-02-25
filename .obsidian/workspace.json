@@ -324,6 +324,7 @@
   },
   "active": "2b76e18df5f7d164",
   "lastOpenFiles": [
+    "01_Ontology/fact-other-current-liabilities-2026.md",
     "consolidate_hypercube.py",
     "New Text Document.txt",
     "evaluate_oim_report.py",
@@ -358,7 +359,6 @@
     "extract_vault_state.py",
     "01_Ontology/fact-current-liabilities-2026.md",
     "00_Architecture/Genesis_Node.md",
-    "01_Ontology/fact-uplift-capital-introduced-2026.md",
-    "trial_balance.csv"
+    "01_Ontology/fact-uplift-capital-introduced-2026.md"
   ]
 }
