@@ -324,6 +324,10 @@
   },
   "active": "2b76e18df5f7d164",
   "lastOpenFiles": [
+    "01_Ontology/fact-asset-binder-heavy-duty-002-accumulated-2026.md",
+    "01_Ontology/fact-asset-binder-heavy-duty-002-cost-2026.md",
+    "01_Ontology/fact-asset-printer-industrial-001-accumulated-2026.md",
+    "01_Ontology/fact-asset-printer-industrial-001-cost-2026.md",
     "ingest_assets.py",
     "New Text Document.txt",
     "asset_register.json",
@@ -341,7 +345,6 @@
     "evaluate_oim_report.py",
     "heal_uplift_nodes.py",
     "vault_report_export.jsonld",
-    "export_jsonld_report.py",
     "00_Architecture/Journal_phase-1.md",
     "02_Rules/rule-ato-instant-asset-writeoff.md",
     "03_Registry/registry-namespace-au.md",
@@ -356,9 +359,6 @@
     "02_Rules/rule-sbrm-fixed-assets-net.md",
     "02_Rules/rule-sbrm-asset-rollup.md",
     "02_Rules/rule-sbrm-accounting-equation.md",
-    "01_Ontology/fact-cash-ledger-2026.md",
-    "01_Ontology/fact-accumulated-depreciation-2026.md",
-    "01_Ontology/def-sbrm-reporting-period.md",
-    "01_Ontology/def-sbrm-reporting-entity.md"
+    "01_Ontology/fact-cash-ledger-2026.md"
   ]
 }

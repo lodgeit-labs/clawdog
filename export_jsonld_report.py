@@ -22,6 +22,12 @@ def map_hierarchy(concept_id):
         return None 
         
     if 'cash' in c or 'receivable' in c or 'nab' in c: return "section:current-assets"
+    
+    # --- NEW: Fixed Asset Sub-Ledger Routing ---
+    if 'asset' in c and 'cost' in c: return "section:plant-at-cost"
+    if 'asset' in c and 'accumulated' in c: return "section:accumulated-depreciation"
+    # -------------------------------------------
+    
     if 'plant' in c or 'accumulated' in c: return "section:non-current-assets"
     if c == 'section:current-assets' or c == 'section:non-current-assets': return "section:total-assets"
     
