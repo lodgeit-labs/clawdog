@@ -1,0 +1,638 @@
+{
+  "@context": [
+    "https://lodgeit.net.au/contexts/sbrm.jsonld",
+    {
+      "iso4217": "http://www.xbrl.org/2003/iso4217#",
+      "xbrli": "http://www.xbrl.org/2003/instance#",
+      "xsd": "http://www.w3.org/2001/XMLSchema#"
+    }
+  ],
+  "@type": "Report",
+  "entity": {
+    "identifier": "LodgeiT Global Reporting Entity",
+    "scheme": "LodgeiT_SBRM"
+  },
+  "reportStructure": [
+    {
+      "@id": "section:08fcb05b-1688-4723-a0a8-cf9e07f07f44",
+      "@type": "ReportSection",
+      "label": {
+        "en": "08Fcb05B 1688 4723 A0A8 Cf9E07F07F44"
+      }
+    },
+    {
+      "@id": "section:39ea9fe5-91d9-4240-9aac-e0fef729c2c8",
+      "@type": "ReportSection",
+      "label": {
+        "en": "39Ea9Fe5 91D9 4240 9Aac E0Fef729C2C8"
+      }
+    },
+    {
+      "@id": "section:3e1651b3-65d3-41b3-8bb3-31c38ca18371",
+      "@type": "ReportSection",
+      "label": {
+        "en": "3E1651B3 65D3 41B3 8Bb3 31C38Ca18371"
+      }
+    },
+    {
+      "@id": "section:549d9411-a34c-40a9-b18f-766fab7c43b2",
+      "@type": "ReportSection",
+      "label": {
+        "en": "549D9411 A34C 40A9 B18F 766Fab7C43B2"
+      }
+    },
+    {
+      "@id": "section:6c44b760-f1f9-43d3-8cbb-38654f92cc7a",
+      "@type": "ReportSection",
+      "label": {
+        "en": "6C44B760 F1F9 43D3 8Cbb 38654F92Cc7A"
+      }
+    },
+    {
+      "@id": "section:72f40714-e6c6-4e0d-a224-1c2ff9f98427",
+      "@type": "ReportSection",
+      "label": {
+        "en": "72F40714 E6C6 4E0D A224 1C2Ff9F98427"
+      }
+    },
+    {
+      "@id": "section:7a461d6c-cb64-4d54-ba1d-b9e51b0dac85",
+      "@type": "ReportSection",
+      "label": {
+        "en": "7A461D6C Cb64 4D54 Ba1D B9E51B0Dac85"
+      }
+    },
+    {
+      "@id": "section:86b31237-d57b-48d8-8a22-65ce3c62cda3",
+      "@type": "ReportSection",
+      "label": {
+        "en": "86B31237 D57B 48D8 8A22 65Ce3C62Cda3"
+      }
+    },
+    {
+      "@id": "section:accumulated-depreciation",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Accumulated Depreciation"
+      },
+      "isPartOf": {
+        "@id": "section:non-current-assets"
+      }
+    },
+    {
+      "@id": "section:bank-statement-balance",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Bank Statement Balance"
+      }
+    },
+    {
+      "@id": "section:cash-at-bank",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Cash At Bank"
+      },
+      "isPartOf": {
+        "@id": "section:current-assets"
+      }
+    },
+    {
+      "@id": "section:current-assets",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Current Assets"
+      },
+      "isPartOf": {
+        "@id": "section:total-assets"
+      }
+    },
+    {
+      "@id": "section:current-liabilities",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Current Liabilities"
+      },
+      "isPartOf": {
+        "@id": "section:total-liabilities"
+      }
+    },
+    {
+      "@id": "section:dividends-paid",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Dividends Paid"
+      },
+      "isPartOf": {
+        "@id": "section:total-equity"
+      }
+    },
+    {
+      "@id": "section:expenses",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Expenses"
+      },
+      "isPartOf": {
+        "@id": "section:profit-loss"
+      }
+    },
+    {
+      "@id": "section:non-current-assets",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Non Current Assets"
+      },
+      "isPartOf": {
+        "@id": "section:total-assets"
+      }
+    },
+    {
+      "@id": "section:non-current-liabilities",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Non Current Liabilities"
+      },
+      "isPartOf": {
+        "@id": "section:total-liabilities"
+      }
+    },
+    {
+      "@id": "section:opening-equity",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Opening Equity"
+      },
+      "isPartOf": {
+        "@id": "section:total-equity"
+      }
+    },
+    {
+      "@id": "section:plant-at-cost",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Plant At Cost"
+      },
+      "isPartOf": {
+        "@id": "section:non-current-assets"
+      }
+    },
+    {
+      "@id": "section:profit-loss",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Profit Loss"
+      }
+    },
+    {
+      "@id": "section:revenue",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Revenue"
+      },
+      "isPartOf": {
+        "@id": "section:profit-loss"
+      }
+    },
+    {
+      "@id": "section:revenue-blue",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Revenue Blue"
+      },
+      "isPartOf": {
+        "@id": "section:revenue"
+      }
+    },
+    {
+      "@id": "section:revenue-green",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Revenue Green"
+      },
+      "isPartOf": {
+        "@id": "section:revenue"
+      }
+    },
+    {
+      "@id": "section:revenue-red",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Revenue Red"
+      },
+      "isPartOf": {
+        "@id": "section:revenue"
+      }
+    },
+    {
+      "@id": "section:revenue-yellow",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Revenue Yellow"
+      },
+      "isPartOf": {
+        "@id": "section:revenue"
+      }
+    },
+    {
+      "@id": "section:total-assets",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Total Assets"
+      }
+    },
+    {
+      "@id": "section:total-equity",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Total Equity"
+      }
+    },
+    {
+      "@id": "section:total-liabilities",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Total Liabilities"
+      }
+    }
+  ],
+  "facts": [
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:accumulated-depreciation"
+        },
+        "periodType": "instant",
+        "as_At": "2026-06-30"
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:cash-at-bank"
+        },
+        "periodType": "instant",
+        "as_At": "2026-06-30"
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:current-assets"
+        },
+        "periodType": "instant",
+        "as_At": "2026-06-30"
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:current-liabilities"
+        },
+        "periodType": "instant",
+        "as_At": "2026-06-30"
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:dividends-paid"
+        },
+        "periodType": "duration",
+        "duration": {
+          "startDate": "2025-07-01",
+          "endDate": "2026-06-30"
+        }
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:expenses"
+        },
+        "periodType": "duration",
+        "duration": {
+          "startDate": "2025-07-01",
+          "endDate": "2026-06-30"
+        }
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:non-current-assets"
+        },
+        "periodType": "instant",
+        "as_At": "2026-06-30"
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:non-current-liabilities"
+        },
+        "periodType": "instant",
+        "as_At": "2026-06-30"
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:opening-equity"
+        },
+        "periodType": "duration",
+        "duration": {
+          "startDate": "2025-07-01",
+          "endDate": "2026-06-30"
+        }
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:plant-at-cost"
+        },
+        "periodType": "instant",
+        "as_At": "2026-06-30"
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:profit-loss"
+        },
+        "periodType": "duration",
+        "duration": {
+          "startDate": "2025-07-01",
+          "endDate": "2026-06-30"
+        }
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:revenue"
+        },
+        "periodType": "duration",
+        "duration": {
+          "startDate": "2025-07-01",
+          "endDate": "2026-06-30"
+        }
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:revenue-blue"
+        },
+        "periodType": "duration",
+        "duration": {
+          "startDate": "2025-07-01",
+          "endDate": "2026-06-30"
+        }
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:revenue-green"
+        },
+        "periodType": "duration",
+        "duration": {
+          "startDate": "2025-07-01",
+          "endDate": "2026-06-30"
+        }
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:revenue-red"
+        },
+        "periodType": "duration",
+        "duration": {
+          "startDate": "2025-07-01",
+          "endDate": "2026-06-30"
+        }
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:revenue-yellow"
+        },
+        "periodType": "duration",
+        "duration": {
+          "startDate": "2025-07-01",
+          "endDate": "2026-06-30"
+        }
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:total-assets"
+        },
+        "periodType": "instant",
+        "as_At": "2026-06-30"
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:total-equity"
+        },
+        "periodType": "duration",
+        "duration": {
+          "startDate": "2025-07-01",
+          "endDate": "2026-06-30"
+        }
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:total-liabilities"
+        },
+        "periodType": "instant",
+        "as_At": "2026-06-30"
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:3e1651b3-65d3-41b3-8bb3-31c38ca18371"
+        },
+        "periodType": "instant",
+        "as_At": "2026-06-30"
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:7a461d6c-cb64-4d54-ba1d-b9e51b0dac85"
+        },
+        "periodType": "instant",
+        "as_At": "2026-06-30"
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:72f40714-e6c6-4e0d-a224-1c2ff9f98427"
+        },
+        "periodType": "duration",
+        "duration": {
+          "startDate": "2025-07-01",
+          "endDate": "2026-06-30"
+        }
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:39ea9fe5-91d9-4240-9aac-e0fef729c2c8"
+        },
+        "periodType": "instant",
+        "as_At": "2026-06-30"
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:549d9411-a34c-40a9-b18f-766fab7c43b2"
+        },
+        "periodType": "instant",
+        "as_At": "2026-06-30"
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:86b31237-d57b-48d8-8a22-65ce3c62cda3"
+        },
+        "periodType": "duration",
+        "duration": {
+          "startDate": "2025-07-01",
+          "endDate": "2026-06-30"
+        }
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:6c44b760-f1f9-43d3-8cbb-38654f92cc7a"
+        },
+        "periodType": "duration",
+        "duration": {
+          "startDate": "2025-07-01",
+          "endDate": "2026-06-30"
+        }
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:08fcb05b-1688-4723-a0a8-cf9e07f07f44"
+        },
+        "periodType": "duration",
+        "duration": {
+          "startDate": "2025-07-01",
+          "endDate": "2026-06-30"
+        }
+      }
+    },
+    {
+      "value": 0.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:bank-statement-balance"
+        },
+        "periodType": "instant",
+        "as_At": "2026-06-30"
+      }
+    }
+  ]
+}
