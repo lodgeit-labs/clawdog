@@ -1,12 +1,3 @@
-# LodgeiT Global: Decentralized SBRM & L402 Gateway
-
-## 🌐 Overview
-LodgeiT Global is a decentralized, cryptographically-anchored multidimensional accounting and tax reasoning engine. It bridges deterministic financial logic (SBRM/OIM) with a machine-to-machine micro-transactional economy. 
-
-By leveraging the **L402 Protocol** (formerly LSAT), the system puts heavy computational accounting proofs behind a Lightning Network paywall. This allows client nodes to request mathematical tax/accounting evaluations, pay for the computation in real-time using Bitcoin Satoshis, and receive a cryptographically verified proof of execution.
-
-
-
 ---
 
 ## 🏗️ System Architecture

@@ -16,7 +16,7 @@ project_context:
 
 integrity:
   source_uri: "internal://architect/journal/phase_5"
-  content_hash: "PENDING_HASH"
+  content_hash: "a53a124a55e8b15cd2842ab6b26825ada9407749148b7a261d197d133816061f"
 ---
 
 # JOURNAL: Phase 5 - Neurosemantic Consolidation & L402 Commerce
