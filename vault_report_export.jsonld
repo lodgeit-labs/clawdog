@@ -167,7 +167,7 @@
         "en": "Expenses"
       },
       "isPartOf": {
-        "@id": "section:expenses"
+        "@id": "section:profit-loss"
       }
     },
     {
@@ -228,6 +228,16 @@
       },
       "isPartOf": {
         "@id": "section:current-liabilities"
+      }
+    },
+    {
+      "@id": "section:other-expenses",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Other Expenses"
+      },
+      "isPartOf": {
+        "@id": "section:expenses"
       }
     },
     {
@@ -545,6 +555,21 @@
         },
         "periodType": "instant",
         "as_At": "2026-06-30"
+      }
+    },
+    {
+      "value": 55000.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:other-expenses"
+        },
+        "periodType": "duration",
+        "duration": {
+          "startDate": "2025-07-01",
+          "endDate": "2026-06-30"
+        }
       }
     },
     {
