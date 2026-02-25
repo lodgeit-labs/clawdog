@@ -24,7 +24,10 @@ edges:
 - rel: sbrm:isInstanceOfConcept
   target: urn:uuid:def-sbr-revenue
 value: 200000.0
+content_hash: e5c3db61c402ca81ef9a744186e1e7da226a00f80ca909f69274271a2d1e3a58
 ---
+
+
 
 
 

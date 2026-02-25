@@ -115,6 +115,9 @@
       "@type": "ReportSection",
       "label": {
         "en": "Nab 5510"
+      },
+      "isPartOf": {
+        "@id": "section:current-assets"
       }
     },
     {
@@ -155,6 +158,16 @@
       },
       "isPartOf": {
         "@id": "section:expenses"
+      }
+    },
+    {
+      "@id": "section:other-current-liabilities",
+      "@type": "ReportSection",
+      "label": {
+        "en": "Other Current Liabilities"
+      },
+      "isPartOf": {
+        "@id": "section:current-liabilities"
       }
     },
     {
@@ -304,7 +317,7 @@
       }
     },
     {
-      "value": 90000.0,
+      "value": 60000.0,
       "decimals": 2,
       "unit": "iso4217:AUD",
       "context": {
@@ -331,7 +344,7 @@
       }
     },
     {
-      "value": 230000.0,
+      "value": 155000.0,
       "decimals": 2,
       "unit": "iso4217:AUD",
       "context": {
@@ -385,6 +398,18 @@
       }
     },
     {
+      "value": 30000.0,
+      "decimals": 2,
+      "unit": "iso4217:AUD",
+      "context": {
+        "parentSection": {
+          "@id": "section:other-current-liabilities"
+        },
+        "periodType": "instant",
+        "as_At": "2026-06-30"
+      }
+    },
+    {
       "value": 100000.0,
       "decimals": 2,
       "unit": "iso4217:AUD",
@@ -397,7 +422,7 @@
       }
     },
     {
-      "value": 70000.0,
+      "value": 45000.0,
       "decimals": 2,
       "unit": "iso4217:AUD",
       "context": {
@@ -412,7 +437,7 @@
       }
     },
     {
-      "value": 300000.0,
+      "value": 200000.0,
       "decimals": 2,
       "unit": "iso4217:AUD",
       "context": {
@@ -499,7 +524,7 @@
       }
     },
     {
-      "value": 150000.0,
+      "value": 125000.0,
       "decimals": 2,
       "unit": "iso4217:AUD",
       "context": {
@@ -514,7 +539,7 @@
       }
     },
     {
-      "value": 140000.0,
+      "value": 110000.0,
       "decimals": 2,
       "unit": "iso4217:AUD",
       "context": {

@@ -1,6 +1,6 @@
 ---
 '@context': ipfs://bafkreifcontext...[Base_Context]
-'@id': urn:uuid:fact-current-liabilities-sample-001
+'@id': urn:uuid:fact-other-curr-liab-001
 ontological_class: FinancialFact
 gist_equivalent: gist:Fact
 domain_tags:
@@ -21,16 +21,9 @@ edges:
 - rel: sbrm:hasReportingPeriod
   target: urn:uuid:def-sbrm-reporting-period
 - rel: sbrm:isInstanceOfConcept
-  target: urn:uuid:def-sbr-current-liabilities
-value: 60000.0
-content_hash: 9121fa1e843b8f808432190f5b045e89f078d1427ad06620f04342d3c5d0eae2
+  target: urn:uuid:def-sbr-other-current-liabilities
+value: 30000.0
+content_hash: a0072abe6f42e3bd1aeb9dbde3f0d18e377e7b48e31c6c774aecb54def01ea4d
 ---
-
-
-
-
-
-
-
-# Fact: Current Liabilities
-As of 2026, Current Liabilities equal $30,000.00 AUD.
+# Other Current Liabilities
+Base: 30000.0

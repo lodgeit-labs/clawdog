@@ -35,7 +35,10 @@ economics:
   l402_rate: 0
   access_tier: private_ledger
 value: 235000.0
+content_hash: 7e207227956823f5ec3bb4124639a8099a041c8f7e8e7a63571d02b70629927e
 ---
+
+
 
 
 

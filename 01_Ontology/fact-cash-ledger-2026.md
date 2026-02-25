@@ -24,7 +24,10 @@ edges:
 - rel: sbrm:isInstanceOfConcept
   target: urn:uuid:def-sbr-cash-at-bank
 value: 50000.0
+content_hash: fb81a1375d425611d9639e04b5935a2a79095fdd607cefb0634b6c0c8b94de6a
 ---
+
+
 
 
 

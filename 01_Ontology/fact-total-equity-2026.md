@@ -28,7 +28,10 @@ integrity:
   content_hash: 114d1672cc23db726c2be25bbddb3994b2cba22a857afdb2b50c92cf3a755800
 parameters_exposed: {}
 value: 125000.0
+content_hash: d9d0b3dc252baaafeec6ceb5fc2f98ef65a3c627b153155a267211b8a6e7c5a7
 ---
+
+
 
 
 

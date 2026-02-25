@@ -46,7 +46,7 @@ def evaluate_report(report):
     if not [s for s in structure if 'en' not in s.get('label', {})]: print("[PASS] Rule A.3: Multi-language Label Maps valid.")
 
     # --- LAYER B: HYPERCUBE ROLL-UP INTEGRITY ---
-    print("\n--- Layer B: Hypercube Roll-Up Integrity (The CSV Uplift Check) ---")
+    print("\n--- Layer B: Hypercube Roll-Up Integrity ---")
     
     assets_asserted = get_asserted_value('section:total-assets')
     assets_calc = get_calculated_value('section:total-assets')
@@ -58,7 +58,6 @@ def evaluate_report(report):
         print(f"[PASS] Asset Hierarchy sums perfectly ({assets_asserted}).")
     else:
         print(f"[WARN] Asset Hierarchy mismatch! Asserted: {assets_asserted} | Calculated from Leaves: {assets_calc}")
-        print(f"       -> Cause: Newly uplifted CSV facts have not been rolled into the master Total Assets node.")
 
     if liab_asserted == liab_calc:
         print(f"[PASS] Liability Hierarchy sums perfectly ({liab_asserted}).")
@@ -68,7 +67,6 @@ def evaluate_report(report):
     # --- LAYER C: ACCOUNTING LOGIC ---
     print("\n--- Layer C: Multidimensional Accounting Logic ---")
     
-    # We evaluate Layer C using the ASSERTED totals to prove the core equations hold prior to the CSV injection
     equity_asserted = get_asserted_value('section:total-equity')
     
     if abs(assets_asserted - (liab_asserted + equity_asserted)) < 0.01:
@@ -76,16 +74,20 @@ def evaluate_report(report):
     else:
         print(f"[FAIL] Rule C.1: Core Accounting Equation Broken.")
 
-    # Temporal Roll-Forward
+    # Rule C.2: Strict Temporal Roll-Forward
     opening = get_asserted_value('section:opening-equity')
+    cap_intro = get_asserted_value('section:capital-introduced')
+    ret_earn = get_asserted_value('section:retained-earnings')
     pl = get_asserted_value('section:profit-loss')
     dividends = get_asserted_value('section:dividends-paid') * -1.0  # Apply contra weighting
     
-    calc_close = opening + pl + dividends
+    calc_close = opening + cap_intro + ret_earn + pl + dividends
+    
     if abs(calc_close - equity_asserted) < 0.01:
-        print(f"[PASS] Rule C.2: Temporal Roll-Forward Valid: Open ({opening}) + P&L ({pl}) + Div ({dividends}) = Close ({equity_asserted}).")
+        print(f"[PASS] Rule C.2: Temporal Roll-Forward Valid.")
+        print(f"       -> Open ({opening}) + CapInt ({cap_intro}) + RetEarn ({ret_earn}) + P&L ({pl}) + Div ({dividends}) = Close ({equity_asserted}).")
     else:
-        print(f"[FAIL] Rule C.2: Temporal Roll-Forward Broken.")
+        print(f"[FAIL] Rule C.2: Roll-Forward calculation mismatch. Expected {calc_close}, Got {equity_asserted}")
         
     print("\n=== EVALUATION COMPLETE ===\n")
 
@@ -93,3 +95,5 @@ if __name__ == "__main__":
     report_file = 'vault_report_export.jsonld'
     if os.path.exists(report_file):
         evaluate_report(load_report(report_file))
+    else:
+        print(f"[ERROR] Could not locate {report_file}. Run export_jsonld_report.py first.")

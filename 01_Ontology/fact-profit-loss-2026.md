@@ -7,7 +7,7 @@ domain_tags:
 - Equity
 - IncomeStatement
 gist_equivalent: gist:Event
-content_hash: 8df75cc0d5e58dec35037bcee77dce0d9acadcb39241dc70499290c5533ff771
+content_hash: 9f7c298e53689bcf23b6eb0cdaac3531ae279429615732f72f21e876834c353f
 hypercube_context:
   primary_hypercube: StatementOfComprehensiveIncome
   arrangement_pattern: RollUp
@@ -26,6 +26,8 @@ edges:
   target: urn:uuid:def-sbr-profit-loss
 value: 45000.0
 ---
+
+
 
 
 

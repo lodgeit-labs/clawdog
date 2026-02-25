@@ -24,7 +24,10 @@ edges:
 - rel: sbrm:isInstanceOfConcept
   target: urn:uuid:def-sbr-expenses
 value: 155000.0
+content_hash: c158bd4770b71be9d89935c8122e16f8ee9b0946990c6f6fd20d7101166d9d4b
 ---
+
+
 
 
 
