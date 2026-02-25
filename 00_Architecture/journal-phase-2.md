@@ -20,7 +20,7 @@ hypercube_context:
 
 integrity:
   source_uri: "internal://architect/journal/phase2"
-  content_hash: "PENDING_HASH"
+  content_hash: "0907ac179e32a9ab8f8d80874bfae4f2d7874252e80f0017bbf835a3ee4f8607"
 ---
 
 # JOURNAL: Phase 2 - Cryptographic Anchoring & Semantic Uplift

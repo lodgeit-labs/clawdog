@@ -28,7 +28,7 @@ edges:
 
 integrity:
   source_uri: "internal://architect/00_architecture"
-  content_hash: "[INJECT_HASH_HERE]"
+  content_hash: "a8a0003067babd18e896d8540b171eed5c20c6eddc57418c4f8fc28d325d4ed5"
   validity_horizon: "Perpetual"
   staleness_flag: false
 

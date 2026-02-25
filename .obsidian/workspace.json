@@ -111,12 +111,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "00_Architecture/journal-phase2-semantic-uplift.md",
+                "file": "00_Architecture/journal-phase-2.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "journal-phase2-semantic-uplift"
+              "title": "journal-phase-2"
             }
           },
           {
@@ -153,12 +153,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "00_Architecture/journal-phase-3.md",
+                "file": "00_Architecture/journal-phase-2.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "journal-phase-3"
+              "title": "journal-phase-2"
             }
           }
         ],
@@ -324,8 +324,9 @@
   },
   "active": "2b76e18df5f7d164",
   "lastOpenFiles": [
-    "00_Architecture/journal-phase2-semantic-uplift.md",
+    "New Text Document.txt",
     "00_Architecture/journal-phase-3.md",
+    "00_Architecture/journal-phase-2.md",
     "00_Architecture/Journal_phase-1.md",
     "02_Rules/rule-ato-instant-asset-writeoff.md",
     "03_Registry/registry-namespace-au.md",
@@ -348,13 +349,11 @@
     "00_Architecture/Journal_phase-1-.md.md",
     "02_Rules/sbrm_kb.pl",
     "prolog_bridge.py",
-    "New Text Document.txt",
     "vault_state_export.json",
     "extract_vault_state.py",
     "01_Ontology/fact-current-liabilities-2026.md",
     "00_Architecture/Genesis_Node.md",
     "01_Ontology/fact-uplift-capital-introduced-2026.md",
-    "01_Ontology/fact-uplift-nab-5510-2026.md",
     "trial_balance.csv",
     "1st kedger rewrite.csv",
     "inject_hypercubes.py",

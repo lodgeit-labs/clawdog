@@ -21,7 +21,7 @@ hypercube_context:
 
 integrity:
   source_uri: "internal://architect/journal/phase_3_4"
-  content_hash: "PENDING_HASH"
+  content_hash: "1bfa77297ab1cdf6af3aa4816ab1165853b46da220bca1b13eb8ced4c669ed65"
   validity_horizon: "Perpetual"
   staleness_flag: false
 ---

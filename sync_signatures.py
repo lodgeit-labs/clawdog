@@ -1,37 +1,47 @@
 import os
-import glob
 import hashlib
-import yaml
+import re
 
-TARGET_DIRS = ["./01_Ontology", "./02_Rules", "./03_Registry"]
+# Architect Directive: Enforce cryptographic signatures across ALL ontological layers
+TARGET_DIRS = ['./00_Architecture', './01_Ontology', './02_Rules', './03_Registry']
 
-def sync_file_hash(filepath):
+def sync_node(filepath):
+    """Calculates the SHA-256 hash of the Markdown body and injects it into the YAML."""
     with open(filepath, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    parts = content.split('---')
-    if len(parts) < 3: return
-
-    # 1. Re-parse the current state
-    header = yaml.safe_load(parts[1])
-    body = '---'.join(parts[2:]).strip()
+    # Isolate JSON-LD Frontmatter from Markdown Body
+    parts = content.split('---', 2)
+    if len(parts) < 3:
+        return # Skip non-conforming files (e.g., README.md without YAML)
     
-    # 2. Generate the "Ground Truth" Hash
-    actual_hash = hashlib.sha256(body.encode('utf-8')).hexdigest()
+    frontmatter = parts[1]
+    body = parts[2]
     
-    # 3. Update the header dictionary
-    if 'integrity' not in header: header['integrity'] = {}
-    header['integrity']['content_hash'] = actual_hash
+    # Generate deterministic hash from the raw body text
+    body_hash = hashlib.sha256(body.encode('utf-8')).hexdigest()
 
-    # 4. Write back to file with standardized YAML formatting
-    new_header_yaml = yaml.dump(header, sort_keys=False, allow_unicode=True).strip()
-    final_output = f"---\n{new_header_yaml}\n---\n\n{body}"
-
+    # Regex target the content_hash parameter to avoid breaking PyYAML ordering
+    updated_frontmatter = re.sub(
+        r'content_hash:\s*".*"', 
+        f'content_hash: "{body_hash}"', 
+        frontmatter
+    )
+    
+    # Reassemble and Write
+    new_content = f"---{updated_frontmatter}---{body}"
+    
     with open(filepath, 'w', encoding='utf-8') as f:
-        f.write(final_output)
+        f.write(new_content)
+        
     print(f"Synced: {filepath}")
 
 if __name__ == "__main__":
+    print("[SYSTEM] Initiating Global Vault Cryptographic Sync...")
     for directory in TARGET_DIRS:
-        for filepath in glob.glob(f"{directory}/**/*.md", recursive=True):
-            sync_file_hash(filepath)
+        if os.path.exists(directory):
+            for root, _, files in os.walk(directory):
+                for file in files:
+                    if file.endswith('.md'):
+                        sync_node(os.path.join(root, file))
+    print("[SUCCESS] Vault Integrity Locked.")

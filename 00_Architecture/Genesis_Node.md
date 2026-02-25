@@ -23,7 +23,7 @@ edges:
 
 integrity:
   source_uri: "internal://architect/genesis_exchange"
-  content_hash: "sha256:d8e8fca2dc0f896fd7cb4cb0031ba249"
+  content_hash: "8765d2b381696a0a4ecde531a5f4836a9805697260970458e3cfc66f0b9b81d9"
   validity_horizon: "Perpetual"
   staleness_flag: false
 

@@ -13,7 +13,7 @@ project_context:
   objective: "Global decentralized financial and regulatory logic engine"
 integrity: 
   source_uri: "internal://architect/00_architecture"
-  content_hash: "PENDING_HASH"
+  content_hash: "5f435e7f52d9b1c6ec2ff9143a360c8d6d151ff98c9bb6048a2da6c4b380e6f9"
 economics: 
   author_id: "The_Ontologist"
   payment_pointer: null

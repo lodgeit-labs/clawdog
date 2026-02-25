@@ -15,7 +15,7 @@ project_context:
 
 integrity:
   source_uri: "internal://architect/00_architecture/cryptographic_sovereignty"
-  content_hash: "PENDING_HASH"
+  content_hash: "df8f09e7b0d800d8d5c52c414c264c568dda0ce1721eaace4da203b6c45cc515"
 ---
 
 # LodgeiT Cryptographic Sovereignty Protocol
