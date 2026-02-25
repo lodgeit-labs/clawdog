@@ -37,7 +37,8 @@ def map_hierarchy(concept_id):
     if 'sales' in c or ('revenue' in c and c != 'section:revenue'): return "section:revenue"
     if c == 'section:revenue': return "section:profit-loss"
     
-    if 'expense' in c: return "section:expenses"
+    # Map all leaf expenses to the master section, but stop the master section from looping
+    if 'expense' in c and c != 'section:expenses': return "section:expenses"
     if c == 'section:expenses': return "section:profit-loss"
     
     if 'dividend' in c or 'capital' in c or 'retained' in c or 'opening-equity' in c or c == 'section:profit-loss': 
