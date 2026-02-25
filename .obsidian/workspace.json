@@ -324,9 +324,11 @@
   },
   "active": "2b76e18df5f7d164",
   "lastOpenFiles": [
+    "evaluate_oim_report.py",
+    "New Text Document.txt",
+    "heal_uplift_nodes.py",
     "vault_report_export.jsonld",
     "export_jsonld_report.py",
-    "New Text Document.txt",
     "00_Architecture/journal-phase-3.md",
     "00_Architecture/journal-phase-2.md",
     "00_Architecture/Journal_phase-1.md",
@@ -357,8 +359,6 @@
     "00_Architecture/Genesis_Node.md",
     "01_Ontology/fact-uplift-capital-introduced-2026.md",
     "trial_balance.csv",
-    "1st kedger rewrite.csv",
-    "inject_hypercubes.py",
-    "view_hypercube.py"
+    "1st kedger rewrite.csv"
   ]
 }

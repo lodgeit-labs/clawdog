@@ -14,20 +14,20 @@
   },
   "reportStructure": [
     {
-      "@id": "section:accounts-payable-2026",
+      "@id": "section:accounts-payable",
       "@type": "ReportSection",
       "label": {
-        "en": "Accounts Payable 2026"
+        "en": "Accounts Payable"
       },
       "isPartOf": {
         "@id": "section:current-liabilities"
       }
     },
     {
-      "@id": "section:accounts-receivable-2026",
+      "@id": "section:accounts-receivable",
       "@type": "ReportSection",
       "label": {
-        "en": "Accounts Receivable 2026"
+        "en": "Accounts Receivable"
       },
       "isPartOf": {
         "@id": "section:current-assets"
@@ -51,10 +51,10 @@
       }
     },
     {
-      "@id": "section:capital-introduced-2026",
+      "@id": "section:capital-introduced",
       "@type": "ReportSection",
       "label": {
-        "en": "Capital Introduced 2026"
+        "en": "Capital Introduced"
       },
       "isPartOf": {
         "@id": "section:total-equity"
@@ -65,16 +65,6 @@
       "@type": "ReportSection",
       "label": {
         "en": "Cash At Bank"
-      },
-      "isPartOf": {
-        "@id": "section:current-assets"
-      }
-    },
-    {
-      "@id": "section:cash-at-bank-2026",
-      "@type": "ReportSection",
-      "label": {
-        "en": "Cash At Bank 2026"
       },
       "isPartOf": {
         "@id": "section:current-assets"
@@ -121,10 +111,10 @@
       }
     },
     {
-      "@id": "section:nab-5510-2026",
+      "@id": "section:nab-5510",
       "@type": "ReportSection",
       "label": {
-        "en": "Nab 5510 2026"
+        "en": "Nab 5510"
       }
     },
     {
@@ -158,10 +148,10 @@
       }
     },
     {
-      "@id": "section:operating-expenses-2026",
+      "@id": "section:operating-expenses",
       "@type": "ReportSection",
       "label": {
-        "en": "Operating Expenses 2026"
+        "en": "Operating Expenses"
       },
       "isPartOf": {
         "@id": "section:expenses"
@@ -185,10 +175,10 @@
       }
     },
     {
-      "@id": "section:retained-earnings-2026",
+      "@id": "section:retained-earnings",
       "@type": "ReportSection",
       "label": {
-        "en": "Retained Earnings 2026"
+        "en": "Retained Earnings"
       },
       "isPartOf": {
         "@id": "section:total-equity"
@@ -245,10 +235,10 @@
       }
     },
     {
-      "@id": "section:sales-revenue-2026",
+      "@id": "section:sales-revenue",
       "@type": "ReportSection",
       "label": {
-        "en": "Sales Revenue 2026"
+        "en": "Sales Revenue"
       },
       "isPartOf": {
         "@id": "section:revenue"
@@ -536,36 +526,36 @@
       }
     },
     {
-      "value": 0.0,
+      "value": 30000.0,
       "decimals": 2,
       "unit": "iso4217:AUD",
       "context": {
         "parentSection": {
-          "@id": "section:accounts-payable-2026"
+          "@id": "section:accounts-payable"
         },
         "periodType": "instant",
         "as_At": "2026-06-30"
       }
     },
     {
-      "value": 0.0,
+      "value": 25000.0,
       "decimals": 2,
       "unit": "iso4217:AUD",
       "context": {
         "parentSection": {
-          "@id": "section:accounts-receivable-2026"
+          "@id": "section:accounts-receivable"
         },
         "periodType": "instant",
         "as_At": "2026-06-30"
       }
     },
     {
-      "value": 0.0,
+      "value": 10000.0,
       "decimals": 2,
       "unit": "iso4217:AUD",
       "context": {
         "parentSection": {
-          "@id": "section:capital-introduced-2026"
+          "@id": "section:capital-introduced"
         },
         "periodType": "duration",
         "duration": {
@@ -575,36 +565,36 @@
       }
     },
     {
-      "value": 0.0,
+      "value": 75000.0,
       "decimals": 2,
       "unit": "iso4217:AUD",
       "context": {
         "parentSection": {
-          "@id": "section:cash-at-bank-2026"
+          "@id": "section:cash-at-bank"
         },
         "periodType": "instant",
         "as_At": "2026-06-30"
       }
     },
     {
-      "value": 0.0,
+      "value": 10000.0,
       "decimals": 2,
       "unit": "iso4217:AUD",
       "context": {
         "parentSection": {
-          "@id": "section:nab-5510-2026"
+          "@id": "section:nab-5510"
         },
         "periodType": "instant",
         "as_At": "2026-06-30"
       }
     },
     {
-      "value": 0.0,
+      "value": 75000.0,
       "decimals": 2,
       "unit": "iso4217:AUD",
       "context": {
         "parentSection": {
-          "@id": "section:operating-expenses-2026"
+          "@id": "section:operating-expenses"
         },
         "periodType": "duration",
         "duration": {
@@ -614,12 +604,12 @@
       }
     },
     {
-      "value": 0.0,
+      "value": 45000.0,
       "decimals": 2,
       "unit": "iso4217:AUD",
       "context": {
         "parentSection": {
-          "@id": "section:retained-earnings-2026"
+          "@id": "section:retained-earnings"
         },
         "periodType": "duration",
         "duration": {
@@ -629,12 +619,12 @@
       }
     },
     {
-      "value": 0.0,
+      "value": 100000.0,
       "decimals": 2,
       "unit": "iso4217:AUD",
       "context": {
         "parentSection": {
-          "@id": "section:sales-revenue-2026"
+          "@id": "section:sales-revenue"
         },
         "periodType": "duration",
         "duration": {
