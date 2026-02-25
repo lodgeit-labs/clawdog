@@ -18,23 +18,20 @@ def map_hierarchy(concept_id):
     """Maps flat SBRM concepts to their presentation layer hierarchy."""
     c = concept_id.lower()
     
-    # Root Level Nodes
     if c in ['section:total-assets', 'section:total-liabilities', 'section:total-equity', 'section:profit-loss']:
         return None 
         
-    # Balance Sheet: Assets
-    if 'cash' in c: return "section:current-assets"
+    if 'cash' in c or 'receivable' in c: return "section:current-assets"
     if 'plant' in c or 'accumulated' in c: return "section:non-current-assets"
     if c == 'section:current-assets' or c == 'section:non-current-assets': return "section:total-assets"
     
-    # Balance Sheet: Liabilities
+    if 'payable' in c: return "section:current-liabilities"
     if c == 'section:current-liabilities' or c == 'section:non-current-liabilities': return "section:total-liabilities"
     
-    # Profit & Loss / Revenue Fanout
-    if 'revenue-' in c: return "section:revenue" # Catches Red, Blue, Green, Yellow
+    if 'revenue' in c and c != 'section:revenue': return "section:revenue"
+    if 'expense' in c: return "section:expenses"
     if c == 'section:revenue' or c == 'section:expenses': return "section:profit-loss"
     
-    # Statement of Changes in Equity (Roll-Forward)
     if 'dividend' in c or 'capital' in c or 'retained' in c or 'opening-equity' in c or c == 'section:profit-loss': 
         return "section:total-equity"
         
@@ -64,7 +61,6 @@ def compile_jsonld_report():
     discovered_concepts = set(['section:total-assets', 'section:total-liabilities', 'section:total-equity', 'section:profit-loss'])
 
     if not os.path.exists(ontology_dir):
-        print(f"[ERROR] {ontology_dir} not found.")
         return
 
     for root, _, files in os.walk(ontology_dir):
@@ -78,24 +74,23 @@ def compile_jsonld_report():
             if not hc or hc.get('arrangement_pattern') == 'SemanticLink':
                 continue
 
-            edges = fm.get('edges', [])
-            
-            # Resolve Concept ID
+            edges = fm.get('edges') or []
             concept_urn = next((e['target'] for e in edges if e.get('rel') == 'sbrm:isInstanceOfConcept'), None)
+            
+            # Fallback to human-readable filename if Phase 2 Uplift Agent missed the concept edge
             if not concept_urn:
-                concept_urn = fm.get('@id', '').replace('urn:uuid:', 'section:')
+                concept_urn = f"section:{file.replace('.md', '').replace('fact-uplift-', '')}"
                 
-            concept_id = concept_urn.replace('urn:uuid:def-sbr-', 'section:').replace('urn:uuid:def-wp-', 'section:').replace('urn:uuid:', 'section:')
+            concept_id = concept_urn.replace('urn:uuid:def-sbr-', 'section:').replace('urn:uuid:def-wp-', 'section:')
             discovered_concepts.add(concept_id)
 
-            # Resolve Magnitude (Scans multiple known binding keys from Phase 1/2)
-            magnitude = fm.get('value', fm.get('magnitude', fm.get('parameters_exposed', {}).get('fact_value', 0.0)))
+            # THE FIX: Target root YAML keys for the literal dollar amounts
+            magnitude = fm.get('value', fm.get('magnitude', fm.get('fact_value', 0.0)))
             try:
                 mag_val = float(magnitude)
             except (ValueError, TypeError):
                 mag_val = 0.0
 
-            # Resolve Dimensional Time Constraints
             pattern = hc.get('arrangement_pattern')
             fact_context = {
                 "parentSection": { "@id": concept_id }
@@ -118,7 +113,6 @@ def compile_jsonld_report():
                 "context": fact_context
             })
 
-    # Compile the structured presentation layer
     for c_id in sorted(list(discovered_concepts)):
         c_label = c_id.replace('section:', '').replace('-', ' ').title()
         section_obj = {
@@ -127,7 +121,6 @@ def compile_jsonld_report():
             "label": { "en": c_label }
         }
         
-        # Inject structural hierarchy mapping
         parent_id = map_hierarchy(c_id)
         if parent_id:
             section_obj["isPartOf"] = { "@id": parent_id }
@@ -137,7 +130,7 @@ def compile_jsonld_report():
     with open('vault_report_export.jsonld', 'w', encoding='utf-8') as f:
         json.dump(report, f, indent=2)
         
-    print(f"[SUCCESS] Advanced JSON-LD Report Compiled: vault_report_export.jsonld")
+    print(f"[SUCCESS] Advanced JSON-LD Report Compiled with Magnitudes: vault_report_export.jsonld")
 
 if __name__ == "__main__":
     compile_jsonld_report()
