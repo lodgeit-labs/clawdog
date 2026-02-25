@@ -27,5 +27,6 @@ value: 50000.0
 ---
 
 
+
 # Fact: Cash at Bank (Ledger)
 Per the internal trial balance, the Cash at Bank account holds $50,000.00 AUD.

@@ -28,5 +28,6 @@ value: 30000.0
 
 
 
+
 # Fact: Current Liabilities
 As of 2026, Current Liabilities equal $30,000.00 AUD.

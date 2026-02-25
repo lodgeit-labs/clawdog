@@ -33,5 +33,6 @@ value: 110000.0
 
 
 
+
 # Fact: Total Liabilities
 As of the 2026 reporting period, the entity holds Total Liabilities valued at $80,000.00 AUD.

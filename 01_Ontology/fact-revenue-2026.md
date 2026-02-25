@@ -29,5 +29,6 @@ value: 200000.0
 
 
 
+
 # Fact: Revenue (2026 Duration)
 For the 2026 duration, the entity generated Revenue of $100,000.00 AUD.

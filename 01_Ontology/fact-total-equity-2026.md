@@ -33,5 +33,6 @@ value: 125000.0
 
 
 
+
 # Fact: Total Equity
 As of the 2026 reporting period, the entity holds Total Equity valued at $45,000.00 AUD.

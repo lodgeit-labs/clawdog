@@ -65,14 +65,15 @@ def consolidate():
     total_liab = curr_liab_base + ap_up + non_curr_liab # 110k
     
     total_rev = rev_base + rev_up # 200k
-    profit_loss = total_rev - exp_base - exp_up # 45k
+    total_exp = exp_base + exp_up # 155k
+    profit_loss = total_rev - total_exp # 45k
     
     total_eq = open_eq + cap_intro + ret_earn + profit_loss - div_paid # 125k
     
     # FORCE PRECISE VALUES INTO MASTER NODES
     update_val('fact-cash-ledger-2026.md', cash_base)
     update_val('fact-current-liabilities-2026.md', curr_liab_base)
-    update_val('fact-expenses-2026.md', exp_base)
+    update_val('fact-expenses-2026.md', total_exp) # Rollup
     
     update_val('fact-current-assets-2026.md', curr_assets)
     update_val('fact-total-assets-2026.md', total_assets)

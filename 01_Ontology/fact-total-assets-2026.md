@@ -40,6 +40,7 @@ value: 235000.0
 
 
 
+
 # Fact: Total Assets (Sample)
 
 ## 1. Raw Source Text

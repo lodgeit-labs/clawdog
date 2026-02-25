@@ -30,5 +30,6 @@ value: 45000.0
 
 
 
+
 # Fact: Profit & Loss (2026 Duration)
 For the 2026 duration, the entity generated a Net Profit of $20,000.00 AUD.
