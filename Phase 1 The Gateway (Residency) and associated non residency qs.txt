@@ -1,0 +1,21 @@
+Phase 1: The Gateway (Residency & General Status)
+Before asking about income, you must establish the "tax identity" of the client.
+
+
+Residency: "During the 2024-25 financial year, were you an Australian resident for tax purposes ?
+
+If no, then were you in Australia for a full or part year? 
+
+Logic: If "Part-year," trigger a prompt for arrival/departure dates. 
+
+
+Special Status: "Were you in Australia on a 417 or 462 Working Holiday visa at any time during the year?" 
+
+
+Logic: If "Yes," the bot must later ask for "Home Country" and specific WHM income. 
+
+
+Future Lodgment: "Do you expect to need to lodge an Australian tax return in the future?" y/n
+
+
+

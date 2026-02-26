@@ -324,6 +324,7 @@
   },
   "active": "2b76e18df5f7d164",
   "lastOpenFiles": [
+    "Phase 1 The Gateway (Residency) and associated non residency qs.txt",
     "01_Ontology/fact-other-expenses-2026.md",
     "heal_expenses.py",
     "New Text Document.txt",
@@ -358,7 +359,6 @@
     "03_Registry/registry-sbrm-master-ruleset.md",
     "03_Registry/reg-namespaces-core.md",
     "03_Registry/reg-authorities-trusted.md",
-    "03_Registry/reg-access-control.md",
-    "02_Rules/rule-sbrm-fixed-assets-net.md"
+    "03_Registry/reg-access-control.md"
   ]
 }
