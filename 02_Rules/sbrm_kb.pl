@@ -155,3 +155,18 @@ run_health_checks :-
     ),
     
     write('========================================='), nl.
+
+% --- 4. ONTOLOGICAL BRANCH STRUCTURE (TAXONOMY) ---
+% Defining the isPartOf relationships (Child -> Parent)
+sbrm_parent('urn:uuid:def-sbr-current-assets', 'urn:uuid:def-sbr-total-assets').
+sbrm_parent('urn:uuid:def-sbr-non-current-assets', 'urn:uuid:def-sbr-total-assets').
+sbrm_parent('urn:uuid:def-sbr-cash-at-bank', 'urn:uuid:def-sbr-current-assets').
+sbrm_parent('urn:uuid:def-wp-bank-statement-balance', 'urn:uuid:def-sbr-cash-at-bank').
+sbrm_parent('urn:uuid:def-sbr-plant-at-cost', 'urn:uuid:def-sbr-non-current-assets').
+sbrm_parent('urn:uuid:def-sbr-accumulated-depreciation', 'urn:uuid:def-sbr-non-current-assets').
+
+% Recursive rule to walk the graph and generate the branch structure
+generate_branch_structure(Node, Indent) :-
+    tab(Indent), write('-> '), write(Node), nl,
+    NewIndent is Indent + 4,
+    forall(sbrm_parent(Child, Node), generate_branch_structure(Child, NewIndent)).
