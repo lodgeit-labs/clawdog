@@ -5,6 +5,8 @@
 
 :- dynamic sbrm_fact/6.
 
+:- discontiguous sbrm_parent/2.
+
 % --- 1. DECENTRALIZED FACT ASSERTIONS ---
 % Arity 6: sbrm_fact(Entity, Period, Concept, Magnitude, Unit, ArrangementPattern).
 
@@ -136,6 +138,10 @@ sbrm_parent('urn:uuid:def-sbr-cash-at-bank', 'urn:uuid:def-sbr-current-assets').
 sbrm_parent('urn:uuid:def-wp-bank-statement-balance', 'urn:uuid:def-sbr-cash-at-bank').
 sbrm_parent('urn:uuid:def-sbr-plant-at-cost', 'urn:uuid:def-sbr-non-current-assets').
 sbrm_parent('urn:uuid:def-sbr-accumulated-depreciation', 'urn:uuid:def-sbr-non-current-assets').
+% Equity Structure
+sbrm_parent('urn:uuid:def-sbr-opening-equity', 'urn:uuid:def-sbr-total-equity').
+sbrm_parent('urn:uuid:def-sbr-profit-loss', 'urn:uuid:def-sbr-total-equity').
+sbrm_parent('urn:uuid:def-sbr-dividends-paid', 'urn:uuid:def-sbr-total-equity').
 
 % Recursive rule to walk the graph and generate the branch structure
 generate_branch_structure(Node, Indent) :-
