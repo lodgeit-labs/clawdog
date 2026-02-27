@@ -139,12 +139,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "01_Ontology/def-sbrm-reporting-entity.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "def-sbrm-reporting-entity"
+              "title": "README"
             }
           }
         ],
@@ -310,6 +310,10 @@
   },
   "active": "2b76e18df5f7d164",
   "lastOpenFiles": [
+    "02_Rules/rule-ato-instant-asset-writeoff.md",
+    "00_Architecture/Architecture_SBRM.md",
+    "00_Architecture/Architecture_Cryptographic_Sovereignty.md",
+    "01_Ontology/def-sbrm-reporting-entity.md",
     "01_Ontology/Agent_SBRM_Minter.py",
     "01_Ontology/New Text Document.txt",
     "README.md",
@@ -334,17 +338,13 @@
     "01_Ontology/fact-asset-binder-heavy-duty-002-expense-2026.md",
     "01_Ontology/fact-asset-binder-heavy-duty-002-cost-2026.md",
     "01_Ontology/fact-asset-binder-heavy-duty-002-accumulated-2026.md",
-    "01_Ontology/fact-accumulated-depreciation-2026.md",
     "App.py",
-    "01_Ontology/wp-bank-statement-2026.md",
-    "01_Ontology/fact-lodgeit-accounting-fees-2024.md",
     "mapper.csv",
     "financials.csv",
     "LodgeiT_Ingestion_Agent.py",
     "New Text Document.txt",
     "app.py",
     "Phase 1 The Gateway (Residency) and associated non residency qs.txt",
-    "heal_expenses.py",
-    "ingest_assets.py"
+    "heal_expenses.py"
   ]
 }
