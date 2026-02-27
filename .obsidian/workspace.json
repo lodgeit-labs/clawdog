@@ -310,6 +310,8 @@
   },
   "active": "2b76e18df5f7d164",
   "lastOpenFiles": [
+    "01_Ontology/Agent_SBRM_Minter.py",
+    "01_Ontology/New Text Document.txt",
     "README.md",
     "01_Ontology/fact-uplift-sales-revenue-2026.md",
     "01_Ontology/fact-uplift-retained-earnings-2026.md",
@@ -336,7 +338,6 @@
     "App.py",
     "01_Ontology/wp-bank-statement-2026.md",
     "01_Ontology/fact-lodgeit-accounting-fees-2024.md",
-    "01_Ontology/fact-lodgeit-accounting-fees-2025.md",
     "mapper.csv",
     "financials.csv",
     "LodgeiT_Ingestion_Agent.py",
@@ -344,7 +345,6 @@
     "app.py",
     "Phase 1 The Gateway (Residency) and associated non residency qs.txt",
     "heal_expenses.py",
-    "ingest_assets.py",
-    "asset_register.json"
+    "ingest_assets.py"
   ]
 }
