@@ -1,92 +1,153 @@
-% =================================================================
-% ATO GST REGISTRATION LOGIC ENGINE
-% =================================================================
+% =========================================================
+% SYSTEM: OPEN-SOURCE SBRM HYPERCUBE
+% LAYER: LOGIC & INFERENCE (SWI-PROLOG)
+% =========================================================
 
-% --- DIRECTIVES: PREVENT WARNINGS & CRASHES ---
-:- dynamic sporting_club/1.
-:- dynamic charity/1.
-:- dynamic community_group/1.
-:- dynamic professional_association/1.
-:- dynamic declared_entity/1.
-:- dynamic uber_driver/1.
-:- dynamic does_not_operate_for_profit/1.
-:- dynamic monthly_turnover/2.
-:- dynamic past_11_months_turnover/2.
-:- dynamic next_11_months_turnover/2.
-:- dynamic has_turnover/2.
-:- dynamic has_projected_turnover/2.
-:- dynamic gst_included/2.
-:- dynamic sales_associates/2.
-:- dynamic disconnected_sales/2.
-:- dynamic input_taxed/2.
-:- dynamic exports/2.
-:- dynamic sales_third_parties/2.
+:- dynamic sbrm_fact/6.
 
-:- discontiguous declared_entity/1.
-:- discontiguous does_not_operate_for_profit/1.
-:- discontiguous has_turnover/2.
-:- discontiguous has_projected_turnover/2.
-:- discontiguous gst_included/2.
-:- discontiguous sales_associates/2.
-:- discontiguous disconnected_sales/2.
-:- discontiguous input_taxed/2.
-:- discontiguous exports/2.
-:- discontiguous sales_third_parties/2.
+:- discontiguous sbrm_parent/2.
 
-% --- 1. ONTOLOGY ---
-entity(E) :- sporting_club(E).
-entity(E) :- charity(E).
-entity(E) :- community_group(E).
-entity(E) :- professional_association(E).
-entity(E) :- declared_entity(E). 
+% --- 1. DECENTRALIZED FACT ASSERTIONS ---
+% Arity 6: sbrm_fact(Entity, Period, Concept, Magnitude, Unit, ArrangementPattern).
 
-ride_sourcing_service(E) :- uber_driver(E).
-not_for_profit(Entity) :- does_not_operate_for_profit(Entity).
+sbrm_fact('urn:uuid:def-sbrm-reporting-entity', 'urn:uuid:def-sbrm-reporting-period-2026', 'urn:uuid:def-sbr-accumulated-depreciation', 25000.0, 'AUD', 'Hierarchy').
+sbrm_fact('urn:uuid:def-sbrm-reporting-entity', 'urn:uuid:def-sbrm-reporting-period-2026', 'urn:uuid:def-sbr-cash-at-bank', 50000.0, 'AUD', 'Hierarchy').
+sbrm_fact('urn:uuid:def-sbrm-reporting-entity', 'urn:uuid:def-sbrm-reporting-period', 'urn:uuid:def-sbr-current-assets', 50000.0, 'AUD', 'Hierarchy').
+sbrm_fact('urn:uuid:def-sbrm-reporting-entity', 'urn:uuid:def-sbrm-reporting-period', 'urn:uuid:def-sbr-current-liabilities', 30000.0, 'AUD', 'Hierarchy').
+sbrm_fact('urn:uuid:def-sbrm-reporting-entity', 'urn:uuid:def-sbrm-reporting-period-2026-duration', 'urn:uuid:def-sbr-dividends-paid', 5000.0, 'AUD', 'RollForward').
+sbrm_fact('urn:uuid:def-sbrm-reporting-entity', 'urn:uuid:def-sbrm-reporting-period-2026-duration', 'urn:uuid:def-sbr-expenses', 80000.0, 'AUD', 'RollUp').
+sbrm_fact('urn:uuid:def-sbrm-reporting-entity', 'urn:uuid:def-sbrm-reporting-period', 'urn:uuid:def-sbr-non-current-assets', 75000.0, 'AUD', 'Hierarchy').
+sbrm_fact('urn:uuid:def-sbrm-reporting-entity', 'urn:uuid:def-sbrm-reporting-period', 'urn:uuid:def-sbr-non-current-liabilities', 50000.0, 'AUD', 'Hierarchy').
+sbrm_fact('urn:uuid:def-sbrm-reporting-entity', 'urn:uuid:def-sbrm-reporting-period-2025', 'urn:uuid:def-sbr-opening-equity', 30000.0, 'AUD', 'RollForward').
+sbrm_fact('urn:uuid:def-sbrm-reporting-entity', 'urn:uuid:def-sbrm-reporting-period-2026', 'urn:uuid:def-sbr-plant-at-cost', 100000.0, 'AUD', 'Hierarchy').
+sbrm_fact('urn:uuid:def-sbrm-reporting-entity', 'urn:uuid:def-sbrm-reporting-period-2026-duration', 'urn:uuid:def-sbr-profit-loss', 20000.0, 'AUD', 'RollUp').
+sbrm_fact('urn:uuid:def-sbrm-reporting-entity', 'urn:uuid:def-sbrm-reporting-period-2026-duration', 'urn:uuid:def-sbr-revenue', 100000.0, 'AUD', 'RollUp').
+sbrm_fact('urn:uuid:def-sbrm-reporting-entity', 'urn:uuid:def-sbrm-reporting-period-2026-duration', 'urn:uuid:def-sbr-revenue-blue', 25000.0, 'AUD', 'RollUp').
+sbrm_fact('urn:uuid:def-sbrm-reporting-entity', 'urn:uuid:def-sbrm-reporting-period-2026-duration', 'urn:uuid:def-sbr-revenue-green', 25000.0, 'AUD', 'RollUp').
+sbrm_fact('urn:uuid:def-sbrm-reporting-entity', 'urn:uuid:def-sbrm-reporting-period-2026-duration', 'urn:uuid:def-sbr-revenue-red', 25000.0, 'AUD', 'RollUp').
+sbrm_fact('urn:uuid:def-sbrm-reporting-entity', 'urn:uuid:def-sbrm-reporting-period-2026-duration', 'urn:uuid:def-sbr-revenue-yellow', 25000.0, 'AUD', 'RollUp').
+sbrm_fact('urn:uuid:def-sbrm-reporting-entity', 'urn:uuid:def-sbrm-reporting-period', 'urn:uuid:def-sbr-total-assets', 125000.0, 'AUD', 'Hierarchy').
+sbrm_fact('urn:uuid:def-sbrm-reporting-entity', 'urn:uuid:def-sbrm-reporting-period', 'urn:uuid:def-sbr-total-equity', 45000.0, 'AUD', 'RollForward').
+sbrm_fact('urn:uuid:def-sbrm-reporting-entity', 'urn:uuid:def-sbrm-reporting-period', 'urn:uuid:def-sbr-total-liabilities', 80000.0, 'AUD', 'Hierarchy').
+sbrm_fact('urn:uuid:def-sbrm-reporting-entity', 'urn:uuid:def-sbrm-reporting-period-2026', 'urn:uuid:def-wp-bank-statement-balance', 50000.0, 'AUD', 'CrossReference').
 
-% --- 2. KNOWLEDGE BASE (GST RULES) ---
-must_register_for_gst(Entity) :- entity(Entity), ride_sourcing_service(Entity).
+% [SYSTEM] 20 Multidimensional Facts Compiled.
 
-must_register_for_gst(Entity) :- entity(Entity), not_for_profit(Entity), has_turnover(Entity, Turnover), Turnover >= 150000.
-must_register_for_gst(Entity) :- entity(Entity), not_for_profit(Entity), has_projected_turnover(Entity, Projection), Projection >= 150000.
+% --- 2. SBRM OPERATIVE PREDICATES ---
 
-must_register_for_gst(Entity) :- entity(Entity), \+ not_for_profit(Entity), has_turnover(Entity, Turnover), Turnover >= 75000.
-must_register_for_gst(Entity) :- entity(Entity), \+ not_for_profit(Entity), has_projected_turnover(Entity, Projection), Projection >= 75000.
+% Rule: rule-sbrm-accounting-equation
+is_balanced(Entity, Period) :-
+    sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-total-assets', Assets, _, 'Hierarchy'),
+    sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-total-liabilities', Liabilities, _, 'Hierarchy'),
+    sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-total-equity', Equity, _, 'RollForward'),
+    Assets =:= Liabilities + Equity.
 
-has_turnover(Entity, CurrentTurnover) :- monthly_turnover(Entity, Monthly), past_11_months_turnover(Entity, Past), CurrentTurnover is Monthly + Past.
-has_projected_turnover(Entity, ProjectedTurnover) :- monthly_turnover(Entity, Monthly), next_11_months_turnover(Entity, Future), ProjectedTurnover is Monthly + Future.
+% Rule: rule-sbrm-asset-rollup
+validate_asset_rollup(Entity, Period) :-
+    sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-current-assets', CA, _, 'Hierarchy'),
+    sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-non-current-assets', NCA, _, 'Hierarchy'),
+    sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-total-assets', TA, _, 'Hierarchy'),
+    TA =:= CA + NCA.
 
-total_business_income(Scenario, TBI) :- gst_included(Scenario, _GST), sales_associates(Scenario, SalesAssoc), disconnected_sales(Scenario, Disconnected), input_taxed(Scenario, InputTaxed), exports(Scenario, Exports), sales_third_parties(Scenario, Sales), TBI is SalesAssoc + Disconnected + InputTaxed + Exports + Sales.
-gst_turnover(Scenario, GSTTurnover) :- total_business_income(Scenario, TBI), gst_included(Scenario, GST), sales_associates(Scenario, SalesAssoc), disconnected_sales(Scenario, Disconnected), input_taxed(Scenario, InputTaxed), exports(Scenario, Exports), GSTTurnover is TBI - GST - SalesAssoc - Disconnected - InputTaxed - Exports.
+% Rule: rule-sbrm-equity-rollforward
+validate_equity_rollforward(Entity, Period) :-
+    sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-opening-equity', Opening, _, 'RollForward'),
+    sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-profit-loss', PL, _, 'RollUp'),
+    sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-dividends-paid', Div, _, 'RollForward'),
+    sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-total-equity', Closing, _, 'RollForward'),
+    Closing =:= Opening + PL - Div.
 
-% --- 3. DEMO SCENARIOS & TESTS ---
-declared_entity('Cherrio Charity').
-does_not_operate_for_profit('Cherrio Charity').
-has_turnover('Cherrio Charity', 160000).
+ 
+%% Temporal Bridge Repair 
+validate_equity_rollforward_v2(Entity) :- 
+    sbrm_fact(Entity, _, 'urn:uuid:def-sbr-opening-equity', Opening, _, 'RollForward'), 
+    sbrm_fact(Entity, _, 'urn:uuid:def-sbr-profit-loss', PL, _, 'RollUp'), 
+    sbrm_fact(Entity, _, 'urn:uuid:def-sbr-dividends-paid', Div, _, 'RollForward'), 
+    sbrm_fact(Entity, _, 'urn:uuid:def-sbr-total-equity', Closing, _, 'RollForward'), 
+    Closing =:= Opening + PL - Div. 
+ 
+%% --- JURISDICTIONAL ROUTING: ATO IAWO --- 
+calculate_iawo_deduction(Entity, Period, Deduction) :- 
+    sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-plant-at-cost', AssetCost, 'AUD', 'Hierarchy'), 
+    ( AssetCost =< 20000.0 -> Deduction = AssetCost ; Deduction = 0.0 ). 
 
-declared_entity('sporting club').
-does_not_operate_for_profit('sporting club').
-has_projected_turnover('sporting club', 100000).
+% Rule: rule-sbrm-net-profit
+validate_net_profit(Entity, Period) :-
+    sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-revenue', Revenue, _, 'RollUp'),
+    sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-expenses', Expenses, _, 'RollUp'),
+    sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-profit-loss', PL, _, 'RollUp'),
+    PL =:= Revenue - Expenses.
 
-declared_entity('Tom s Bakery').
-has_turnover('Tom s Bakery', 80000).
+% Rule: rule-sbrm-revenue-breakdown
+validate_revenue_breakdown(Entity, Period) :-
+    sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-revenue-blue', RevBlue, _, 'RollUp'),
+    sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-revenue-green', RevGreen, _, 'RollUp'),
+    sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-revenue-red', RevRed, _, 'RollUp'),
+    sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-revenue-yellow', RevYellow, _, 'RollUp'),
+    sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-revenue', TotalRevenue, _, 'RollUp'),
+    TotalRevenue =:= RevBlue + RevGreen + RevRed + RevYellow.
 
-declared_entity(mario).
-uber_driver(mario).
+% --- 3. HEALTH CHECK WRAPPER ---
 
-declared_entity('Demo Company').
-has_turnover('Demo Company', 120000).
+run_health_checks :-
+    write('========================================='), nl,
+    write('      SBRM HEALTH CHECK REPORT           '), nl,
+    write('========================================='), nl,
+    
+    Entity = 'urn:uuid:def-sbrm-reporting-entity',
+    InstantPeriod = 'urn:uuid:def-sbrm-reporting-period',
+    DurationPeriod = 'urn:uuid:def-sbrm-reporting-period-2026-duration',
 
-gst_included(typical, 9090.91).
-sales_associates(typical, 0).
-disconnected_sales(typical, 0).
-input_taxed(typical, 5000).
-exports(typical, 0).
-sales_third_parties(typical, 100000).
+    % Check 1: Accounting Equation
+    ( is_balanced(Entity, InstantPeriod) ->
+        write('[PASS] Accounting Equation (A = L + E)'), nl
+    ;   write('[FAIL] Accounting Equation (A = L + E)'), nl
+    ),
 
-gst_included(significant_exports, 6818.18).
-sales_associates(significant_exports, 10000).
-disconnected_sales(significant_exports, 2000).
-input_taxed(significant_exports, 0).
-exports(significant_exports, 50000).
-sales_third_parties(significant_exports, 75000).
+    % Check 2: Asset Rollup
+    ( validate_asset_rollup(Entity, InstantPeriod) ->
+        write('[PASS] Asset Rollup (CA + NCA = TA)'), nl
+    ;   write('[FAIL] Asset Rollup (CA + NCA = TA)'), nl
+    ),
 
+    % Check 3: Equity Roll-forward
+    ( validate_equity_rollforward_v2(Entity) ->
+        write('[PASS] Equity Roll-forward (Open + P&L - Div = Close)'), nl
+    ;   write('[FAIL] Equity Roll-forward (Open + P&L - Div = Close)'), nl
+    ),
+    
+    % Check 4: Net Profit
+    ( validate_net_profit(Entity, DurationPeriod) ->
+        write('[PASS] Net Profit (Revenue - Expenses = P&L)'), nl
+    ;   write('[FAIL] Net Profit (Revenue - Expenses = P&L)'), nl
+    ),
+
+    % Check 5: Revenue Breakdown
+    ( validate_revenue_breakdown(Entity, DurationPeriod) ->
+        write('[PASS] Revenue Breakdown (Sum of slices = Total Revenue)'), nl
+    ;   write('[FAIL] Revenue Breakdown (Sum of slices = Total Revenue)'), nl
+    ),
+    
+    write('========================================='), nl.
+
+% --- 4. ONTOLOGICAL BRANCH STRUCTURE (TAXONOMY) ---
+% Defining the isPartOf relationships (Child -> Parent)
+sbrm_parent('urn:uuid:def-sbr-current-assets', 'urn:uuid:def-sbr-total-assets').
+sbrm_parent('urn:uuid:def-sbr-non-current-assets', 'urn:uuid:def-sbr-total-assets').
+sbrm_parent('urn:uuid:def-sbr-cash-at-bank', 'urn:uuid:def-sbr-current-assets').
+sbrm_parent('urn:uuid:def-wp-bank-statement-balance', 'urn:uuid:def-sbr-cash-at-bank').
+sbrm_parent('urn:uuid:def-sbr-plant-at-cost', 'urn:uuid:def-sbr-non-current-assets').
+sbrm_parent('urn:uuid:def-sbr-accumulated-depreciation', 'urn:uuid:def-sbr-non-current-assets').
+% Equity Structure
+sbrm_parent('urn:uuid:def-sbr-opening-equity', 'urn:uuid:def-sbr-total-equity').
+sbrm_parent('urn:uuid:def-sbr-profit-loss', 'urn:uuid:def-sbr-total-equity').
+sbrm_parent('urn:uuid:def-sbr-dividends-paid', 'urn:uuid:def-sbr-total-equity').
+
+% Recursive rule to walk the graph and generate the branch structure
+generate_branch_structure(Node, Indent) :-
+    tab(Indent), write('-> '), write(Node), nl,
+    NewIndent is Indent + 4,
+    forall(sbrm_parent(Child, Node), generate_branch_structure(Child, NewIndent)).
+
+sbrm_parent('urn:uuid:def-sbr-current-liabilities', 'urn:uuid:def-sbr-total-liabilities').
+sbrm_parent('urn:uuid:def-sbr-non-current-liabilities', 'urn:uuid:def-sbr-total-liabilities')
