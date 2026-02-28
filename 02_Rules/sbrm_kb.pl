@@ -55,9 +55,26 @@ validate_equity_rollforward_v2(Entity) :-
     sbrm_fact(Entity, _, 'urn:uuid:def-sbr-total-equity', Closing, _, 'RollForward'), 
     Closing =:= Opening + PL - Div. 
 
+% --- SEMANTIC BRIDGE ---
+% Links the SBRM UUID to the GST Logic Engine's named entity
+entity_name_map('urn:uuid:def-sbrm-reporting-entity', 'Demo Company').
+
+% --- DYNAMIC IAWO RULE ---
 calculate_iawo_deduction(Entity, Period, Deduction) :- 
+    % 1. Get the asset cost from SBRM
     sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-plant-at-cost', AssetCost, 'AUD', 'Hierarchy'), 
-    ( AssetCost =< 20000.0 -> Deduction = AssetCost ; Deduction = 0.0 ). 
+    
+    % 2. Cross the bridge to get the human name
+    entity_name_map(Entity, NamedEntity),
+    
+    % 3. Query the GST rules for this entity's turnover
+    has_turnover(NamedEntity, Turnover),
+    
+    % 4. Logic: If Turnover < $10m (SBE), threshold is $150k. Else, $20k.
+    ( Turnover < 10000000 -> Threshold = 150000.0 ; Threshold = 20000.0 ),
+    
+    % 5. Apply the deduction
+    ( AssetCost =< Threshold -> Deduction = AssetCost ; Deduction = 0.0 ).
 
 validate_net_profit(Entity, Period) :-
     sbrm_fact(Entity, Period, 'urn:uuid:def-sbr-revenue', Revenue, _, 'RollUp'),
