@@ -181,12 +181,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Developer Onboarding.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Developer Onboarding"
+              "title": "README"
             }
           }
         ],
@@ -350,8 +350,9 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "123ad21752713224",
+  "active": "c5046328016d425c",
   "lastOpenFiles": [
+    "Developer Onboarding.md",
     "00_Architecture/Architecture_Rules_and_Execution.md",
     "00_Architecture/New Text Document.txt",
     "Legacy Scripts/Moved.png",
@@ -365,7 +366,6 @@
     "Legacy Scripts/latest_sbrm_payload.jsonld",
     "Legacy Scripts/l402_middleware.py",
     "00_Architecture/Architecture_Cryptographic_Sovereignty.md",
-    "Developer Onboarding.md",
     "01_Ontology/GST_Logic_Explanation.md",
     "01_Ontology/fact-revenue-yellow-2026.md",
     "01_Ontology/fact-revenue-red-2026.md",
