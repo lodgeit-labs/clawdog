@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClawDog | Neurosemantic Engine for OpenClaw</title>
+    
+    <!-- Fonts: Inter for UI, JetBrains Mono for Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Extracted/Themed LodgeiT Blue (Electric vibrant blue against dark mode)
+                        lodgeit: {
+                            blue: '#0066FF',
+                            light: '#4D94FF',
+                            dark: '#004CCC',
+                            glow: 'rgba(0, 102, 255, 0.5)'
+                        },
+                        obsidian: '#0a0f1a',
+                        slate: {
+                            850: '#151e2e',
+                            950: '#0b1120',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    boxShadow: {
+                        'neon': '0 0 20px rgba(0, 102, 255, 0.4)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0a0f1a; color: #e2e8f0; }
+        .gradient-text {
+            background: linear-gradient(to right, #ffffff, #4D94FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .node-bg {
+            background-image: radial-gradient(rgba(0, 102, 255, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased node-bg selection:bg-lodgeit-blue selection:text-white flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-obsidian/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 rounded bg-lodgeit-blue flex items-center justify-center font-bold text-white shadow-neon">L</div>
+                <span class="text-xl font-bold tracking-tight text-white">LodgeiT<span class="text-lodgeit-light font-mono text-sm ml-1">.ORG</span></span>
+            </div>
+            <nav class="hidden md:flex space-x-8 text-sm font-medium text-slate-400">
+                <a href="#pipeline" class="hover:text-white transition">The Engine</a>
+                <a href="#world-model" class="hover:text-white transition">SBRM World-Model</a>
+                <a href="https://github.com/lodgeit-labs" target="_blank" class="hover:text-white transition">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- Section 1: The Hero -->
+        <section class="relative pt-32 pb-24 overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-b from-lodgeit-blue/10 to-transparent z-0"></div>
+            
+            <div class="max-w-4xl mx-auto px-6 relative z-10 text-center">
+                <!-- ClawDog Icon Placeholder -->
+                <div class="mx-auto w-24 h-24 mb-8 rounded-xl border border-lodgeit-light/30 bg-slate-900 shadow-neon flex items-center justify-center">
+                    <span class="text-4xl">🐕</span> <!-- PLACEHOLDER AWAITING ASSET -->
+                </div>
+
+                <h1 class="text-5xl md:text-7xl font-black tracking-tight text-white mb-6 gradient-text">
+                    Equip Your AI with the <br />Mind of an Accountant.
+                </h1>
+                <p class="text-xl md:text-2xl text-slate-400 mb-10 max-w-3xl mx-auto leading-relaxed">
+                    ClawDog is the neurosemantic skillset for OpenClaw. Add deterministic, zero-hallucination financial logic to your autonomous agents in seconds.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                    <a href="https://myclaw.ai" class="px-8 py-4 bg-lodgeit-blue hover:bg-lodgeit-light text-white font-bold rounded-lg transition-all shadow-neon flex items-center">
+                        Try it now on myClaw.ai
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </a>
+                    <a href="https://github.com/lodgeit-labs/LodgeiT_Global_SBRM_Seed/tree/clawdog/v1-root-release" target="_blank" class="px-8 py-4 bg-transparent border border-slate-600 hover:border-lodgeit-light text-slate-300 hover:text-white font-bold rounded-lg transition-all flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+                        Fork the Repo
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: The Core Pipeline Showcase -->
+        <section id="pipeline" class="py-24 border-y border-slate-800 bg-slate-900/50">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    
+                    <!-- Left: Video Asset 1 Placeholder -->
+                    <div class="relative rounded-2xl border border-slate-700 bg-obsidian overflow-hidden aspect-video shadow-2xl flex items-center justify-center group">
+                        <!-- Simulated Terminal overlay for dev vibe -->
+                        <div class="absolute top-0 left-0 right-0 h-8 bg-slate-800 flex items-center px-4 space-x-2 border-b border-slate-700">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            <span class="ml-4 font-mono text-xs text-slate-400">clawdog_pipeline.mp4</span>
+                        </div>
+                        <div class="p-8 text-center mt-8">
+                            <span class="text-6xl mb-4 block opacity-50">🎬</span>
+                            <p class="font-mono text-lodgeit-light text-sm">VIDEO ASSET 1 PLACEHOLDER</p>
+                            <p class="text-slate-500 text-xs mt-2">"The Pipeline" - Raw CSV to SBRM Nodes</p>
+                        </div>
+                    </div>
+
+                    <!-- Right: Copy -->
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
+                            From Raw Trial Balance to a Complete Financial Suite. <span class="text-lodgeit-light">Instantly.</span>
+                        </h2>
+                        <p class="text-lg text-slate-400 mb-8 leading-relaxed">
+                            Standard LLMs guess at account mapping. ClawDog <em>computes</em> it. Feed your agent a standard trial balance, and ClawDog utilizes a persistent deterministic logic engine to map, audit, and render all four core financial reports without human intervention.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="flex items-start">
+                                <svg class="w-6 h-6 text-lodgeit-blue mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span class="font-medium text-slate-200">Statement of Financial Position</span>
+                            </div>
+                            <div class="flex items-start">
+                                <svg class="w-6 h-6 text-lodgeit-blue mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span class="font-medium text-slate-200">Statement of Performance</span>
+                            </div>
+                            <div class="flex items-start">
+                                <svg class="w-6 h-6 text-lodgeit-blue mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span class="font-medium text-slate-200">Statement of Changes in Equity</span>
+                            </div>
+                            <div class="flex items-start">
+                                <svg class="w-6 h-6 text-lodgeit-blue mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span class="font-medium text-slate-200">Statement of Cash Flows</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: The SBRM World-Model (Matrix) -->
+        <section id="world-model" class="py-24">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">The SBRM World-Model</h2>
+                    <p class="text-slate-400 text-lg">Why neurosemantic logic obliterates stateless AI in financial data.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                    
+                    <!-- Standard AI -->
+                    <div class="p-8 rounded-2xl border border-slate-800 bg-slate-900/30 flex flex-col h-full">
+                        <div class="flex items-center mb-6">
+                            <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center mr-4 text-slate-400">🤖</div>
+                            <h3 class="text-2xl font-bold text-slate-300">Standard AI Agents</h3>
+                        </div>
+                        <ul class="space-y-4 flex-grow">
+                            <li class="flex items-start">
+                                <span class="text-red-500 mr-3">✕</span>
+                                <span class="text-slate-400">Probabilistic outputs (guesses mapping)</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-red-500 mr-3">✕</span>
+                                <span class="text-slate-400">Hallucinates double-entry math</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-red-500 mr-3">✕</span>
+                                <span class="text-slate-400">Stateless memory across workflows</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-red-500 mr-3">✕</span>
+                                <span class="text-slate-400">Unstructured, un-auditable outputs</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- ClawDog Engine -->
+                    <div class="p-8 rounded-2xl border border-lodgeit-blue bg-lodgeit-blue/5 flex flex-col h-full relative overflow-hidden">
+                        <!-- Glow effect -->
+                        <div class="absolute -top-10 -right-10 w-32 h-32 bg-lodgeit-blue rounded-full blur-[80px] opacity-30"></div>
+                        
+                        <div class="flex items-center mb-6 relative z-10">
+                            <div class="w-10 h-10 rounded-full bg-lodgeit-blue flex items-center justify-center mr-4 text-white shadow-neon">🐕</div>
+                            <h3 class="text-2xl font-bold text-white">ClawDog Engine</h3>
+                        </div>
+                        <ul class="space-y-4 flex-grow relative z-10">
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-lodgeit-light mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div>
+                                    <strong class="text-white block">Grounded in SBRM</strong>
+                                    <span class="text-slate-400 text-sm">Pre-loaded with the foundational taxonomy engineered by Charles Hoffman, CPA.</span>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-lodgeit-light mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div>
+                                    <strong class="text-white block">Deterministic Logic</strong>
+                                    <span class="text-slate-400 text-sm">Powered by a persistent SWI-Prolog ontology to execute ironclad tax math.</span>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-lodgeit-light mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div>
+                                    <strong class="text-white block">Mathematically Auditable</strong>
+                                    <span class="text-slate-400 text-sm">100% cryptographically traceable nodes from raw input to JSON-LD output.</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Developer Footer -->
+    <footer class="border-t border-slate-800 bg-obsidian py-12">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+            <div class="mb-6 md:mb-0">
+                <div class="flex items-center justify-center md:justify-start space-x-2 mb-2">
+                    <div class="w-6 h-6 rounded bg-slate-800 flex items-center justify-center font-bold text-white text-xs">L</div>
+                    <span class="text-lg font-bold tracking-tight text-white">LodgeiT<span class="text-slate-500 font-mono text-xs ml-1">.ORG</span></span>
+                </div>
+                <p class="text-slate-500 text-sm max-w-md">
+                    Built for the OpenClaw ecosystem. Ready to be expanded with jurisdictional taxonomies via AgentSkills.
+                </p>
+            </div>
+            
+            <div class="flex space-x-6">
+                <a href="#" class="text-sm font-medium text-slate-400 hover:text-white transition">Documentation</a>
+                <a href="https://github.com/lodgeit-labs/LodgeiT_Global_SBRM_Seed" target="_blank" class="text-sm font-medium text-slate-400 hover:text-white transition">GitHub Source</a>
+                <a href="https://lodgeit.net.au" target="_blank" class="text-sm font-medium text-slate-400 hover:text-white transition">LodgeiT.net.au</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
