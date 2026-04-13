@@ -1,1 +1,47 @@
-__pycache__/ 
+# Generated
+/_site
+__pycache__/
+
+# Visual Studio Code
+.vscode/*
+## !Team preferences
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json
+
+
+# Linux
+*~
+.Trash-*
+.directory
+.fuse_hidden*
+.nfs*
+
+# macOS
+._*
+.DS_Store
+.AppleDouble
+.LSOverride
+## Volume root files
+.DocumentRevisions-V100
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.fseventsd
+## Remote AFP share dirs
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+$RECYCLE.BIN/
+*.lnk
+*.stackdump
+[Dd]esktop.ini
+ehthumbs*.db
+[Tt]humbs.db

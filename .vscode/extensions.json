@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "bierner.github-markdown-preview",
+    "EditorConfig.EditorConfig",
+    "esbenp.prettier-vscode",
+    "redhat.vscode-xml",
+    "redhat.vscode-yaml",
+    "streetsidesoftware.code-spell-checker"
+  ]
+}
