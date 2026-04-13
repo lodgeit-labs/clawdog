@@ -1,0 +1,47 @@
+# Core Mini-Taxonomy (The Universal Physics of Accounting)
+# Based on Charles Hoffman's structural models.
+# This is the stable anchor. Specialist domains (AU Tax, Hire Purchase) extend from here.
+
+taxonomy:
+  name: "ClawDog_Core_SBRM"
+  version: "1.0.0"
+  namespace: "https://lodgeit.global/ontology/core/v1#"
+
+elements:
+  # --- BALANCE SHEET ---
+  Assets:
+    type: "monetary"
+    balance: "debit"
+    description: "Total economic resources."
+  
+  Liabilities:
+    type: "monetary"
+    balance: "credit"
+    description: "Total economic obligations."
+  
+  Equity:
+    type: "monetary"
+    balance: "credit"
+    description: "Residual interest in the assets after deducting liabilities."
+
+  # --- INCOME STATEMENT ---
+  Revenue:
+    type: "monetary"
+    balance: "credit"
+    description: "Gross inflow of economic benefits."
+  
+  Expenses:
+    type: "monetary"
+    balance: "debit"
+    description: "Gross outflow of economic benefits."
+  
+  NetIncome:
+    type: "monetary"
+    balance: "credit"
+    description: "Revenue minus Expenses."
+
+structures:
+  BalanceSheetEquation:
+    rule: "Assets = Liabilities + Equity"
+  NetIncomeEquation:
+    rule: "NetIncome = Revenue - Expenses"
