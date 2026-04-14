@@ -1,0 +1,140 @@
+Transaction_ID,Date,Account_Name,Description,Amount
+1000,2024-07-01,NAB Business 5510,Opening Balance,39325
+1000,2024-07-01,Share Capital - Ordinary,Opening Balance,-15730.0
+1000,2024-07-01,Retained Earnings,Opening Balance,-23595.0
+1001,2025-03-10,Wages & Salaries,Payroll,6862
+1001,2025-03-10,Superannuation Expense,Payroll,789.13
+1001,2025-03-10,PAYG Withholding Payable,Payroll,-1715.5
+1001,2025-03-10,Super Guarantee Payable,Payroll,-789.13
+1001,2025-03-10,NAB Business 5510,Payroll,-5146.5
+1002,2024-07-20,NAB Business 5510,Client Payment,10271
+1002,2024-07-20,Services Provided,Client Payment,-9337.27
+1002,2024-07-20,GST Collected,Client Payment,-933.73
+1003,2025-06-14,NAB Business 5510,Client Payment,10198
+1003,2025-06-14,Services Provided,Client Payment,-9270.91
+1003,2025-06-14,GST Collected,Client Payment,-927.09
+1004,2024-07-03,Bunnings Trade Supplies,Supplier Payment,987.27
+1004,2024-07-03,GST Paid,Supplier Payment,98.73
+1004,2024-07-03,NAB Business 5510,Supplier Payment,-1086
+1005,2025-05-31,ATO Integrated Client Account,BAS Payment,1808
+1005,2025-05-31,NAB Business 5510,BAS Payment,-1808
+1006,2024-11-19,NAB Business 5510,Client Payment,6913
+1006,2024-11-19,Services Provided,Client Payment,-6284.55
+1006,2024-11-19,GST Collected,Client Payment,-628.45
+1007,2025-03-30,Office Works - Stationery,Supplier Payment,251.82
+1007,2025-03-30,GST Paid,Supplier Payment,25.18
+1007,2025-03-30,NAB Business 5510,Supplier Payment,-277
+1008,2024-10-18,Wages & Salaries,Payroll,7928
+1008,2024-10-18,Superannuation Expense,Payroll,911.72
+1008,2024-10-18,PAYG Withholding Payable,Payroll,-1982.0
+1008,2024-10-18,Super Guarantee Payable,Payroll,-911.72
+1008,2024-10-18,NAB Business 5510,Payroll,-5946.0
+1009,2025-01-14,ATO Integrated Client Account,BAS Payment,2745
+1009,2025-01-14,NAB Business 5510,BAS Payment,-2745
+1010,2024-10-02,Wages & Salaries,Payroll,4982
+1010,2024-10-02,Superannuation Expense,Payroll,572.93
+1010,2024-10-02,PAYG Withholding Payable,Payroll,-1245.5
+1010,2024-10-02,Super Guarantee Payable,Payroll,-572.93
+1010,2024-10-02,NAB Business 5510,Payroll,-3736.5
+1011,2025-04-24,Xero Subscription,Supplier Payment,1391.82
+1011,2025-04-24,GST Paid,Supplier Payment,139.18
+1011,2025-04-24,NAB Business 5510,Supplier Payment,-1531
+1012,2024-11-23,Wages & Salaries,Payroll,5388
+1012,2024-11-23,Superannuation Expense,Payroll,619.62
+1012,2024-11-23,PAYG Withholding Payable,Payroll,-1347.0
+1012,2024-11-23,Super Guarantee Payable,Payroll,-619.62
+1012,2024-11-23,NAB Business 5510,Payroll,-4041.0
+1013,2024-07-23,ATO Integrated Client Account,BAS Payment,3548
+1013,2024-07-23,NAB Business 5510,BAS Payment,-3548
+1014,2025-05-25,NAB Business 5510,Client Payment,8215
+1014,2025-05-25,Services Provided,Client Payment,-7468.18
+1014,2025-05-25,GST Collected,Client Payment,-746.82
+1015,2025-06-18,ATO Integrated Client Account,BAS Payment,1709
+1015,2025-06-18,NAB Business 5510,BAS Payment,-1709
+1016,2025-01-30,Telstra Internet,Supplier Payment,1267.27
+1016,2025-01-30,GST Paid,Supplier Payment,126.73
+1016,2025-01-30,NAB Business 5510,Supplier Payment,-1394
+1017,2025-02-07,ATO Integrated Client Account,BAS Payment,3003
+1017,2025-02-07,NAB Business 5510,BAS Payment,-3003
+1018,2025-05-28,Bunnings Trade Supplies,Supplier Payment,467.27
+1018,2025-05-28,GST Paid,Supplier Payment,46.73
+1018,2025-05-28,NAB Business 5510,Supplier Payment,-514
+1019,2024-09-15,Wages & Salaries,Supplier Payment,698.18
+1019,2024-09-15,GST Paid,Supplier Payment,69.82
+1019,2024-09-15,NAB Business 5510,Supplier Payment,-768
+1020,2024-10-12,ATO Integrated Client Account,BAS Payment,1766
+1020,2024-10-12,NAB Business 5510,BAS Payment,-1766
+1021,2024-07-16,ATO Integrated Client Account,BAS Payment,3029
+1021,2024-07-16,NAB Business 5510,BAS Payment,-3029
+1022,2025-06-13,Xero Subscription,Supplier Payment,1844.55
+1022,2025-06-13,GST Paid,Supplier Payment,184.45
+1022,2025-06-13,NAB Business 5510,Supplier Payment,-2029
+1023,2025-01-21,Telstra Internet,Supplier Payment,1711.82
+1023,2025-01-21,GST Paid,Supplier Payment,171.18
+1023,2025-01-21,NAB Business 5510,Supplier Payment,-1883
+1024,2024-07-04,Wages & Salaries,Payroll,3925
+1024,2024-07-04,Superannuation Expense,Payroll,451.38
+1024,2024-07-04,PAYG Withholding Payable,Payroll,-981.25
+1024,2024-07-04,Super Guarantee Payable,Payroll,-451.38
+1024,2024-07-04,NAB Business 5510,Payroll,-2943.75
+1025,2025-02-26,Telstra Internet,Supplier Payment,406.36
+1025,2025-02-26,GST Paid,Supplier Payment,40.64
+1025,2025-02-26,NAB Business 5510,Supplier Payment,-447
+1026,2025-04-18,ATO Integrated Client Account,BAS Payment,1667
+1026,2025-04-18,NAB Business 5510,BAS Payment,-1667
+1027,2025-06-17,Wages & Salaries,Payroll,7513
+1027,2025-06-17,Superannuation Expense,Payroll,864.0
+1027,2025-06-17,PAYG Withholding Payable,Payroll,-1878.25
+1027,2025-06-17,Super Guarantee Payable,Payroll,-864.0
+1027,2025-06-17,NAB Business 5510,Payroll,-5634.75
+1028,2025-05-07,Qantas Flights,Supplier Payment,1019.09
+1028,2025-05-07,GST Paid,Supplier Payment,101.91
+1028,2025-05-07,NAB Business 5510,Supplier Payment,-1121
+1029,2025-04-28,Xero Subscription,Supplier Payment,335.45
+1029,2025-04-28,GST Paid,Supplier Payment,33.55
+1029,2025-04-28,NAB Business 5510,Supplier Payment,-369
+1030,2024-07-30,NAB Business 5510,Client Payment,9849
+1030,2024-07-30,Services Provided,Client Payment,-8953.64
+1030,2024-07-30,GST Collected,Client Payment,-895.36
+1031,2024-10-15,Telstra Internet,Supplier Payment,922.73
+1031,2024-10-15,GST Paid,Supplier Payment,92.27
+1031,2024-10-15,NAB Business 5510,Supplier Payment,-1015
+1032,2024-09-08,Wages & Salaries,Payroll,4813
+1032,2024-09-08,Superannuation Expense,Payroll,553.5
+1032,2024-09-08,PAYG Withholding Payable,Payroll,-1203.25
+1032,2024-09-08,Super Guarantee Payable,Payroll,-553.5
+1032,2024-09-08,NAB Business 5510,Payroll,-3609.75
+1033,2024-11-08,NAB Business 5510,Client Payment,10771
+1033,2024-11-08,Services Provided,Client Payment,-9791.82
+1033,2024-11-08,GST Collected,Client Payment,-979.18
+1034,2024-12-05,Rent - Westfield,Supplier Payment,901.82
+1034,2024-12-05,GST Paid,Supplier Payment,90.18
+1034,2024-12-05,NAB Business 5510,Supplier Payment,-992
+1035,2024-12-03,Office Works - Stationery,Supplier Payment,1205.45
+1035,2024-12-03,GST Paid,Supplier Payment,120.55
+1035,2024-12-03,NAB Business 5510,Supplier Payment,-1326
+1036,2025-01-09,Wages & Salaries,Payroll,7574
+1036,2025-01-09,Superannuation Expense,Payroll,871.01
+1036,2025-01-09,PAYG Withholding Payable,Payroll,-1893.5
+1036,2025-01-09,Super Guarantee Payable,Payroll,-871.01
+1036,2025-01-09,NAB Business 5510,Payroll,-5680.5
+1037,2025-06-15,NAB Business 5510,Client Payment,4992
+1037,2025-06-15,Services Provided,Client Payment,-4538.18
+1037,2025-06-15,GST Collected,Client Payment,-453.82
+1038,2024-12-15,ATO Integrated Client Account,BAS Payment,4566
+1038,2024-12-15,NAB Business 5510,BAS Payment,-4566
+1039,2025-01-26,ATO Integrated Client Account,BAS Payment,2009
+1039,2025-01-26,NAB Business 5510,BAS Payment,-2009
+1040,2024-12-06,NAB Business 5510,Client Payment,7839
+1040,2024-12-06,Services Provided,Client Payment,-7126.36
+1040,2024-12-06,GST Collected,Client Payment,-712.64
+1041,2025-06-03,Share Capital - Ordinary,Capital Injection,-4478
+1041,2025-06-03,NAB Business 5510,Capital Injection,4478
+1042,2025-03-18,Share Capital - Ordinary,Capital Injection,-1375
+1042,2025-03-18,NAB Business 5510,Capital Injection,1375
+1043,2024-10-02,Dividends Paid,Owner Drawings/Dividends,2922
+1043,2024-10-02,NAB Business 5510,Owner Drawings/Dividends,-2922
+1044,2025-01-17,Share Capital - Ordinary,Capital Injection,-3925
+1044,2025-01-17,NAB Business 5510,Capital Injection,3925
+1045,2025-04-03,Share Capital - Ordinary,Capital Injection,-4434
+1045,2025-04-03,NAB Business 5510,Capital Injection,4434
