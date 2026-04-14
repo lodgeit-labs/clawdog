@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:ix="http://www.xbrl.org/2008/inlineXBRL" 
+      xmlns:xbrli="http://www.xbrl.org/2003/instance" 
+      xmlns:mini="http://xbrlsite.azurewebsites.net/2026/reporting-framework/mini">
+<head>
+    <title>GL_05_Sydney_Cafe_Co_Pty_Ltd - Seattle MINI Statutory Accounts</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 10pt; }
+        table { border-collapse: collapse; width: 60%; margin: 20px 0; }
+        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        .header-row { font-weight: bold; color: navy; }
+        .total-row { font-weight: bold; border-top: 2px solid black; }
+    </style>
+</head>
+<body>
+    <div style="display:none">
+        <ix:header>
+            <ix:hidden>
+                <ix:nonNumeric name="mini:EntityRegistrantName" contextRef="ctx-instant">GL_05_Sydney_Cafe_Co_Pty_Ltd</ix:nonNumeric>
+            </ix:hidden>
+            <ix:references></ix:references>
+            <ix:resources>
+                <xbrli:context id="ctx-instant">
+                    <xbrli:entity>
+                        <xbrli:identifier scheme="http://www.ato.gov.au/abn">ABN 12 345 678 901</xbrli:identifier>
+                    </xbrli:entity>
+                    <xbrli:period>
+                        <xbrli:instant>2025-06-30</xbrli:instant>
+                    </xbrli:period>
+                </xbrli:context>
+                <xbrli:context id="ctx-duration">
+                    <xbrli:entity>
+                        <xbrli:identifier scheme="http://www.ato.gov.au/abn">ABN 12 345 678 901</xbrli:identifier>
+                    </xbrli:entity>
+                    <xbrli:period>
+                        <xbrli:startDate>2024-07-01</xbrli:startDate>
+                        <xbrli:endDate>2025-06-30</xbrli:endDate>
+                    </xbrli:period>
+                </xbrli:context>
+                <xbrli:unit id="unit-aud">
+                    <xbrli:measure>iso4217:AUD</xbrli:measure>
+                </xbrli:unit>
+            </ix:resources>
+        </ix:header>
+    </div>
+
+    <h1>Statement of Financial Position (Balance Sheet)</h1>
+    <h2>GL_05_Sydney_Cafe_Co_Pty_Ltd</h2>
+    <p>As of 2025-06-30</p>
+
+    <table>
+        <tr class="header-row"><td colspan="2">ASSETS</td></tr>
+        <tr>
+            <td>Cash and Cash Equivalents</td>
+            <td>
+                <ix:nonFraction name="mini:CashAndCashEquivalents" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
+                    0.0
+                </ix:nonFraction>
+            </td>
+        </tr>
+        <tr>
+            <td>Receivables</td>
+            <td>
+                <ix:nonFraction name="mini:Receivables" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
+                    27348.440000000002
+                </ix:nonFraction>
+            </td>
+        </tr>
+        <tr>
+            <td>Inventories</td>
+            <td>
+                <ix:nonFraction name="mini:Inventories" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
+                    0.0
+                </ix:nonFraction>
+            </td>
+        </tr>
+        <tr class="total-row">
+            <td>Total Current Assets</td>
+            <td>
+                <ix:nonFraction name="mini:CurrentAssets" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
+                    27348.440000000002
+                </ix:nonFraction>
+            </td>
+        </tr>
+        <tr>
+            <td>Property, Plant and Equipment</td>
+            <td>
+                <ix:nonFraction name="mini:PropertyPlantAndEquipment" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
+                    0.0
+                </ix:nonFraction>
+            </td>
+        </tr>
+        <tr class="total-row">
+            <td>Total Noncurrent Assets</td>
+            <td>
+                <ix:nonFraction name="mini:NoncurrentAssets" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
+                    0.0
+                </ix:nonFraction>
+            </td>
+        </tr>
+        <tr class="total-row">
+            <td>TOTAL ASSETS</td>
+            <td>
+                <ix:nonFraction name="mini:Assets" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
+                    27348.440000000002
+                </ix:nonFraction>
+            </td>
+        </tr>
+    </table>
+
+    <table>
+        <tr class="header-row"><td colspan="2">LIABILITIES & EQUITY</td></tr>
+        <tr>
+            <td>Accounts Payable</td>
+            <td>
+                <ix:nonFraction name="mini:AccountsPayable" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
+                    22255.0
+                </ix:nonFraction>
+            </td>
+        </tr>
+        <tr class="total-row">
+            <td>Total Current Liabilities</td>
+            <td>
+                <ix:nonFraction name="mini:CurrentLiabilities" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
+                    22255.0
+                </ix:nonFraction>
+            </td>
+        </tr>
+        <tr class="total-row">
+            <td>Total Noncurrent Liabilities</td>
+            <td>
+                <ix:nonFraction name="mini:NoncurrentLiabilities" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
+                    0.0
+                </ix:nonFraction>
+            </td>
+        </tr>
+        <tr class="total-row">
+            <td>Total Liabilities</td>
+            <td>
+                <ix:nonFraction name="mini:Liabilities" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
+                    22255.0
+                </ix:nonFraction>
+            </td>
+        </tr>
+        
+        <tr><td colspan="2">&nbsp;</td></tr>
+
+        <tr>
+            <td>Paid in Capital</td>
+            <td>
+                <ix:nonFraction name="mini:PaidInCapital" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
+                    13215.4
+                </ix:nonFraction>
+            </td>
+        </tr>
+        <tr>
+            <td>Retained Earnings</td>
+            <td>
+                <ix:nonFraction name="mini:RetainedEarnings" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
+                    -8121.959999999992
+                </ix:nonFraction>
+            </td>
+        </tr>
+        <tr class="total-row">
+            <td>Total Equity</td>
+            <td>
+                <ix:nonFraction name="mini:Equity" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
+                    5093.440000000008
+                </ix:nonFraction>
+            </td>
+        </tr>
+        <tr class="total-row" style="border-bottom: 3px double black;">
+            <td>TOTAL LIABILITIES & EQUITY</td>
+            <td>
+                <ix:nonFraction name="mini:LiabilitiesAndEquity" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
+                    27348.44000000001
+                </ix:nonFraction>
+            </td>
+        </tr>
+    </table>
+
+    <h1>Statement of Comprehensive Income</h1>
+    <table>
+        <tr class="header-row"><td colspan="2">PROFIT AND LOSS</td></tr>
+        <tr>
+            <td>Sales / Revenues</td>
+            <td>
+                <ix:nonFraction name="mini:Sales" contextRef="ctx-duration" unitRef="unit-aud" decimals="2">
+                    38740.90000000001
+                </ix:nonFraction>
+            </td>
+        </tr>
+        <tr>
+            <td>Cost of Goods Sold</td>
+            <td>
+                <ix:nonFraction name="mini:CostOfGoodsSold" contextRef="ctx-duration" unitRef="unit-aud" decimals="2">
+                    0.0
+                </ix:nonFraction>
+            </td>
+        </tr>
+        <tr>
+            <td>Operating Expenses</td>
+            <td>
+                <ix:nonFraction name="mini:OperatingExpenses" contextRef="ctx-duration" unitRef="unit-aud" decimals="2">
+                    57053.46
+                </ix:nonFraction>
+            </td>
+        </tr>
+        <tr class="total-row">
+            <td>NET INCOME (LOSS)</td>
+            <td>
+                <ix:nonFraction name="mini:NetIncomeLoss" contextRef="ctx-duration" unitRef="unit-aud" decimals="2">
+                    -18312.55999999999
+                </ix:nonFraction>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
