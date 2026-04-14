@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quickstart | ClawDog Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        lodgeit: { blue: '#0066FF', light: '#4D94FF', dark: '#004CCC', glow: 'rgba(0, 102, 255, 0.5)' },
+                        obsidian: '#0a0f1a',
+                        slate: { 850: '#151e2e', 950: '#0b1120', }
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'], },
+                    boxShadow: { 'neon': '0 0 20px rgba(0, 102, 255, 0.4)', }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0a0f1a; color: #e2e8f0; }
+        .gradient-text { background: linear-gradient(to right, #ffffff, #4D94FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .node-bg { background-image: radial-gradient(rgba(0, 102, 255, 0.1) 1px, transparent 1px); background-size: 40px 40px; }
+    </style>
+</head>
+<body class="font-sans antialiased node-bg selection:bg-lodgeit-blue selection:text-white flex flex-col min-h-screen">
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-obsidian/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <a href="index.html" class="flex items-center space-x-2">
+                    <img src="assets/lodgeit-logo.png" alt="LodgeiT" class="h-8 w-auto">
+                </a>
+            </div>
+            <nav class="hidden md:flex space-x-8 text-sm font-medium text-slate-400">
+                <a href="index.html" class="hover:text-white transition">Home</a>
+                <a href="quickstart.html" class="text-white transition">Documentation</a>
+                <a href="https://github.com/lodgeit-labs/clawdog" target="_blank" class="hover:text-white transition">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow pt-20 pb-24">
+        <div class="max-w-4xl mx-auto px-6">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-6 gradient-text">ClawDog Quickstart</h1>
+            <p class="text-xl text-slate-400 mb-12">The easiest way to run the ClawDog neurosemantic pipeline is via MyClaw. No local installation or terminal required.</p>
+            
+            <div class="bg-slate-900/50 border border-slate-800 rounded-2xl p-8 mb-12 shadow-xl">
+                <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+                    <span class="bg-lodgeit-blue text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">1</span>
+                    Zero-Setup Execution
+                </h2>
+                <p class="text-slate-400 mb-6">Since MyClaw is an autonomous agent running in its own pre-configured Ubuntu environment (which already has Python and SWI-Prolog installed), you can just talk to it. Paste this "Magic Prompt" into your MyClaw chat:</p>
+                
+                <div class="relative bg-obsidian border border-slate-700 rounded-xl p-6 font-mono text-sm text-slate-300 shadow-inner mb-6">
+                    <p class="leading-relaxed">"Hey MyClaw, please clone <span class="text-lodgeit-light">https://github.com/lodgeit-labs/clawdog</span>, install the dependencies from <span class="text-lodgeit-light">requirements.txt</span>, and run <span class="text-lodgeit-light">pipeline.py</span>. Tell me when the thermodynamic audit is complete and what files were generated."</p>
+                </div>
+                
+                <h3 class="text-lg font-semibold text-white mb-3">What happens next?</h3>
+                <ul class="space-y-3 text-slate-400">
+                    <li class="flex items-start"><svg class="w-5 h-5 text-lodgeit-light mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>MyClaw will automatically run <code class="bg-slate-800 px-1.5 py-0.5 rounded text-xs">git clone</code>, execute <code class="bg-slate-800 px-1.5 py-0.5 rounded text-xs">pip install -r requirements.txt</code>, and run the pipeline.</li>
+                    <li class="flex items-start"><svg class="w-5 h-5 text-lodgeit-light mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>It will validate the sample trial balances using the Prolog physics engine.</li>
+                    <li class="flex items-start"><svg class="w-5 h-5 text-lodgeit-light mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>It will report back to you when the JSON-LD and iXBRL outputs are ready in the <code class="bg-slate-800 px-1.5 py-0.5 rounded text-xs">outputs/</code> folder.</li>
+                </ul>
+            </div>
+            
+            <div class="bg-slate-900/50 border border-slate-800 rounded-2xl p-8 shadow-xl">
+                <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+                    <span class="bg-lodgeit-blue text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">2</span>
+                    Map Your Own Data
+                </h2>
+                <p class="text-slate-400 mb-6">Once the initial run is complete, the engine is ready. You can simply ask MyClaw to map a new CSV for you.</p>
+                <div class="relative bg-obsidian border border-slate-700 rounded-xl p-6 font-mono text-sm text-slate-300 shadow-inner">
+                    <p class="leading-relaxed">"I have a new trial balance CSV. Can you map the accounts using the heuristic mapper and run it through the ClawDog pipeline for me?"</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-obsidian py-12 mt-auto">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+            <div class="mb-6 md:mb-0">
+                <div class="flex items-center justify-center md:justify-start space-x-2 mb-2">
+                    <img src="assets/lodgeit-logo.png" alt="LodgeiT" class="h-6 w-auto opacity-75">
+                </div>
+                <p class="text-slate-500 text-sm max-w-md">Built for the OpenClaw ecosystem. Ready to be expanded with jurisdictional taxonomies via AgentSkills.</p>
+            </div>
+            <div class="flex space-x-6">
+                <a href="quickstart.html" class="text-sm font-medium text-white transition">Documentation</a>
+                <a href="https://github.com/lodgeit-labs/clawdog" target="_blank" class="text-sm font-medium text-slate-400 hover:text-white transition">GitHub Source</a>
+                <a href="https://lodgeit.net.au" target="_blank" class="text-sm font-medium text-slate-400 hover:text-white transition">LodgeiT.net.au</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
