@@ -1,0 +1,120 @@
+Transaction_ID,Date,Account_Name,Description,Amount
+1000,2024-07-01,CBA Business Account,Opening Balance,100.0
+1000,2024-07-01,Owner's Equity,Opening Balance,-100.0
+1001,2024-07-05,Rent Expense,Monthly Office Rent,1000.0
+1001,2024-07-05,GST Paid,Monthly Office Rent,100.0
+1001,2024-07-05,CBA Business Account,Monthly Office Rent,-1100.0
+1024,2024-07-13,CBA Business Account,Client Payment,2145.94
+1024,2024-07-13,Sales Revenue,Client Payment,-1950.86
+1024,2024-07-13,GST Collected,Client Payment,-195.09
+1019,2024-07-14,Office Supplies,Stationery & Supplies,180.4
+1019,2024-07-14,GST Paid,Stationery & Supplies,18.04
+1019,2024-07-14,CBA Business Account,Stationery & Supplies,-198.43
+1013,2024-07-15,Wages & Salaries,Fortnightly Payroll,3061.25
+1013,2024-07-15,PAYG Withholding Payable,Fortnightly Payroll,-612.25
+1013,2024-07-15,CBA Business Account,Fortnightly Payroll,-2449.0
+1025,2024-07-16,CBA Business Account,Client Payment,3790.48
+1025,2024-07-16,Sales Revenue,Client Payment,-3445.89
+1025,2024-07-16,GST Collected,Client Payment,-344.59
+1026,2024-07-17,CBA Business Account,Client Payment,1806.63
+1026,2024-07-17,Sales Revenue,Client Payment,-1642.39
+1026,2024-07-17,GST Collected,Client Payment,-164.24
+1002,2024-08-05,Rent Expense,Monthly Office Rent,1000.0
+1002,2024-08-05,GST Paid,Monthly Office Rent,100.0
+1002,2024-08-05,CBA Business Account,Monthly Office Rent,-1100.0
+1027,2024-08-14,CBA Business Account,Client Payment,2639.78
+1027,2024-08-14,Sales Revenue,Client Payment,-2399.8
+1027,2024-08-14,GST Collected,Client Payment,-239.98
+1014,2024-08-15,Wages & Salaries,Fortnightly Payroll,3216.02
+1014,2024-08-15,PAYG Withholding Payable,Fortnightly Payroll,-643.2
+1014,2024-08-15,CBA Business Account,Fortnightly Payroll,-2572.82
+1028,2024-08-17,CBA Business Account,Client Payment,2576.94
+1028,2024-08-17,Sales Revenue,Client Payment,-2342.67
+1028,2024-08-17,GST Collected,Client Payment,-234.27
+1029,2024-08-22,CBA Business Account,Client Payment,2531.87
+1029,2024-08-22,Sales Revenue,Client Payment,-2301.7
+1029,2024-08-22,GST Collected,Client Payment,-230.17
+1030,2024-08-27,CBA Business Account,Client Payment,2293.56
+1030,2024-08-27,Sales Revenue,Client Payment,-2085.06
+1030,2024-08-27,GST Collected,Client Payment,-208.51
+1003,2024-09-05,Rent Expense,Monthly Office Rent,1000.0
+1003,2024-09-05,GST Paid,Monthly Office Rent,100.0
+1003,2024-09-05,CBA Business Account,Monthly Office Rent,-1100.0
+1031,2024-09-10,CBA Business Account,Client Payment,1630.35
+1031,2024-09-10,Sales Revenue,Client Payment,-1482.14
+1031,2024-09-10,GST Collected,Client Payment,-148.21
+1015,2024-09-15,Wages & Salaries,Fortnightly Payroll,3201.32
+1015,2024-09-15,PAYG Withholding Payable,Fortnightly Payroll,-640.26
+1015,2024-09-15,CBA Business Account,Fortnightly Payroll,-2561.06
+1004,2024-10-05,Rent Expense,Monthly Office Rent,1000.0
+1004,2024-10-05,GST Paid,Monthly Office Rent,100.0
+1004,2024-10-05,CBA Business Account,Monthly Office Rent,-1100.0
+1016,2024-10-15,Wages & Salaries,Fortnightly Payroll,2919.52
+1016,2024-10-15,PAYG Withholding Payable,Fortnightly Payroll,-583.9
+1016,2024-10-15,CBA Business Account,Fortnightly Payroll,-2335.62
+1020,2024-10-20,Office Supplies,Stationery & Supplies,163.82
+1020,2024-10-20,GST Paid,Stationery & Supplies,16.38
+1020,2024-10-20,CBA Business Account,Stationery & Supplies,-180.2
+1032,2024-10-23,CBA Business Account,Client Payment,2878.27
+1032,2024-10-23,Sales Revenue,Client Payment,-2616.61
+1032,2024-10-23,GST Collected,Client Payment,-261.66
+1021,2024-10-28,Office Supplies,Stationery & Supplies,73.95
+1021,2024-10-28,GST Paid,Stationery & Supplies,7.39
+1021,2024-10-28,CBA Business Account,Stationery & Supplies,-81.34
+1033,2024-11-03,CBA Business Account,Client Payment,1874.48
+1033,2024-11-03,Sales Revenue,Client Payment,-1704.07
+1033,2024-11-03,GST Collected,Client Payment,-170.41
+1005,2024-11-05,Rent Expense,Monthly Office Rent,1000.0
+1005,2024-11-05,GST Paid,Monthly Office Rent,100.0
+1005,2024-11-05,CBA Business Account,Monthly Office Rent,-1100.0
+1017,2024-11-15,Wages & Salaries,Fortnightly Payroll,2949.21
+1017,2024-11-15,PAYG Withholding Payable,Fortnightly Payroll,-589.84
+1017,2024-11-15,CBA Business Account,Fortnightly Payroll,-2359.37
+1034,2024-11-18,CBA Business Account,Client Payment,4266.89
+1034,2024-11-18,Sales Revenue,Client Payment,-3878.99
+1034,2024-11-18,GST Collected,Client Payment,-387.9
+1006,2024-12-05,Rent Expense,Monthly Office Rent,1000.0
+1006,2024-12-05,GST Paid,Monthly Office Rent,100.0
+1006,2024-12-05,CBA Business Account,Monthly Office Rent,-1100.0
+1018,2024-12-15,Wages & Salaries,Fortnightly Payroll,2778.19
+1018,2024-12-15,PAYG Withholding Payable,Fortnightly Payroll,-555.64
+1018,2024-12-15,CBA Business Account,Fortnightly Payroll,-2222.55
+1007,2025-01-05,Rent Expense,Monthly Office Rent,1000.0
+1007,2025-01-05,GST Paid,Monthly Office Rent,100.0
+1007,2025-01-05,CBA Business Account,Monthly Office Rent,-1100.0
+1035,2025-02-02,CBA Business Account,Client Payment,1736.4
+1035,2025-02-02,Sales Revenue,Client Payment,-1578.55
+1035,2025-02-02,GST Collected,Client Payment,-157.85
+1008,2025-02-05,Rent Expense,Monthly Office Rent,1000.0
+1008,2025-02-05,GST Paid,Monthly Office Rent,100.0
+1008,2025-02-05,CBA Business Account,Monthly Office Rent,-1100.0
+1009,2025-03-05,Rent Expense,Monthly Office Rent,1000.0
+1009,2025-03-05,GST Paid,Monthly Office Rent,100.0
+1009,2025-03-05,CBA Business Account,Monthly Office Rent,-1100.0
+1022,2025-03-16,Office Supplies,Stationery & Supplies,113.39
+1022,2025-03-16,GST Paid,Stationery & Supplies,11.34
+1022,2025-03-16,CBA Business Account,Stationery & Supplies,-124.73
+1010,2025-04-05,Rent Expense,Monthly Office Rent,1000.0
+1010,2025-04-05,GST Paid,Monthly Office Rent,100.0
+1010,2025-04-05,CBA Business Account,Monthly Office Rent,-1100.0
+1036,2025-04-06,CBA Business Account,Client Payment,2379.53
+1036,2025-04-06,Sales Revenue,Client Payment,-2163.21
+1036,2025-04-06,GST Collected,Client Payment,-216.32
+1037,2025-04-29,CBA Business Account,Client Payment,3385.92
+1037,2025-04-29,Sales Revenue,Client Payment,-3078.11
+1037,2025-04-29,GST Collected,Client Payment,-307.81
+1011,2025-05-05,Rent Expense,Monthly Office Rent,1000.0
+1011,2025-05-05,GST Paid,Monthly Office Rent,100.0
+1011,2025-05-05,CBA Business Account,Monthly Office Rent,-1100.0
+1023,2025-05-05,Office Supplies,Stationery & Supplies,91.68
+1023,2025-05-05,GST Paid,Stationery & Supplies,9.17
+1023,2025-05-05,CBA Business Account,Stationery & Supplies,-100.85
+1038,2025-05-24,CBA Business Account,Client Payment,4156.36
+1038,2025-05-24,Sales Revenue,Client Payment,-3778.5
+1038,2025-05-24,GST Collected,Client Payment,-377.85
+1012,2025-06-05,Rent Expense,Monthly Office Rent,1000.0
+1012,2025-06-05,GST Paid,Monthly Office Rent,100.0
+1012,2025-06-05,CBA Business Account,Monthly Office Rent,-1100.0
+1039,2025-06-12,CBA Business Account,Client Payment,2584.91
+1039,2025-06-12,Sales Revenue,Client Payment,-2349.91
+1039,2025-06-12,GST Collected,Client Payment,-234.99
