@@ -26,3 +26,7 @@ When you run `pipeline.py`:
 3. **Prolog Engine:** It loads `engine/rules.pl` and evaluates all equations to ensure total mathematical integrity.
 4. **Audit:** It runs the Thermodynamic Safeguard (Assets = Liabilities + Equity).
 5. **Output:** It drops the fully audited `.json` and `_ixbrl.html` files into the `outputs/` folder.
+
+## Acknowledgments
+
+ClawDog's neurosemantic architecture is deeply indebted to the pioneering work of **Charles Hoffman, CPA**. The core logic engine and taxonomy structure adopted in this project are built directly upon Hoffman's **Seattle Method** and his foundational **Standard Business Reporting Model (SBRM)** taxonomy. We recognize and appreciate his massive contributions to the digitalization, logical structuring, and mathematical formalization of financial reporting.
