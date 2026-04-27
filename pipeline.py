@@ -1,12 +1,10 @@
-import sys
 import os
 import glob
 import pandas as pd
 from jinja2 import Template
 from pyswip import Prolog
 
-sys.path.append(os.path.abspath('/home/ubuntu/.openclaw/workspace'))
-from test_all_mini import map_account_to_mini
+from engine.heuristic_mapper import map_account_to_mini
 
 def calculate_cashflow_and_equity(csv_file, net_income):
     """
