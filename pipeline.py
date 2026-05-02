@@ -1,6 +1,7 @@
 import os
 import glob
 import pandas as pd
+import yaml
 from jinja2 import Template
 from pyswip import Prolog
 
@@ -330,36 +331,140 @@ def generate_sbrm_jsonld(csv_file):
         "Accounts": final_accounts
     }
 
+# ---------------------------------------------------------------------------
+# S2: Multi-currency consolidated ingestion
+#
+# A group manifest (YAML) describes a parent + N subsidiaries, each with their
+# own ledger CSV in their own functional currency. The consolidator reads each
+# member ledger, FX-translates any non-reporting-currency rows, and synthesises
+# a single in-memory consolidated CSV that the existing audit pipeline can
+# process unchanged.
+#
+# CSV schema extension: an optional `Currency` column. Legacy ledgers without
+# the column are treated as the manifest's reporting currency (default AUD).
+# Each entity's books must self-balance in their own functional currency before
+# consolidation — the consolidator does not validate that, the per-entity audit
+# implicitly does (assuming you also run the entity's CSV directly).
+# ---------------------------------------------------------------------------
+
+def _load_fx_rates(fx_csv_path):
+    """Read fx_rates.csv and return {(src, tgt, period): rate}."""
+    rates = {}
+    if not os.path.exists(fx_csv_path):
+        return rates
+    df = pd.read_csv(fx_csv_path)
+    for _, row in df.iterrows():
+        rates[(row['Source'], row['Target'], row['Period'])] = float(row['Rate'])
+    return rates
+
+def consolidate_group(manifest_path):
+    """Read a group manifest, translate each member's ledger into the group's
+    reporting currency, and write a single consolidated CSV to outputs/.
+    Returns (consolidated_csv_path, group_name, reporting_currency).
+    """
+    with open(manifest_path) as f:
+        manifest = yaml.safe_load(f)
+
+    group_name = manifest['group_name']
+    reporting_ccy = manifest['reporting_currency']
+    period = manifest.get('period', 'FY25')
+    ledgers_dir = os.path.dirname(manifest_path)
+
+    fx_path = os.path.join(ledgers_dir, manifest.get('fx_rate_source', 'fx_rates.csv'))
+    fx = _load_fx_rates(fx_path)
+
+    members = [manifest['parent']] + manifest.get('subsidiaries', [])
+    consolidated_rows = []
+
+    for member in members:
+        member_csv = os.path.join(ledgers_dir, member['file'])
+        functional_ccy = member['functional_currency']
+        df = pd.read_csv(member_csv)
+        for _, row in df.iterrows():
+            row_ccy = row.get('Currency', functional_ccy)
+            if pd.isna(row_ccy):
+                row_ccy = functional_ccy
+            amount = float(row['Amount'])
+            if row_ccy == reporting_ccy:
+                translated = amount
+            else:
+                key = (row_ccy, reporting_ccy, period)
+                if key not in fx:
+                    raise ValueError(
+                        f"FX rate missing for {row_ccy} -> {reporting_ccy} @ {period} "
+                        f"(needed for {member_csv}). Add row to {fx_path}.")
+                translated = amount * fx[key]
+            consolidated_rows.append({
+                'Transaction_ID': f"{member.get('name', os.path.basename(member_csv))[:6]}-{row['Transaction_ID']}",
+                'Date': row['Date'],
+                'Account_Name': row['Account_Name'],
+                'Description': f"[{row_ccy}->{reporting_ccy}] {row['Description']}" if row_ccy != reporting_ccy else row['Description'],
+                'Amount': round(translated, 2),
+                'Currency': reporting_ccy,
+            })
+
+    consolidated_df = pd.DataFrame(consolidated_rows)
+    os.makedirs('outputs', exist_ok=True)
+    out_path = os.path.join('outputs', f"{group_name}_consolidated_{period}.csv")
+    consolidated_df.to_csv(out_path, index=False)
+    return out_path, group_name, reporting_ccy
+
 def run_all_ledgers():
     print("===========================================================================")
     print(" 🚀 RUNNING FULL 7-POINT THERMODYNAMIC SAFEGUARD AGAINST ALL GLs")
     print("    (Points 1-6: Python; Point 7: engine/consolidation.pl shadow-check)")
     print("===========================================================================\n")
-    
-    gl_files = sorted(glob.glob('data/sample_ledgers/*.csv'))
-    gl_files = [f for f in gl_files if 'Div7A' not in f and 'HP_Standard' not in f]
-    
+
+    # Discover legacy single-entity CSVs and multi-entity group manifests.
+    csv_files = sorted(glob.glob('data/sample_ledgers/*.csv'))
+    csv_files = [f for f in csv_files
+                 if 'Div7A' not in f
+                 and 'HP_Standard' not in f
+                 and not f.endswith('fx_rates.csv')
+                 and 'GL_06_Acme_AU_Pty_Ltd' not in f       # Member of GL_06 group
+                 and 'GL_06_Acme_UK_Ltd' not in f]          # (rendered via manifest)
+    manifest_files = sorted(glob.glob('data/sample_ledgers/*_consolidated.yaml'))
+
     success_count = 0
     fail_count = 0
 
-    for csv_file in gl_files:
+    # --- Legacy single-entity ledgers ---
+    for csv_file in csv_files:
         client_name = os.path.basename(csv_file).replace('.csv', '')
-        
-        # --- SAFEGUARD: Prevent Massive Ledgers ---
         df_check = pd.read_csv(csv_file)
         if len(df_check) > 250:
             print(f"⚠️ [{client_name}] BLOCKED: Dataset too large ({len(df_check)} rows). Capped at 250 rows until semantic routing is integrated.")
             fail_count += 1
             continue
-        # ------------------------------------------
 
         json_ld = generate_sbrm_jsonld(csv_file)
-        
         if pre_flight_audit(json_ld['Accounts'], csv_file, client_name):
             success_count += 1
         else:
             fail_count += 1
-            
+
+    # --- Group manifests (S2: multi-currency consolidation) ---
+    for manifest_file in manifest_files:
+        try:
+            consolidated_csv, group_name, _ = consolidate_group(manifest_file)
+            print(f"🌐 [{group_name}] Consolidated -> {consolidated_csv}")
+        except Exception as e:
+            print(f"❌ [{os.path.basename(manifest_file)}] Consolidation failed: {e}")
+            fail_count += 1
+            continue
+
+        df_check = pd.read_csv(consolidated_csv)
+        if len(df_check) > 250:
+            print(f"⚠️ [{group_name}] BLOCKED: Consolidated dataset too large ({len(df_check)} rows).")
+            fail_count += 1
+            continue
+
+        json_ld = generate_sbrm_jsonld(consolidated_csv)
+        if pre_flight_audit(json_ld['Accounts'], consolidated_csv, group_name):
+            success_count += 1
+        else:
+            fail_count += 1
+
     print("\n===========================================================================")
     print(f" PIPELINE COMPLETE | ✅ {success_count} Passed | ❌ {fail_count} Aborted")
     print("===========================================================================")

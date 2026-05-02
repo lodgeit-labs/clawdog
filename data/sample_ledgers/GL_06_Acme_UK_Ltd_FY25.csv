@@ -1,0 +1,13 @@
+Transaction_ID,Date,Account_Name,Description,Amount,Currency
+8000,2024-07-01,Lloyds Business GBP,Opening Balance,30000.00,GBP
+8000,2024-07-01,Trade Receivables,Opening Balance,5000.00,GBP
+8000,2024-07-01,Share Capital - Ordinary,Opening Balance,-25000.00,GBP
+8000,2024-07-01,Retained Earnings,Opening Balance,-10000.00,GBP
+8001,2024-12-15,Lloyds Business GBP,Q2 services billed,20000.00,GBP
+8001,2024-12-15,Service Revenue,Q2 services revenue,-20000.00,GBP
+8002,2025-05-20,Lloyds Business GBP,Q4 services billed,15000.00,GBP
+8002,2025-05-20,Service Revenue,Q4 services revenue,-15000.00,GBP
+8003,2025-06-30,Office Rent,FY25 London office rent,10000.00,GBP
+8003,2025-06-30,Lloyds Business GBP,FY25 rent payment,-10000.00,GBP
+8004,2025-06-30,Wages & Salaries,FY25 staff wages,15000.00,GBP
+8004,2025-06-30,Lloyds Business GBP,FY25 staff wages payment,-15000.00,GBP

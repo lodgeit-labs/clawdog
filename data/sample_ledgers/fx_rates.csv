@@ -1,0 +1,2 @@
+Source,Target,Period,Rate,Note
+GBP,AUD,FY25,1.92,"Illustrative spot rate for FY25 demo. Real-world rates vary; production should use a properly-sourced rate (RBA, Bank of England, or third-party feed)."
