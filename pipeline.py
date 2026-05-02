@@ -10,76 +10,65 @@ from engine.heuristic_mapper import map_account_to_mini
 
 
 # ---------------------------------------------------------------------------
-# S1: Prolog shadow-verification of the equity roll-forward (Point #6).
+# S3: Prolog audit lift — points 1–4 + 6 of the legacy 6-Point Thermodynamic
+# Safeguard now live in engine/audit.pl. This Python module is a thin shim
+# that derives the audit facts (from the JSON-LD accounts dict and per-row
+# CSV equity-rollforward parsing), injects them into the shared
+# sbrm_consolidation:sbrm_fact/6 multifile predicate, and queries
+# sbrm_audit:audit_all/3 for the structured failure list.
 #
-# The legacy 6-Point Thermodynamic Safeguard implements equity roll-forward in
-# Python (`calculate_cashflow_and_equity` below). engine/consolidation.pl now
-# implements the same equation in Prolog with stricter determinism guarantees
-# (no silent zero, unique-FX-rate enforcement, epsilon-tolerant equality).
+# Point 5 (cashflow transaction-flow analysis) stays in Python because the
+# current sbrm_fact/6 schema is balance-snapshot-oriented; lifting it would
+# require a separate transaction-fact schema (out of S3's scope, marked TODO).
 #
-# This helper runs the Prolog version *alongside* the Python check and surfaces
-# any disagreement as a Point #7 FATAL. In mono-currency mode (TargetCurrency =
-# entity reporting currency, identity FX) the two implementations should agree
-# exactly. Disagreement points at a real bug in either layer.
+# What this lift removes:
+#   * The four duplicated arithmetic invariants (points 1–4) previously
+#     hand-coded in pre_flight_audit — source of truth is now Prolog.
+#   * The S1 Point 7 Prolog/Python shadow-verifier on equity roll-forward.
+#     Once point 6 IS Prolog (here), the shadow disappears: there is only
+#     one source of truth, no second to disagree with.
+#   * verify_equity_via_prolog and the S1 _CONSOLIDATION_LOADED gate — their
+#     job is now done by the audit shim's _ensure_audit_loaded gate.
 #
 # Brain canon: GLOBAL_NOTES/CLAWDOG/107_CONSOLIDATION_LOGIC.md
-# Engine:      engine/consolidation.pl
+# Engine:      engine/audit.pl (consults engine/consolidation.pl for the
+#              shared sbrm_fact/6 schema).
 # ---------------------------------------------------------------------------
 
-_CONSOLIDATION_LOADED = False
+_AUDIT_LOADED = False
 
-def _ensure_consolidation_loaded(prolog):
-    """Consult engine/consolidation.pl into the shared Prolog database once."""
-    global _CONSOLIDATION_LOADED
-    if not _CONSOLIDATION_LOADED:
-        prolog.consult('engine/consolidation.pl')
-        _CONSOLIDATION_LOADED = True
+def _ensure_audit_loaded(prolog):
+    """Consult engine/audit.pl (which transitively consults engine/
+    consolidation.pl for the shared multifile sbrm_fact/6 predicate) into
+    the Prolog database once. Subsequent pyswip Prolog() instances share
+    the same database, so a single load suffices for the process."""
+    global _AUDIT_LOADED
+    if not _AUDIT_LOADED:
+        prolog.consult('engine/audit.pl')
+        _AUDIT_LOADED = True
 
-def verify_equity_via_prolog(opening_equity, profit_plus_capital, dividends_paid,
-                             closing_equity, currency='AUD',
-                             opening_period='OPENING', action_period='ACTION',
-                             closing_period='CLOSING', entity='client'):
-    """Run engine/consolidation.pl::verify_temporal_equity/5 over the four
-    equity-roll-forward inputs and return (balanced, expected_closing).
+_AUDIT_FAILURE_RE = re.compile(
+    r'fail\(\s*point\((\d+)\)\s*,\s*([a-z_]+)\s*,\s*\[(.*?)\]\s*\)')
 
-    `balanced` is True iff:
-        opening_equity + profit_plus_capital - dividends_paid == closing_equity
-    within engine/consolidation.pl's fx_epsilon tolerance (1e-6).
-
-    Note: the legacy Python equation conflates capital injections with net
-    income into a single "profit" term. We feed that conflation as-is into
-    sbr:NetProfit so the two layers compute over identical inputs. Breaking
-    out capital injections as a separate fact-stream is a future sprint.
-    """
-    prolog = Prolog()
-    _ensure_consolidation_loaded(prolog)
-
-    # Clean any prior asserts in the consolidation namespace for this entity.
-    list(prolog.query(
-        f"retractall(sbrm_consolidation:sbrm_fact('{entity}',_,_,_,_,_))"))
-
-    # Inject the four roll-forward facts. Currency is identity (AUD->AUD) in
-    # mono-currency mode; no fx_rate facts needed because convert_value/5
-    # short-circuits on identity.
-    facts = [
-        (opening_period, 'sbr:OpeningEquity',  float(opening_equity)),
-        (action_period,  'sbr:NetProfit',      float(profit_plus_capital)),
-        (action_period,  'sbr:DividendsPaid',  float(dividends_paid)),
-        (closing_period, 'sbr:ClosingEquity',  float(closing_equity)),
-    ]
-    for period, concept, value in facts:
-        list(prolog.query(
-            f"assertz(sbrm_consolidation:sbrm_fact('{entity}','{period}',"
-            f"'{concept}',{value},'{currency}','Leaf'))"))
-
-    # Run the verifier.
-    query = (f"sbrm_consolidation:verify_temporal_equity('{entity}',"
-             f"'{opening_period}','{action_period}','{closing_period}',"
-             f"'{currency}')")
-    balanced = bool(list(prolog.query(query)))
-
-    expected_closing = opening_equity + profit_plus_capital - dividends_paid
-    return balanced, expected_closing
+def _format_audit_failure(term_string):
+    """Pretty-print one fail(point(N), Reason, Details) term emitted by
+    engine/audit.pl::audit_all/3 for inclusion in the audit error list."""
+    m = _AUDIT_FAILURE_RE.match(term_string)
+    if not m:
+        # Defensive: pyswip marshalling shape changed; surface raw term
+        # rather than silently formatting it as something else.
+        return f"FATAL (audit): unparseable failure term {term_string!r}"
+    point, reason, details = m.groups()
+    label_map = {
+        'tensegrity':           'Balance Sheet Tensegrity Failed',
+        'asset_rollup':         'Asset Rollup Failed',
+        'liab_equity_rollup':   'Liab & Eq Rollup Failed',
+        'pl_net_income':        'P&L Math Failed',
+        'equity_rollforward':   'Equity Rollforward Failed',
+        'missing_fact':         'Required audit fact missing',
+    }
+    label = label_map.get(reason, reason)
+    return f"FATAL ({point}): {label}. {details}"
 
 def calculate_cashflow_and_equity(csv_file, net_income):
     """
@@ -143,112 +132,152 @@ def calculate_cashflow_and_equity(csv_file, net_income):
     
     return calculated_cash, calculated_equity
 
+def _derive_equity_rollforward_scalars(csv_file):
+    """Re-parse the raw CSV to extract the three scalars needed for the
+    equity roll-forward audit point: opening equity, capital injections,
+    and dividends paid. NetIncome is sourced separately from the JSON-LD
+    accounts dict; closing equity is mini_Equity from the same source.
+
+    This function exists because the JSON-LD layer aggregates equity into
+    a single closing balance; the rollforward components are only
+    distinguishable at the per-row level via Description/Account_Name
+    heuristics. A future schema cleanup could push these into the
+    JSON-LD layer directly; until then, the audit shim re-parses.
+    """
+    df = pd.read_csv(csv_file)
+    opening_eq = 0.0
+    cap_inj = 0.0
+    divs = 0.0
+    for _, row in df.iterrows():
+        uri = map_account_to_mini(row['Account_Name'])
+        amt = float(row['Amount'])
+        if uri == 'mini_PaidInCapital':
+            if 'Opening' in str(row['Description']):
+                opening_eq += -amt
+            else:
+                cap_inj += -amt
+        elif uri == 'mini_RetainedEarnings':
+            if 'Opening' in str(row['Description']):
+                opening_eq += -amt
+            elif 'Dividend' in str(row['Account_Name']) or 'Drawings' in str(row['Account_Name']):
+                divs += amt
+    return opening_eq, cap_inj, divs
+
+def _run_prolog_audit(accounts, csv_file, client_name,
+                     entity='client', period='current'):
+    """Inject the audit facts derived from `accounts` and `csv_file` into
+    sbrm_consolidation:sbrm_fact/6, then query sbrm_audit:audit_all/3 and
+    return the formatted failure-message list (empty list on clean pass).
+
+    Standing Rule #3 alignment: Python defaults `accounts.get(..., 0.0)`
+    are preserved here for the mini_* concepts because the legacy
+    pipeline already projected JSON-LD nulls as zeros at the json_ld
+    layer. The audit lift is faithful to that legacy semantic; tightening
+    to no-silent-zero at the mini layer is a separate sprint (would
+    require json_ld emission to fail loudly on missing concepts too).
+    """
+    prolog = Prolog()
+    _ensure_audit_loaded(prolog)
+
+    # Use a per-client entity atom so concurrent ledgers can coexist in
+    # the shared Prolog database without leakage. Sanitise to atoms.
+    entity_atom = re.sub(r'[^A-Za-z0-9_]', '_', client_name)
+
+    # Clean any prior asserts in the consolidation namespace for this
+    # entity (idempotent across multiple ledgers in one process).
+    list(prolog.query(
+        f"retractall(sbrm_consolidation:sbrm_fact('{entity_atom}',_,_,_,_,_))"))
+
+    # Project mini_* accounts into facts. Concepts the audit predicates
+    # consume are listed explicitly so unrelated noise in the JSON-LD
+    # dict doesn't pollute the audit fact base.
+    audit_concepts = [
+        'mini_Assets', 'mini_CurrentAssets', 'mini_NoncurrentAssets',
+        'mini_LiabilitiesAndEquity', 'mini_Liabilities', 'mini_Equity',
+        'mini_Sales', 'mini_CostOfGoodsSold', 'mini_OperatingExpenses',
+        'mini_NonoperatingIncomeExpense', 'mini_NetIncomeLoss',
+    ]
+    for concept in audit_concepts:
+        if concept not in accounts:
+            # Match legacy Python semantic: mini_* missing → treat as 0.0.
+            # (See Standing-Rule-#3 note in the function docstring.)
+            value = 0.0
+        else:
+            value = float(accounts[concept])
+        list(prolog.query(
+            f"assertz(sbrm_consolidation:sbrm_fact('{entity_atom}',"
+            f"'{period}','{concept}',{value},'AUD','Leaf'))"))
+
+    # Equity-rollforward scalars derived from the CSV. These are the
+    # audit_* concepts (deliberately distinct from mini_* to make it
+    # explicit they are audit-only inputs, not part of the public mini
+    # ontology surface).
+    opening_eq, cap_inj, divs = _derive_equity_rollforward_scalars(csv_file)
+    rollforward_facts = [
+        ('audit_OpeningEquity',     opening_eq),
+        ('audit_CapitalInjections', cap_inj),
+        ('audit_DividendsPaid',     divs),
+    ]
+    for concept, value in rollforward_facts:
+        list(prolog.query(
+            f"assertz(sbrm_consolidation:sbrm_fact('{entity_atom}',"
+            f"'{period}','{concept}',{float(value)},'AUD','Leaf'))"))
+
+    # Run the aggregator. audit_all/3 binds Failures to a (possibly empty)
+    # list of fail(point(N), Reason, Details) terms.
+    query = f"sbrm_audit:audit_all('{entity_atom}','{period}',Failures)"
+    results = list(prolog.query(query))
+    if not results:
+        # Should never happen — audit_all/3 always succeeds with at least
+        # an empty Failures list. Surface explicitly rather than silently.
+        return ["FATAL (audit): sbrm_audit:audit_all/3 returned no solution"]
+    failures = results[0]['Failures']
+    return [_format_audit_failure(term) for term in failures]
+
 def pre_flight_audit(accounts, csv_file, client_name):
     """
-    THE 6-POINT STRICT SBRM THERMODYNAMIC SAFEGUARD
+    THE 6-POINT STRICT SBRM THERMODYNAMIC SAFEGUARD (S3 Prolog-lifted form).
+
+    Points 1–4 + 6 are now Prolog rules in engine/audit.pl, queried via
+    _run_prolog_audit. Point 5 (cashflow transaction-flow) stays in Python
+    pending a transaction-fact schema (TODO in this function).
     """
     errors = []
-    
-    # 1. The Tensegrity Proof
-    assets = accounts.get('mini_Assets', 0.0)
-    lia_eq = accounts.get('mini_LiabilitiesAndEquity', 0.0)
-    if abs(assets - lia_eq) > 0.01:
-        errors.append(f"FATAL (1): Balance Sheet Tensegrity Failed. Assets: {assets:,.2f} | Liab & Eq: {lia_eq:,.2f}")
 
-    # 2. Asset Rollup Integrity
-    current_assets = accounts.get('mini_CurrentAssets', 0.0)
-    non_current_assets = accounts.get('mini_NoncurrentAssets', 0.0)
-    if abs(assets - (current_assets + non_current_assets)) > 0.01:
-        errors.append(f"FATAL (2): Asset Rollup Failed. Current({current_assets:,.2f}) + NonCurrent({non_current_assets:,.2f}) != Total Assets({assets:,.2f})")
-
-    # 3. Liability & Equity Rollup Integrity
-    liab = accounts.get('mini_Liabilities', 0.0)
-    eq = accounts.get('mini_Equity', 0.0)
-    if abs(lia_eq - (liab + eq)) > 0.01:
-        errors.append(f"FATAL (3): Liab & Eq Rollup Failed. Liab({liab:,.2f}) + Equity({eq:,.2f}) != Total L&E({lia_eq:,.2f})")
-
-    # 4. P&L Net Income Verification
-    rev = accounts.get('mini_Sales', 0.0)
-    cogs = accounts.get('mini_CostOfGoodsSold', 0.0)
-    opex = accounts.get('mini_OperatingExpenses', 0.0)
-    non_op = accounts.get('mini_NonoperatingIncomeExpense', 0.0)
-    stated_ni = accounts.get('mini_NetIncomeLoss', 0.0)
-    calculated_ni = rev - cogs - opex + non_op
-    
-    if abs(stated_ni - calculated_ni) > 0.01:
-        errors.append(f"FATAL (4): P&L Math Failed. Calculated NI: {calculated_ni:,.2f} | Stated NI: {stated_ni:,.2f}")
-
-    # 5 & 6. Cashflow and Equity Proofs
+    # Points 1–4 + 6 — Prolog audit lift.
     try:
-        calc_cash, calc_equity = calculate_cashflow_and_equity(csv_file, stated_ni)
-        
-        # Grab actual ending balances from the JSON-LD state
-        # Cash is tricky because if it was overdrawn, it was switched to Liabilities.
-        # We need the absolute raw cash position to verify the cashflow statement.
-        df = pd.read_csv(csv_file)
-        actual_raw_cash = df[df['Account_Name'].apply(lambda x: map_account_to_mini(x) == 'mini_CashAndCashEquivalents')]['Amount'].sum()
-        
-        # 5. Cashflow Verification
-        if abs(calc_cash - actual_raw_cash) > 0.01:
-            errors.append(f"FATAL (5): Cashflow Integrity Failed. Calculated Ending Cash: {calc_cash:,.2f} | Actual Ledger Cash: {actual_raw_cash:,.2f}")
-            
-        # 6. Equity Verification
-        # Note: The JSON-LD stated equity includes retained earnings + paid in capital
-        stated_total_equity = accounts.get('mini_Equity', 0.0)
-        if abs(calc_equity - stated_total_equity) > 0.01:
-            errors.append(f"FATAL (6): Equity Rollforward Failed. Calculated Closing Equity: {calc_equity:,.2f} | Stated Total Equity: {stated_total_equity:,.2f}")
-
-        # 7. Prolog shadow-verification of point 6 (S1 integration).
-        # Re-runs the equity equation through engine/consolidation.pl and
-        # cross-checks against the Python result. Disagreement = real bug.
-        try:
-            # Reconstruct the four roll-forward inputs from the same source as
-            # calculate_cashflow_and_equity above. The function is run twice
-            # here only because we need the four scalar inputs separately for
-            # the Prolog call; this is intentionally cheap.
-            df_eq = pd.read_csv(csv_file)
-            opening_eq = 0.0
-            cap_inj = 0.0
-            divs = 0.0
-            for _, row in df_eq.iterrows():
-                uri = map_account_to_mini(row['Account_Name'])
-                amt = float(row['Amount'])
-                if uri == 'mini_PaidInCapital':
-                    if 'Opening' in str(row['Description']):
-                        opening_eq += -amt
-                    else:
-                        cap_inj += -amt
-                elif uri == 'mini_RetainedEarnings':
-                    if 'Opening' in str(row['Description']):
-                        opening_eq += -amt
-                    elif 'Dividend' in str(row['Account_Name']) or 'Drawings' in str(row['Account_Name']):
-                        divs += amt
-            profit_term = cap_inj + stated_ni
-            balanced, expected = verify_equity_via_prolog(
-                opening_eq, profit_term, divs, stated_total_equity)
-
-            python_balanced = abs(calc_equity - stated_total_equity) <= 0.01
-            if balanced != python_balanced:
-                errors.append(
-                    f"FATAL (7): Prolog/Python disagreement on equity "
-                    f"roll-forward. Python balanced={python_balanced} "
-                    f"(calc_equity={calc_equity:,.2f} vs stated={stated_total_equity:,.2f}) | "
-                    f"Prolog balanced={balanced} "
-                    f"(opening={opening_eq:,.2f} + profit={profit_term:,.2f} "
-                    f"- divs={divs:,.2f} = expected={expected:,.2f} "
-                    f"vs closing={stated_total_equity:,.2f})")
-        except Exception as e:
-            errors.append(f"FATAL (7): Prolog shadow-verifier error: {str(e)}")
-
+        prolog_failures = _run_prolog_audit(accounts, csv_file, client_name)
+        errors.extend(prolog_failures)
     except Exception as e:
-        errors.append(f"FATAL: Error calculating thermodynamic flows: {str(e)}")
+        errors.append(f"FATAL (audit): Prolog audit shim error: {e}")
+
+    # Point 5 — Cashflow integrity.
+    # TODO: lift to Prolog once a transaction-fact schema lands. The current
+    # sbrm_fact/6 schema is balance-snapshot-oriented; cashflow validation
+    # requires per-transaction analysis (which non-cash accounts moved
+    # alongside each cash movement) which doesn't fit cleanly without a
+    # new fact shape. Tracked as a future sprint.
+    try:
+        stated_ni = float(accounts.get('mini_NetIncomeLoss', 0.0))
+        calc_cash, _calc_equity = calculate_cashflow_and_equity(csv_file, stated_ni)
+        df = pd.read_csv(csv_file)
+        actual_raw_cash = df[df['Account_Name'].apply(
+            lambda x: map_account_to_mini(x) == 'mini_CashAndCashEquivalents'
+        )]['Amount'].sum()
+        if abs(calc_cash - actual_raw_cash) > 0.01:
+            errors.append(
+                f"FATAL (5): Cashflow Integrity Failed. "
+                f"Calculated Ending Cash: {calc_cash:,.2f} | "
+                f"Actual Ledger Cash: {actual_raw_cash:,.2f}")
+    except Exception as e:
+        errors.append(f"FATAL (5): Error calculating cashflow flow: {e}")
 
     if errors:
         print(f"\n❌ [{client_name}] 6-POINT AUDIT FAILED. ABORTING RENDER.")
-        for e in errors:
-            print(f"  -> {e}")
+        for err in errors:
+            print(f"  -> {err}")
         return False
-        
+
     print(f"✅ [{client_name}] 6-Point Audit Passed. Thermodynamic Integrity Verified.")
     return True
 
@@ -482,7 +511,7 @@ def build_translation_evidence(manifest_path):
     members = [manifest['parent']] + manifest.get('subsidiaries', [])
 
     prolog = Prolog()
-    _ensure_consolidation_loaded(prolog)
+    _ensure_audit_loaded(prolog)
 
     evidence_rows = []
     total = 0.0
@@ -602,8 +631,8 @@ def render_ixbrl(json_ld, output_path, translation_evidence=None,
 
 def run_all_ledgers():
     print("===========================================================================")
-    print(" 🚀 RUNNING FULL 7-POINT THERMODYNAMIC SAFEGUARD AGAINST ALL GLs")
-    print("    (Points 1-6: Python; Point 7: engine/consolidation.pl shadow-check)")
+    print(" 🚀 RUNNING FULL 6-POINT THERMODYNAMIC SAFEGUARD AGAINST ALL GLs")
+    print("    (Points 1-4 + 6: engine/audit.pl; Point 5: Python cashflow shim)")
     print("===========================================================================\n")
 
     # Discover legacy single-entity CSVs and multi-entity group manifests.

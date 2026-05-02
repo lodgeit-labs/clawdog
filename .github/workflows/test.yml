@@ -48,6 +48,11 @@ jobs:
           set -e
           swipl -g run_tests -t halt engine/tests/test_consolidation.pl
 
+      - name: Run engine/tests/test_audit.pl
+        run: |
+          set -e
+          swipl -g run_tests -t halt engine/tests/test_audit.pl
+
   pipeline-integration:
     name: Gate 2 — Pipeline integration (7-point audit)
     runs-on: ubuntu-latest
