@@ -3,7 +3,8 @@ def map_account_to_mini(acc_name):
     
     if any(x in acc for x in ['telstra', 'rent', 'super', 'wages', 'office', 'qantas', 'xero', 'expense', 'supplies']):
         return 'mini_OperatingExpenses'
-    elif any(x in acc for x in ['bank', 'nab', 'westpac', 'cba', 'anz', 'macquarie']):
+    elif any(x in acc for x in ['bank', 'nab', 'westpac', 'cba', 'anz', 'macquarie',
+                                  'lloyds', 'barclays', 'hsbc', 'natwest', 'santander']):
         return 'mini_CashAndCashEquivalents'
     elif 'receivable' in acc or 'loan' in acc:
         return 'mini_Receivables'

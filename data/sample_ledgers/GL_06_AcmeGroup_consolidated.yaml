@@ -1,0 +1,35 @@
+# GL_06 — AcmeGroup consolidated demo manifest
+#
+# Demonstrates multi-currency consolidation: an Australian parent (AUD-
+# denominated) and a wholly-owned UK subsidiary (GBP-denominated) consolidated
+# into a single AUD reporting currency for the group.
+#
+# Scope deliberately minimal for sprint S2:
+#   - No intercompany eliminations (parent does not hold an "Investment in
+#     Acme UK" line; the two entities are independently operational).
+#   - Single closing FX rate (no opening / average / period-by-period rates).
+#   - No dual-currency rendering in the iXBRL output (deferred to S4).
+#
+# The consolidation engine reads each member CSV, translates non-reporting-
+# currency facts via fx_rates.csv, and runs the standard 7-point audit on the
+# consolidated set of accounts. Each entity's books must self-balance in their
+# own functional currency before consolidation; that's a precondition, not
+# something the consolidator validates.
+
+group_name: AcmeGroup
+reporting_currency: AUD
+period: FY25
+period_start: 2024-07-01
+period_end: 2025-06-30
+
+parent:
+  file: GL_06_Acme_AU_Pty_Ltd_FY25.csv
+  functional_currency: AUD
+
+subsidiaries:
+  - file: GL_06_Acme_UK_Ltd_FY25.csv
+    functional_currency: GBP
+    name: Acme UK Ltd
+    ownership: 1.00
+
+fx_rate_source: fx_rates.csv
