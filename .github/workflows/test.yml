@@ -106,3 +106,34 @@ jobs:
             fi
           done
           echo "✅ Translation Note correctly scoped to multi-currency groups."
+
+      - name: Assert iXBRL output is XML well-formed
+        run: |
+          set -e
+          # iXBRL is XHTML and MUST parse as XML. Unescaped specials
+          # (& < > in text nodes, unquoted attribute values, etc.) make
+          # the output unprocessable by HMRC/ATO XBRL ingest pipelines
+          # downstream of the Kit. Catching this in CI is cheap and
+          # exactly the kind of structural regression the gate exists
+          # for. Assert every rendered .html parses cleanly via stdlib
+          # ElementTree.
+          python3 - <<'PY'
+          import sys, glob
+          import xml.etree.ElementTree as ET
+          fails = []
+          for path in sorted(glob.glob('outputs/*.html')):
+              try:
+                  ET.parse(path)
+                  print(f'✅ {path}: well-formed XML')
+              except ET.ParseError as e:
+                  fails.append((path, str(e)))
+                  print(f'❌ {path}: {e}')
+          if fails:
+              print()
+              print(f'{len(fails)} iXBRL artifact(s) failed XML well-formedness:')
+              for p, e in fails:
+                  print(f'  {p}: {e}')
+              sys.exit(1)
+          print()
+          print(f'✅ All {len(glob.glob("outputs/*.html"))} iXBRL artifacts are XML well-formed.')
+          PY
