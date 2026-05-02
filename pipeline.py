@@ -6,6 +6,79 @@ from pyswip import Prolog
 
 from engine.heuristic_mapper import map_account_to_mini
 
+
+# ---------------------------------------------------------------------------
+# S1: Prolog shadow-verification of the equity roll-forward (Point #6).
+#
+# The legacy 6-Point Thermodynamic Safeguard implements equity roll-forward in
+# Python (`calculate_cashflow_and_equity` below). engine/consolidation.pl now
+# implements the same equation in Prolog with stricter determinism guarantees
+# (no silent zero, unique-FX-rate enforcement, epsilon-tolerant equality).
+#
+# This helper runs the Prolog version *alongside* the Python check and surfaces
+# any disagreement as a Point #7 FATAL. In mono-currency mode (TargetCurrency =
+# entity reporting currency, identity FX) the two implementations should agree
+# exactly. Disagreement points at a real bug in either layer.
+#
+# Brain canon: GLOBAL_NOTES/CLAWDOG/107_CONSOLIDATION_LOGIC.md
+# Engine:      engine/consolidation.pl
+# ---------------------------------------------------------------------------
+
+_CONSOLIDATION_LOADED = False
+
+def _ensure_consolidation_loaded(prolog):
+    """Consult engine/consolidation.pl into the shared Prolog database once."""
+    global _CONSOLIDATION_LOADED
+    if not _CONSOLIDATION_LOADED:
+        prolog.consult('engine/consolidation.pl')
+        _CONSOLIDATION_LOADED = True
+
+def verify_equity_via_prolog(opening_equity, profit_plus_capital, dividends_paid,
+                             closing_equity, currency='AUD',
+                             opening_period='OPENING', action_period='ACTION',
+                             closing_period='CLOSING', entity='client'):
+    """Run engine/consolidation.pl::verify_temporal_equity/5 over the four
+    equity-roll-forward inputs and return (balanced, expected_closing).
+
+    `balanced` is True iff:
+        opening_equity + profit_plus_capital - dividends_paid == closing_equity
+    within engine/consolidation.pl's fx_epsilon tolerance (1e-6).
+
+    Note: the legacy Python equation conflates capital injections with net
+    income into a single "profit" term. We feed that conflation as-is into
+    sbr:NetProfit so the two layers compute over identical inputs. Breaking
+    out capital injections as a separate fact-stream is a future sprint.
+    """
+    prolog = Prolog()
+    _ensure_consolidation_loaded(prolog)
+
+    # Clean any prior asserts in the consolidation namespace for this entity.
+    list(prolog.query(
+        f"retractall(sbrm_consolidation:sbrm_fact('{entity}',_,_,_,_,_))"))
+
+    # Inject the four roll-forward facts. Currency is identity (AUD->AUD) in
+    # mono-currency mode; no fx_rate facts needed because convert_value/5
+    # short-circuits on identity.
+    facts = [
+        (opening_period, 'sbr:OpeningEquity',  float(opening_equity)),
+        (action_period,  'sbr:NetProfit',      float(profit_plus_capital)),
+        (action_period,  'sbr:DividendsPaid',  float(dividends_paid)),
+        (closing_period, 'sbr:ClosingEquity',  float(closing_equity)),
+    ]
+    for period, concept, value in facts:
+        list(prolog.query(
+            f"assertz(sbrm_consolidation:sbrm_fact('{entity}','{period}',"
+            f"'{concept}',{value},'{currency}','Leaf'))"))
+
+    # Run the verifier.
+    query = (f"sbrm_consolidation:verify_temporal_equity('{entity}',"
+             f"'{opening_period}','{action_period}','{closing_period}',"
+             f"'{currency}')")
+    balanced = bool(list(prolog.query(query)))
+
+    expected_closing = opening_equity + profit_plus_capital - dividends_paid
+    return balanced, expected_closing
+
 def calculate_cashflow_and_equity(csv_file, net_income):
     """
     Parses the raw CSV to calculate the thermodynamic flow of Cash and Equity.
@@ -122,7 +195,49 @@ def pre_flight_audit(accounts, csv_file, client_name):
         stated_total_equity = accounts.get('mini_Equity', 0.0)
         if abs(calc_equity - stated_total_equity) > 0.01:
             errors.append(f"FATAL (6): Equity Rollforward Failed. Calculated Closing Equity: {calc_equity:,.2f} | Stated Total Equity: {stated_total_equity:,.2f}")
-            
+
+        # 7. Prolog shadow-verification of point 6 (S1 integration).
+        # Re-runs the equity equation through engine/consolidation.pl and
+        # cross-checks against the Python result. Disagreement = real bug.
+        try:
+            # Reconstruct the four roll-forward inputs from the same source as
+            # calculate_cashflow_and_equity above. The function is run twice
+            # here only because we need the four scalar inputs separately for
+            # the Prolog call; this is intentionally cheap.
+            df_eq = pd.read_csv(csv_file)
+            opening_eq = 0.0
+            cap_inj = 0.0
+            divs = 0.0
+            for _, row in df_eq.iterrows():
+                uri = map_account_to_mini(row['Account_Name'])
+                amt = float(row['Amount'])
+                if uri == 'mini_PaidInCapital':
+                    if 'Opening' in str(row['Description']):
+                        opening_eq += -amt
+                    else:
+                        cap_inj += -amt
+                elif uri == 'mini_RetainedEarnings':
+                    if 'Opening' in str(row['Description']):
+                        opening_eq += -amt
+                    elif 'Dividend' in str(row['Account_Name']) or 'Drawings' in str(row['Account_Name']):
+                        divs += amt
+            profit_term = cap_inj + stated_ni
+            balanced, expected = verify_equity_via_prolog(
+                opening_eq, profit_term, divs, stated_total_equity)
+
+            python_balanced = abs(calc_equity - stated_total_equity) <= 0.01
+            if balanced != python_balanced:
+                errors.append(
+                    f"FATAL (7): Prolog/Python disagreement on equity "
+                    f"roll-forward. Python balanced={python_balanced} "
+                    f"(calc_equity={calc_equity:,.2f} vs stated={stated_total_equity:,.2f}) | "
+                    f"Prolog balanced={balanced} "
+                    f"(opening={opening_eq:,.2f} + profit={profit_term:,.2f} "
+                    f"- divs={divs:,.2f} = expected={expected:,.2f} "
+                    f"vs closing={stated_total_equity:,.2f})")
+        except Exception as e:
+            errors.append(f"FATAL (7): Prolog shadow-verifier error: {str(e)}")
+
     except Exception as e:
         errors.append(f"FATAL: Error calculating thermodynamic flows: {str(e)}")
 
@@ -217,7 +332,8 @@ def generate_sbrm_jsonld(csv_file):
 
 def run_all_ledgers():
     print("===========================================================================")
-    print(" 🚀 RUNNING FULL 6-POINT THERMODYNAMIC SAFEGUARD AGAINST ALL GLs")
+    print(" 🚀 RUNNING FULL 7-POINT THERMODYNAMIC SAFEGUARD AGAINST ALL GLs")
+    print("    (Points 1-6: Python; Point 7: engine/consolidation.pl shadow-check)")
     print("===========================================================================\n")
     
     gl_files = sorted(glob.glob('data/sample_ledgers/*.csv'))
