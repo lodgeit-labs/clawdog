@@ -7,14 +7,24 @@
 # Scope deliberately minimal for sprint S2:
 #   - No intercompany eliminations (parent does not hold an "Investment in
 #     Acme UK" line; the two entities are independently operational).
-#   - Single closing FX rate (no opening / average / period-by-period rates).
-#   - No dual-currency rendering in the iXBRL output (deferred to S4).
+#   - Single closing FX rate per period (no opening / average / period-by-
+#     period rates within a single period).
+#   - No dual-currency rendering in the iXBRL output (deferred to S4 / future).
 #
 # The consolidation engine reads each member CSV, translates non-reporting-
-# currency facts via fx_rates.csv, and runs the standard 7-point audit on the
+# currency facts via fx_rates.csv, and runs the standard 6-point audit on the
 # consolidated set of accounts. Each entity's books must self-balance in their
 # own functional currency before consolidation; that's a precondition, not
 # something the consolidator validates.
+#
+# S5b extension — period comparatives
+# -----------------------------------
+# The optional `comparative` block declares the prior-period sibling. Each
+# member of the group MUST have a corresponding comparator file (parent and
+# every subsidiary), keyed by `file:` per member. The comparative period is
+# audited *independently* of the current period — both must self-audit clean
+# before the renderer emits a comparative iXBRL artifact. There is no
+# implicit `period - 1` magic; the comparator is whatever the manifest names.
 
 group_name: AcmeGroup
 reporting_currency: AUD
@@ -33,3 +43,19 @@ subsidiaries:
     ownership: 1.00
 
 fx_rate_source: fx_rates.csv
+
+# Comparative-period (prior-year) sibling. The parent and EVERY subsidiary
+# MUST have a comparator file declared. The comparator's functional_currency
+# follows the current-period declaration (an entity's functional currency
+# does not change between periods in this demo). FX rates for the comparator
+# period must exist in fx_rate_source for every non-reporting-currency
+# member.
+comparative:
+  period: FY24
+  period_start: 2023-07-01
+  period_end: 2024-06-30
+  parent:
+    file: GL_06_Acme_AU_Pty_Ltd_FY24.csv
+  subsidiaries:
+    - name: Acme UK Ltd
+      file: GL_06_Acme_UK_Ltd_FY24.csv

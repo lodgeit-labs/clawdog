@@ -1,2 +1,3 @@
 Source,Target,Period,Rate,Note
 GBP,AUD,FY25,1.92,"Illustrative spot rate for FY25 demo. Real-world rates vary; production should use a properly-sourced rate (RBA, Bank of England, or third-party feed)."
+GBP,AUD,FY24,1.88,"Illustrative spot rate for FY24 demo (comparative period). Distinct from FY25 to demonstrate period-scoped FX lookup honouring Standing Rule #6 (Hoffman temporal-dimension discipline) — the audit and consolidation engines must use the rate that matches the period being translated, not a single global rate."

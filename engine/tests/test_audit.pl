@@ -59,9 +59,79 @@ run_tests :-
     test_point4_missing_fact_fails_loud,
     test_audit_all_collects_multiple_failures_in_order,
     test_epsilon_tolerance_absorbs_subcent_drift,
+    %% S5b: period-comparative regression tests \u2014 multi-period in one DB.
+    test_two_periods_coexist_without_leakage,
+    test_audit_distinguishes_period_atoms,
     format("~n=================================~n", []),
     format("ALL AUDIT TESTS PASSED \u2713~n", []),
     format("=================================~n", []).
+
+%% S5b helper: assert a balanced fixture with custom totals at a chosen
+%% (Entity, Period). The closing equity is implied by the rollforward:
+%% Closing = Opening + CapInj + NI - Divs.
+balanced_fixture_for(Entity, Period, Opening, CapInj, NI, Divs) :-
+    Closing is Opening + CapInj + NI - Divs,
+    %% Make the BS work: Assets = LiabEq, both = Closing + Liab. We pick
+    %% Liabilities to match Closing (i.e. Liab=Equity for clarity), but
+    %% any number balances as long as Assets = Liab + Equity.
+    Liab = 100.0,
+    Assets is Liab + Closing,
+    LiabEq = Assets,
+    %% Asset rollup: Current + NonCurrent = Assets. Pick a clean split.
+    Current is Assets * 0.4,
+    NonCurrent is Assets - Current,
+    %% P&L: Sales - COGS - OpEx + NonOp = NI. We absorb NI into Sales
+    %% by picking COGS=OpEx=NonOp=0.
+    Sales = NI,
+    retractall(sbrm_consolidation:sbrm_fact(Entity, Period, _, _, _, _)),
+    assertz(sbrm_consolidation:sbrm_fact(Entity, Period, 'mini_Assets',                  Assets,    'AUD', 'Leaf')),
+    assertz(sbrm_consolidation:sbrm_fact(Entity, Period, 'mini_CurrentAssets',           Current,   'AUD', 'Leaf')),
+    assertz(sbrm_consolidation:sbrm_fact(Entity, Period, 'mini_NoncurrentAssets',        NonCurrent,'AUD', 'Leaf')),
+    assertz(sbrm_consolidation:sbrm_fact(Entity, Period, 'mini_LiabilitiesAndEquity',    LiabEq,    'AUD', 'Leaf')),
+    assertz(sbrm_consolidation:sbrm_fact(Entity, Period, 'mini_Liabilities',             Liab,      'AUD', 'Leaf')),
+    assertz(sbrm_consolidation:sbrm_fact(Entity, Period, 'mini_Equity',                  Closing,   'AUD', 'Leaf')),
+    assertz(sbrm_consolidation:sbrm_fact(Entity, Period, 'mini_Sales',                   Sales,     'AUD', 'Leaf')),
+    assertz(sbrm_consolidation:sbrm_fact(Entity, Period, 'mini_CostOfGoodsSold',         0.0,       'AUD', 'Leaf')),
+    assertz(sbrm_consolidation:sbrm_fact(Entity, Period, 'mini_OperatingExpenses',       0.0,       'AUD', 'Leaf')),
+    assertz(sbrm_consolidation:sbrm_fact(Entity, Period, 'mini_NetIncomeLoss',           NI,        'AUD', 'Leaf')),
+    assertz(sbrm_consolidation:sbrm_fact(Entity, Period, 'audit_OpeningEquity',          Opening,   'AUD', 'Leaf')),
+    assertz(sbrm_consolidation:sbrm_fact(Entity, Period, 'audit_CapitalInjections',      CapInj,    'AUD', 'Leaf')),
+    assertz(sbrm_consolidation:sbrm_fact(Entity, Period, 'audit_DividendsPaid',          Divs,      'AUD', 'Leaf')).
+
+%% S5b test 1: same entity, two distinct period atoms, both audit clean
+%% with their own independent (but separately-balanced) fact sets in the
+%% shared multifile predicate. This is what the pipeline.py shim relies on
+%% to audit FY25 and FY24 in one process without cross-period leakage.
+test_two_periods_coexist_without_leakage :-
+    %% FY24: opening 0, NI 1000, divs 100 \u2192 closing 900.
+    balanced_fixture_for(acme, 'FY24', 0.0,   0.0, 1000.0, 100.0),
+    %% FY25: opening 900 (carrying forward), NI 2000, divs 200 \u2192 closing 2700.
+    balanced_fixture_for(acme, 'FY25', 900.0, 0.0, 2000.0, 200.0),
+    audit_all(acme, 'FY24', F24),
+    audit_all(acme, 'FY25', F25),
+    (   F24 == [], F25 == []
+    ->  format("test_two_periods_coexist_without_leakage: PASS~n", [])
+    ;   format("test_two_periods_coexist_without_leakage: FAIL F24=~w F25=~w~n",
+               [F24, F25]), fail).
+
+%% S5b test 2: when the FY25 net income is corrupted but FY24 is clean,
+%% audit_all on the FY25 period reports the failure and audit_all on the
+%% FY24 period reports clean. Period atoms are first-class dimensions
+%% (Standing Rule #6); they don't bleed across periods.
+test_audit_distinguishes_period_atoms :-
+    balanced_fixture_for(beta, 'FY24', 0.0,   0.0, 500.0, 0.0),
+    balanced_fixture_for(beta, 'FY25', 500.0, 0.0, 700.0, 0.0),
+    %% Corrupt FY25 NetIncomeLoss only.
+    retractall(sbrm_consolidation:sbrm_fact(beta, 'FY25', 'mini_NetIncomeLoss', _, _, _)),
+    assertz(sbrm_consolidation:sbrm_fact(beta, 'FY25', 'mini_NetIncomeLoss', 999.0, 'AUD', 'Leaf')),
+    audit_all(beta, 'FY24', F24),
+    audit_all(beta, 'FY25', F25),
+    %% FY24 must still be clean; FY25 must report point 4 and point 6.
+    (   F24 == [],
+        F25 = [fail(point(4), _, _), fail(point(6), _, _)]
+    ->  format("test_audit_distinguishes_period_atoms: PASS~n", [])
+    ;   format("test_audit_distinguishes_period_atoms: FAIL F24=~w F25=~w~n",
+               [F24, F25]), fail).
 
 % -----------------------------------------------------------------------------
 

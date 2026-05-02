@@ -1,0 +1,27 @@
+Transaction_ID,Date,Account_Name,Description,Amount
+2000,2023-07-01,NAB Business 5510,Opening Balance,20000
+2000,2023-07-01,Share Capital - Ordinary,Opening Balance,-10000
+2000,2023-07-01,Retained Earnings,Opening Balance,-10000
+2001,2023-08-15,NAB Business 5510,Client Payment,5500
+2001,2023-08-15,Services Provided,Client Payment,-5000
+2001,2023-08-15,GST Collected,Client Payment,-500
+2002,2023-09-20,NAB Business 5510,Client Payment,4400
+2002,2023-09-20,Services Provided,Client Payment,-4000
+2002,2023-09-20,GST Collected,Client Payment,-400
+2003,2023-10-10,Wages & Salaries,Payroll,3000
+2003,2023-10-10,NAB Business 5510,Payroll,-3000
+2004,2023-11-15,Rent - Westfield,Supplier Payment,1090.91
+2004,2023-11-15,GST Paid,Supplier Payment,109.09
+2004,2023-11-15,NAB Business 5510,Supplier Payment,-1200
+2005,2024-01-25,NAB Business 5510,Client Payment,3300
+2005,2024-01-25,Services Provided,Client Payment,-3000
+2005,2024-01-25,GST Collected,Client Payment,-300
+2006,2024-03-08,Wages & Salaries,Payroll,2500
+2006,2024-03-08,NAB Business 5510,Payroll,-2500
+2007,2024-05-12,Office Works - Stationery,Supplier Payment,545.45
+2007,2024-05-12,GST Paid,Supplier Payment,54.55
+2007,2024-05-12,NAB Business 5510,Supplier Payment,-600
+2008,2024-04-30,Share Capital - Ordinary,Capital Injection,-2134.40
+2008,2024-04-30,NAB Business 5510,Capital Injection,2134.40
+2009,2024-06-30,Dividends Paid,Owner Drawings/Dividends,540
+2009,2024-06-30,NAB Business 5510,Owner Drawings/Dividends,-540
