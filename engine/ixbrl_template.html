@@ -181,6 +181,36 @@
         </tr>
     </table>
 
+    {% if translation_evidence %}
+    <h1>Translation Note — Multi-Currency Provenance</h1>
+    <p>The following table lists every non-reporting-currency fact contributed by a member entity, the FX rate applied, and the resulting reporting-currency contribution. Source values are recorded as ingested from each member's ledger; FX rates are sourced from the group manifest's <code>fx_rate_source</code>. Each row is auditable evidence emitted by <code>engine/consolidation.pl::consolidation_evidence/6</code> &mdash; the Prolog provenance predicate &mdash; not by the Python rendering layer.</p>
+    <table>
+        <tr class="header-row">
+            <td>Member Entity</td>
+            <td>Concept</td>
+            <td>Source Currency</td>
+            <td style="text-align:right">Source Value</td>
+            <td style="text-align:right">FX Rate</td>
+            <td style="text-align:right">Reporting Value (AUD)</td>
+        </tr>
+        {% for row in translation_evidence %}
+        <tr>
+            <td>{{ row.entity }}</td>
+            <td>{{ row.concept }}</td>
+            <td>{{ row.source_currency }}</td>
+            <td style="text-align:right">{{ "{:,.2f}".format(row.source_value) }}</td>
+            <td style="text-align:right">{{ "{:.4f}".format(row.fx_rate) }}</td>
+            <td style="text-align:right">{{ "{:,.2f}".format(row.contribution) }}</td>
+        </tr>
+        {% endfor %}
+        <tr class="total-row">
+            <td colspan="5">Total Translated Contribution</td>
+            <td style="text-align:right">{{ "{:,.2f}".format(translation_evidence_total) }}</td>
+        </tr>
+    </table>
+    <p style="font-size:9pt;color:#555"><em>Provenance source: <code>sbrm_consolidation:consolidation_evidence/6</code> in <code>engine/consolidation.pl</code>. Each row corresponds to a single <code>evidence/6</code> term emitted by the Prolog engine. The Python renderer does not compute these values; it only displays them.</em></p>
+    {% endif %}
+
     <h1>Statement of Comprehensive Income</h1>
     <table>
         <tr class="header-row"><td colspan="2">PROFIT AND LOSS</td></tr>

@@ -1,4 +1,5 @@
 import os
+import re
 import glob
 import pandas as pd
 import yaml
@@ -409,6 +410,196 @@ def consolidate_group(manifest_path):
     consolidated_df.to_csv(out_path, index=False)
     return out_path, group_name, reporting_ccy
 
+# ---------------------------------------------------------------------------
+# S4: iXBRL provenance trails consuming consolidation_evidence/6.
+#
+# After a group's audit passes, the renderer queries engine/consolidation.pl's
+# consolidation_evidence/6 predicate to produce a per-row, per-member,
+# per-currency provenance trail. Each non-reporting-currency fact contributed
+# by a member entity is rendered as a Translation Note row showing source
+# value, FX rate, and the AUD-translated contribution.
+#
+# Crucially: the rendered values are emitted by Prolog, not recomputed by the
+# Python renderer. The Python layer only shapes presentation. This is what
+# makes the provenance trail authoritative — it's the same predicate that
+# would back a helm_mutations cryptographic anchor.
+#
+# Sub-option B.i (Translation Note section): smallest-scope, highest-demo-value
+# slice of the iXBRL provenance story. Inline `<aria-describedby>` (B.ii) and
+# side-by-side dual-currency columns (B.iii) are future sprints.
+#
+# Brain canon: GLOBAL_NOTES/CLAWDOG/107_CONSOLIDATION_LOGIC.md
+# Engine:      engine/consolidation.pl::consolidation_evidence/6
+# ---------------------------------------------------------------------------
+
+_EVIDENCE_RE = re.compile(
+    r'evidence\(\s*([^,]+?)\s*,\s*([^,]+?)\s*,\s*([^,]+?)\s*,'
+    r'\s*([^,]+?)\s*,\s*([^,]+?)\s*,\s*([^)]+?)\s*\)'
+)
+
+def _parse_evidence_term(term_string):
+    """Parse a single 'evidence(Concept, SrcCcy, SrcVal, Wt, FxRate, Contrib)'
+    term as returned by pyswip into a structured dict. pyswip marshals
+    compound terms as their string repr; we don't risk evaluating them, we
+    parse positionally."""
+    m = _EVIDENCE_RE.match(term_string)
+    if not m:
+        raise ValueError(f"Unparseable evidence term: {term_string!r}")
+    concept, src_ccy, src_val, weight, fx_rate, contribution = m.groups()
+    return {
+        'concept': concept.strip(),
+        'source_currency': src_ccy.strip(),
+        'source_value': float(src_val),
+        'weight': float(weight),
+        'fx_rate': float(fx_rate),
+        'contribution': float(contribution),
+    }
+
+def build_translation_evidence(manifest_path):
+    """Run engine/consolidation.pl::consolidation_evidence/6 over each member
+    entity's ledger, collecting every non-reporting-currency fact and its
+    translation into the group's reporting currency.
+
+    Returns (evidence_rows, total_contribution) where evidence_rows is a list
+    of dicts (one per non-reporting-currency source fact, keyed by entity name,
+    concept, source_currency, source_value, fx_rate, contribution) and
+    total_contribution is the sum of contributions across all rows. Returns
+    ([], 0.0) if no non-reporting-currency facts exist.
+
+    The evidence is sourced from Prolog — not recomputed in Python — so the
+    rendered Translation Note is authoritative against engine/consolidation.pl.
+    """
+    with open(manifest_path) as f:
+        manifest = yaml.safe_load(f)
+
+    reporting_ccy = manifest['reporting_currency']
+    period = manifest.get('period', 'FY25')
+    ledgers_dir = os.path.dirname(manifest_path)
+    fx_path = os.path.join(
+        ledgers_dir, manifest.get('fx_rate_source', 'fx_rates.csv'))
+    fx_rates = _load_fx_rates(fx_path)
+
+    members = [manifest['parent']] + manifest.get('subsidiaries', [])
+
+    prolog = Prolog()
+    _ensure_consolidation_loaded(prolog)
+
+    evidence_rows = []
+    total = 0.0
+
+    for member in members:
+        functional_ccy = member['functional_currency']
+        if functional_ccy == reporting_ccy:
+            # No translation needed; nothing for the Translation Note.
+            continue
+
+        member_csv = os.path.join(ledgers_dir, member['file'])
+        entity_name = member.get('name', os.path.basename(member_csv))
+        entity_atom = re.sub(r"[^A-Za-z0-9_]", '_', entity_name)
+
+        # Clean any prior asserts in the consolidation namespace for this
+        # entity (idempotent across multiple ledgers in one process).
+        list(prolog.query(
+            f"retractall(sbrm_consolidation:sbrm_fact('{entity_atom}',_,_,_,_,_))"))
+        list(prolog.query(
+            f"retractall(sbrm_consolidation:fx_rate(_,_,_,_))"))
+
+        # Inject FX rates relevant to this period.
+        for (src, tgt, per), rate in fx_rates.items():
+            if per != period:
+                continue
+            list(prolog.query(
+                f"assertz(sbrm_consolidation:fx_rate('{src}','{tgt}','{per}',{rate}))"))
+
+        # Inject one sbrm_fact per non-reporting-currency CSV row, keyed by
+        # the heuristic-mapped mini_* concept. We aggregate by concept first
+        # so the Translation Note has one row per (entity, concept), not one
+        # per raw transaction line — matches what an auditor expects to see.
+        df = pd.read_csv(member_csv)
+        per_concept = {}
+        for _, row in df.iterrows():
+            row_ccy = row.get('Currency', functional_ccy)
+            if pd.isna(row_ccy):
+                row_ccy = functional_ccy
+            if row_ccy == reporting_ccy:
+                continue
+            concept = map_account_to_mini(row['Account_Name'])
+            key = (concept, row_ccy)
+            per_concept[key] = per_concept.get(key, 0.0) + float(row['Amount'])
+
+        # Drop near-zero aggregates (offsetting transactions cancelling out).
+        for (concept, src_ccy), value in list(per_concept.items()):
+            if abs(value) < 0.01:
+                continue
+            list(prolog.query(
+                f"assertz(sbrm_consolidation:sbrm_fact('{entity_atom}',"
+                f"'{period}','{concept}',{value},'{src_ccy}','Leaf'))"))
+
+        # Query consolidation_evidence/6 once per (concept, src_ccy) tuple.
+        # With a leaf-only graph (no sbrm_edge entries for these concepts),
+        # consolidation_evidence/6 returns the concept's own injected fact
+        # as a single evidence row with the FX rate applied.
+        for (concept, src_ccy), _value in per_concept.items():
+            if abs(_value) < 0.01:
+                continue
+            query = (
+                f"sbrm_consolidation:consolidation_evidence('{entity_atom}',"
+                f"'{period}','{reporting_ccy}','{concept}',Total,Evidence)")
+            results = list(prolog.query(query))
+            if not results:
+                # Should not happen — every injected fact should produce
+                # evidence — but if it does, surface explicitly rather than
+                # silently dropping.
+                raise RuntimeError(
+                    f"consolidation_evidence/6 returned no rows for "
+                    f"({entity_atom}, {period}, {concept}). Likely missing "
+                    f"FX rate {src_ccy} -> {reporting_ccy} @ {period}.")
+            for term in results[0]['Evidence']:
+                row = _parse_evidence_term(term)
+                row['entity'] = entity_name
+                evidence_rows.append(row)
+                total += row['contribution']
+
+    return evidence_rows, total
+
+def render_ixbrl(json_ld, output_path, translation_evidence=None,
+                 translation_evidence_total=0.0):
+    """Render the iXBRL template against a JSON-LD result and (optionally) a
+    Translation Note evidence list.
+
+    Writes the rendered HTML to output_path and returns the rendered string.
+    """
+    template_path = os.path.join('engine', 'ixbrl_template.html')
+    with open(template_path) as f:
+        template_src = f.read()
+    template = Template(template_src)
+
+    # Provide accounts as an attribute-style dict so {{ accounts.mini_X }}
+    # resolves cleanly. Jinja2's default dict access gives us this via
+    # __getitem__; the template already uses dotted access, so we wrap.
+    class _Attrs(dict):
+        def __getattr__(self, k):
+            return self.get(k, 0.0)
+
+    accounts = _Attrs({k: v for k, v in json_ld['Accounts'].items()})
+    entity = _Attrs(json_ld['Entity'])
+    period = _Attrs({
+        'StartDate': json_ld['AccountingPeriod']['StartDate'],
+        'EndDate':   json_ld['AccountingPeriod']['EndDate'],
+    })
+
+    rendered = template.render(
+        entity=entity,
+        period=period,
+        accounts=accounts,
+        translation_evidence=translation_evidence,
+        translation_evidence_total=translation_evidence_total,
+    )
+    os.makedirs(os.path.dirname(output_path) or '.', exist_ok=True)
+    with open(output_path, 'w') as f:
+        f.write(rendered)
+    return rendered
+
 def run_all_ledgers():
     print("===========================================================================")
     print(" 🚀 RUNNING FULL 7-POINT THERMODYNAMIC SAFEGUARD AGAINST ALL GLs")
@@ -440,6 +631,13 @@ def run_all_ledgers():
         json_ld = generate_sbrm_jsonld(csv_file)
         if pre_flight_audit(json_ld['Accounts'], csv_file, client_name):
             success_count += 1
+            # S4: render iXBRL with no Translation Note (single-currency).
+            try:
+                out_html = os.path.join('outputs', f"{client_name}.html")
+                render_ixbrl(json_ld, out_html)
+                print(f"   📄 [{client_name}] iXBRL rendered -> {out_html}")
+            except Exception as e:
+                print(f"   ⚠️ [{client_name}] iXBRL render failed: {e}")
         else:
             fail_count += 1
 
@@ -460,8 +658,22 @@ def run_all_ledgers():
             continue
 
         json_ld = generate_sbrm_jsonld(consolidated_csv)
+        json_ld['Entity']['CompanyName'] = group_name
         if pre_flight_audit(json_ld['Accounts'], consolidated_csv, group_name):
             success_count += 1
+            # S4: render iXBRL with the Translation Note section sourced
+            # from engine/consolidation.pl::consolidation_evidence/6.
+            try:
+                evidence_rows, evidence_total = build_translation_evidence(
+                    manifest_file)
+                out_html = os.path.join('outputs', f"{group_name}_consolidated.html")
+                render_ixbrl(json_ld, out_html,
+                             translation_evidence=evidence_rows,
+                             translation_evidence_total=evidence_total)
+                print(f"   📄 [{group_name}] iXBRL rendered -> {out_html}"
+                      f" ({len(evidence_rows)} provenance rows)")
+            except Exception as e:
+                print(f"   ⚠️ [{group_name}] iXBRL render failed: {e}")
         else:
             fail_count += 1
 
