@@ -1,0 +1,108 @@
+name: Kit Test Gates
+
+# Two-gate CI for the public ClawDog Kit (lodgeit-labs/clawdog).
+#
+# Per `clawdog-brain` Standing Rule #7 (Repository Topology) the Kit is an
+# Egress Interface: direct-to-`main` is authorised for additive-isolated
+# work and PR-mode is required for critical-path mutations to `pipeline.py`
+# or `engine/`. Either way, both gates below must pass before merge:
+#
+#   Gate 1 — Prolog regression suite. Proves engine/consolidation.pl and any
+#            future engine/*.pl modules did not regress against their own
+#            test fixtures. Required because the engine is the source of
+#            truth for SBRM consolidation semantics.
+#
+#   Gate 2 — Pipeline integration. Proves the full Python+Prolog pipeline
+#            (pipeline.py + heuristic_mapper + ixbrl_template) still passes
+#            the 7-point thermodynamic audit across all sample ledgers,
+#            including multi-currency consolidation. Required because the
+#            pipeline is what users actually run.
+#
+# These gates surface as inline status checks above the GitHub merge button.
+
+on:
+  pull_request:
+    branches: [ "main", "master" ]
+  push:
+    branches: [ "main", "master" ]
+
+permissions:
+  contents: read
+
+jobs:
+  prolog-regression:
+    name: Gate 1 — Prolog regression (engine/tests)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install SWI-Prolog
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends swi-prolog-nox
+          swipl --version
+
+      - name: Run engine/tests/test_consolidation.pl
+        run: |
+          set -e
+          swipl -g run_tests -t halt engine/tests/test_consolidation.pl
+
+  pipeline-integration:
+    name: Gate 2 — Pipeline integration (7-point audit)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install SWI-Prolog (with libswipl for pyswip)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends swi-prolog
+          swipl --version
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run pipeline.py against all sample ledgers
+        run: |
+          set -e
+          python3 pipeline.py | tee pipeline.log
+          # Pipeline returns exit code 0 even when audit fails; we have to
+          # parse the summary line to fail the job on any aborted ledger.
+          if grep -E "^ PIPELINE COMPLETE \| .* \| ❌ 0 Aborted" pipeline.log >/dev/null; then
+            echo "✅ All ledgers passed the 7-point audit."
+          else
+            echo "❌ One or more ledgers failed the 7-point audit. See pipeline.log above."
+            exit 1
+          fi
+
+      - name: Confirm iXBRL artifacts rendered
+        run: |
+          set -e
+          ls -la outputs/ || (echo "❌ outputs/ directory missing" && exit 1)
+          test -f outputs/AcmeGroup_consolidated.html \
+            || (echo "❌ AcmeGroup iXBRL did not render" && exit 1)
+          # Translation Note section must appear in the multi-currency group
+          # output (regression guard for S4).
+          if grep -q "Translation Note" outputs/AcmeGroup_consolidated.html; then
+            echo "✅ Translation Note section present in AcmeGroup iXBRL."
+          else
+            echo "❌ Translation Note section missing in AcmeGroup iXBRL."
+            exit 1
+          fi
+          # Translation Note must NOT appear in single-currency outputs.
+          for f in outputs/GL_01_*.html outputs/GL_02_*.html outputs/GL_05_*.html outputs/Input_A.html; do
+            if [ -f "$f" ] && grep -q "Translation Note" "$f"; then
+              echo "❌ Translation Note leaked into single-currency output: $f"
+              exit 1
+            fi
+          done
+          echo "✅ Translation Note correctly scoped to multi-currency groups."
