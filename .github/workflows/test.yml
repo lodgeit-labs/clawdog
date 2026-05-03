@@ -53,6 +53,21 @@ jobs:
           set -e
           swipl -g run_tests -t halt engine/tests/test_audit.pl
 
+      - name: Set up Python (for engine.jurisdiction_periods unittests)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run engine/tests/test_jurisdiction_periods.py (S5c)
+        run: |
+          set -e
+          # Stdlib unittest only — no new test-framework dependency.
+          # The engine.jurisdiction_periods module is pure Python with
+          # zero third-party imports, so this runs without installing
+          # requirements.txt. Per Lesson #29: every Kit gate verifies
+          # what it claims to gate, and Gate 1 owns engine/* regression.
+          python3 -m unittest engine.tests.test_jurisdiction_periods -v
+
   pipeline-integration:
     name: Gate 2 — Pipeline integration (7-point audit)
     runs-on: ubuntu-latest
