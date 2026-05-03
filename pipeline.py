@@ -7,6 +7,10 @@ from jinja2 import Template
 from pyswip import Prolog
 
 from engine.heuristic_mapper import map_account_to_mini
+from engine.jurisdiction_periods import (
+    DEFAULT_JURISDICTION as _DEFAULT_JURISDICTION,
+    period_meta_for_label as _jurisdiction_period_meta,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -835,23 +839,55 @@ def _discover_single_entity_comparator(csv_path):
         return None
     return comparator_path, current_period, comparator_period
 
-def _period_meta_for_label(period_label):
-    """Map a fiscal-year label like `FY25` to a period_meta dict with the
-    Australian-tax-year date convention (1 July — 30 June). Used for
-    single-entity ledgers; group manifests carry explicit dates.
+def _period_meta_for_label(period_label, jurisdiction=_DEFAULT_JURISDICTION):
+    """Map a fiscal-year label like `FY25` to a period_meta dict under
+    the given jurisdiction's date convention.
+
+    S5c: this is now a thin wrapper around
+    ``engine.jurisdiction_periods.period_meta_for_label`` so the same
+    AU/UK/US lookup serves the rest of the pipeline. Default jurisdiction
+    is ``'AU'`` so existing single-entity ledgers (no sidecar present)
+    see exactly the AU date convention they had pre-S5c.
+
+    Used for single-entity ledgers; group manifests carry explicit
+    period_start/period_end dates and bypass this helper entirely.
     """
-    m = re.match(r'^FY(\d{2})$', period_label)
-    if not m:
-        return None
-    yy = int(m.group(1))
-    # FY25 = 2024-07-01 .. 2025-06-30 (Australian fiscal year).
-    end_year = 2000 + yy
-    start_year = end_year - 1
-    return {
-        'PeriodLabel': period_label,
-        'StartDate':   f"{start_year:04d}-07-01",
-        'EndDate':     f"{end_year:04d}-06-30",
-    }
+    return _jurisdiction_period_meta(period_label, jurisdiction)
+
+
+_META_SIDECAR_RE = re.compile(r'\.csv$')
+
+
+def _jurisdiction_for_csv(csv_path):
+    """S5c: discover the jurisdiction for a single-entity ledger via an
+    optional ``<basename>_meta.yaml`` sidecar next to the CSV.
+
+    The sidecar is opt-in. When absent, the default jurisdiction
+    (``'AU'``) is returned, preserving legacy behaviour exactly. When
+    present, the YAML must declare a top-level ``jurisdiction:`` key
+    whose value is one of the supported jurisdictions; an unknown
+    value raises ``ValueError`` rather than silently defaulting
+    (Standing Rule #3).
+
+    Sidecar shape (minimal):
+
+        # GL_07_demo_FY25_meta.yaml
+        jurisdiction: UK
+
+    Group manifests are unaffected by this helper — they carry
+    explicit ``period_start`` / ``period_end`` dates and do not need
+    a jurisdiction lookup.
+    """
+    sidecar_path = _META_SIDECAR_RE.sub('_meta.yaml', csv_path)
+    if not os.path.exists(sidecar_path):
+        return _DEFAULT_JURISDICTION
+    with open(sidecar_path, 'r', encoding='utf-8') as fh:
+        meta = yaml.safe_load(fh) or {}
+    juris = meta.get('jurisdiction', _DEFAULT_JURISDICTION)
+    # Validate eagerly; period_meta_for_label would raise on first call
+    # otherwise, but raising at sidecar-read time gives a clearer error.
+    _jurisdiction_period_meta('FY25', juris)   # validation probe
+    return juris
 
 def run_all_ledgers():
     print("===========================================================================")
@@ -899,8 +935,15 @@ def run_all_ledgers():
         current_period_meta = None
         if comp_info is not None:
             comp_csv, current_period_label, comp_period_label = comp_info
-            current_period_meta  = _period_meta_for_label(current_period_label)
-            comp_period_meta     = _period_meta_for_label(comp_period_label)
+            # S5c: jurisdiction comes from the optional sidecar; both the
+            # current period and the comparator period share the same
+            # jurisdiction (an entity does not change tax jurisdiction
+            # between adjacent fiscal years in this demo).
+            ledger_jurisdiction  = _jurisdiction_for_csv(csv_file)
+            current_period_meta  = _period_meta_for_label(current_period_label,
+                                                          ledger_jurisdiction)
+            comp_period_meta     = _period_meta_for_label(comp_period_label,
+                                                          ledger_jurisdiction)
             comp_json_ld = generate_sbrm_jsonld(comp_csv, comp_period_meta)
             comp_client = os.path.basename(comp_csv).replace('.csv', '')
             print(f"🔁 [{client_name}] Comparator detected -> {comp_csv}"
