@@ -1,0 +1,13 @@
+Transaction_ID,Date,Account_Name,Description,Amount,Currency
+9100,2023-07-01,NAB Business 8800,Opening Balance,60000.00,AUD
+9100,2023-07-01,Trade Receivables,Opening Balance,10000.00,AUD
+9100,2023-07-01,Share Capital - Ordinary,Opening Balance,-50000.00,AUD
+9100,2023-07-01,Retained Earnings,Opening Balance,-20000.00,AUD
+9101,2023-09-30,NAB Business 8800,Q1 consulting fees received,30000.00,AUD
+9101,2023-09-30,Service Revenue,Q1 consulting fees,-30000.00,AUD
+9102,2024-03-15,NAB Business 8800,Q3 consulting fees received,40000.00,AUD
+9102,2024-03-15,Service Revenue,Q3 consulting fees,-40000.00,AUD
+9103,2024-06-30,Office Rent,FY24 Sydney office rent,12000.00,AUD
+9103,2024-06-30,NAB Business 8800,FY24 rent payment,-12000.00,AUD
+9104,2024-06-30,Wages & Salaries,FY24 staff wages,33000.00,AUD
+9104,2024-06-30,NAB Business 8800,FY24 staff wages payment,-33000.00,AUD

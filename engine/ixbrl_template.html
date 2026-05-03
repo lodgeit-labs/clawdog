@@ -7,11 +7,13 @@
     <title>{{ entity.CompanyName }} - Seattle MINI Statutory Accounts</title>
     <style>
         body { font-family: Arial, sans-serif; font-size: 10pt; }
-        table { border-collapse: collapse; width: 60%; margin: 20px 0; }
+        table { border-collapse: collapse; width: 70%; margin: 20px 0; }
         th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
         th { background-color: #f2f2f2; font-weight: bold; }
         .header-row { font-weight: bold; color: navy; }
         .total-row { font-weight: bold; border-top: 2px solid black; }
+        .num { text-align: right; font-variant-numeric: tabular-nums; }
+        .period-hdr { background-color: #fafafa; font-weight: bold; text-align: right; }
     </style>
 </head>
 <body>
@@ -39,6 +41,27 @@
                         <xbrli:endDate>{{ period.EndDate }}</xbrli:endDate>
                     </xbrli:period>
                 </xbrli:context>
+                {% if comparative_period %}
+                <!-- S5b: comparative-period contexts. Each ix:nonFraction
+                     for the prior period references one of these. -->
+                <xbrli:context id="ctx-instant-prior">
+                    <xbrli:entity>
+                        <xbrli:identifier scheme="http://www.ato.gov.au/abn">{{ entity.TaxReference }}</xbrli:identifier>
+                    </xbrli:entity>
+                    <xbrli:period>
+                        <xbrli:instant>{{ comparative_period.EndDate }}</xbrli:instant>
+                    </xbrli:period>
+                </xbrli:context>
+                <xbrli:context id="ctx-duration-prior">
+                    <xbrli:entity>
+                        <xbrli:identifier scheme="http://www.ato.gov.au/abn">{{ entity.TaxReference }}</xbrli:identifier>
+                    </xbrli:entity>
+                    <xbrli:period>
+                        <xbrli:startDate>{{ comparative_period.StartDate }}</xbrli:startDate>
+                        <xbrli:endDate>{{ comparative_period.EndDate }}</xbrli:endDate>
+                    </xbrli:period>
+                </xbrli:context>
+                {% endif %}
                 <xbrli:unit id="unit-aud">
                     <xbrli:measure>iso4217:AUD</xbrli:measure>
                 </xbrli:unit>
@@ -48,203 +71,184 @@
 
     <h1>Statement of Financial Position (Balance Sheet)</h1>
     <h2>{{ entity.CompanyName }}</h2>
-    <p>As of {{ period.EndDate }}</p>
+    <p>As of {{ period.EndDate }}{% if comparative_period %} (with comparative period {{ comparative_period.PeriodLabel }} ended {{ comparative_period.EndDate }}){% endif %}</p>
+
+    {%- macro instant_cell(name, current_val, comp_val, comparative) -%}
+    <td class="num">
+        <ix:nonFraction name="mini:{{ name }}" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
+            {{ "{:.2f}".format(current_val) }}
+        </ix:nonFraction>
+    </td>
+    {%- if comparative %}
+    <td class="num">
+        <ix:nonFraction name="mini:{{ name }}" contextRef="ctx-instant-prior" unitRef="unit-aud" decimals="2">
+            {{ "{:.2f}".format(comp_val) }}
+        </ix:nonFraction>
+    </td>
+    {%- endif %}
+    {%- endmacro -%}
+
+    {%- macro duration_cell(name, current_val, comp_val, comparative) -%}
+    <td class="num">
+        <ix:nonFraction name="mini:{{ name }}" contextRef="ctx-duration" unitRef="unit-aud" decimals="2">
+            {{ "{:.2f}".format(current_val) }}
+        </ix:nonFraction>
+    </td>
+    {%- if comparative %}
+    <td class="num">
+        <ix:nonFraction name="mini:{{ name }}" contextRef="ctx-duration-prior" unitRef="unit-aud" decimals="2">
+            {{ "{:.2f}".format(comp_val) }}
+        </ix:nonFraction>
+    </td>
+    {%- endif %}
+    {%- endmacro -%}
+
+    {% set has_comp = comparative_accounts is not none %}
+    {% set colspan = (has_comp and 3) or 2 %}
 
     <table>
-        <tr class="header-row"><td colspan="2">ASSETS</td></tr>
+        <tr class="header-row"><td colspan="{{ colspan }}">ASSETS</td></tr>
+        {% if has_comp %}
+        <tr class="period-hdr">
+            <td></td>
+            <td>{{ period.PeriodLabel }} (current)</td>
+            <td>{{ comparative_period.PeriodLabel }} (prior)</td>
+        </tr>
+        {% endif %}
         <tr>
             <td>Cash and Cash Equivalents</td>
-            <td>
-                <ix:nonFraction name="mini:CashAndCashEquivalents" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
-                    {{ accounts.mini_CashAndCashEquivalents }}
-                </ix:nonFraction>
-            </td>
+            {{ instant_cell('CashAndCashEquivalents', accounts.mini_CashAndCashEquivalents, has_comp and comparative_accounts.mini_CashAndCashEquivalents or 0.0, has_comp) }}
         </tr>
         <tr>
             <td>Receivables</td>
-            <td>
-                <ix:nonFraction name="mini:Receivables" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
-                    {{ accounts.mini_Receivables }}
-                </ix:nonFraction>
-            </td>
+            {{ instant_cell('Receivables', accounts.mini_Receivables, has_comp and comparative_accounts.mini_Receivables or 0.0, has_comp) }}
         </tr>
         <tr>
             <td>Inventories</td>
-            <td>
-                <ix:nonFraction name="mini:Inventories" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
-                    {{ accounts.mini_Inventories }}
-                </ix:nonFraction>
-            </td>
+            {{ instant_cell('Inventories', accounts.mini_Inventories, has_comp and comparative_accounts.mini_Inventories or 0.0, has_comp) }}
         </tr>
         <tr class="total-row">
             <td>Total Current Assets</td>
-            <td>
-                <ix:nonFraction name="mini:CurrentAssets" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
-                    {{ accounts.mini_CurrentAssets }}
-                </ix:nonFraction>
-            </td>
+            {{ instant_cell('CurrentAssets', accounts.mini_CurrentAssets, has_comp and comparative_accounts.mini_CurrentAssets or 0.0, has_comp) }}
         </tr>
         <tr>
             <td>Property, Plant and Equipment</td>
-            <td>
-                <ix:nonFraction name="mini:PropertyPlantAndEquipment" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
-                    {{ accounts.mini_PropertyPlantAndEquipment }}
-                </ix:nonFraction>
-            </td>
+            {{ instant_cell('PropertyPlantAndEquipment', accounts.mini_PropertyPlantAndEquipment, has_comp and comparative_accounts.mini_PropertyPlantAndEquipment or 0.0, has_comp) }}
         </tr>
         <tr class="total-row">
             <td>Total Noncurrent Assets</td>
-            <td>
-                <ix:nonFraction name="mini:NoncurrentAssets" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
-                    {{ accounts.mini_NoncurrentAssets }}
-                </ix:nonFraction>
-            </td>
+            {{ instant_cell('NoncurrentAssets', accounts.mini_NoncurrentAssets, has_comp and comparative_accounts.mini_NoncurrentAssets or 0.0, has_comp) }}
         </tr>
         <tr class="total-row">
             <td>TOTAL ASSETS</td>
-            <td>
-                <ix:nonFraction name="mini:Assets" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
-                    {{ accounts.mini_Assets }}
-                </ix:nonFraction>
-            </td>
+            {{ instant_cell('Assets', accounts.mini_Assets, has_comp and comparative_accounts.mini_Assets or 0.0, has_comp) }}
         </tr>
     </table>
 
     <table>
-        <tr class="header-row"><td colspan="2">LIABILITIES &amp; EQUITY</td></tr>
+        <tr class="header-row"><td colspan="{{ colspan }}">LIABILITIES &amp; EQUITY</td></tr>
+        {% if has_comp %}
+        <tr class="period-hdr">
+            <td></td>
+            <td>{{ period.PeriodLabel }} (current)</td>
+            <td>{{ comparative_period.PeriodLabel }} (prior)</td>
+        </tr>
+        {% endif %}
         <tr>
             <td>Accounts Payable</td>
-            <td>
-                <ix:nonFraction name="mini:AccountsPayable" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
-                    {{ accounts.mini_AccountsPayable }}
-                </ix:nonFraction>
-            </td>
+            {{ instant_cell('AccountsPayable', accounts.mini_AccountsPayable, has_comp and comparative_accounts.mini_AccountsPayable or 0.0, has_comp) }}
         </tr>
         <tr class="total-row">
             <td>Total Current Liabilities</td>
-            <td>
-                <ix:nonFraction name="mini:CurrentLiabilities" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
-                    {{ accounts.mini_CurrentLiabilities }}
-                </ix:nonFraction>
-            </td>
+            {{ instant_cell('CurrentLiabilities', accounts.mini_CurrentLiabilities, has_comp and comparative_accounts.mini_CurrentLiabilities or 0.0, has_comp) }}
         </tr>
         <tr class="total-row">
             <td>Total Noncurrent Liabilities</td>
-            <td>
-                <ix:nonFraction name="mini:NoncurrentLiabilities" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
-                    {{ accounts.mini_NoncurrentLiabilities }}
-                </ix:nonFraction>
-            </td>
+            {{ instant_cell('NoncurrentLiabilities', accounts.mini_NoncurrentLiabilities, has_comp and comparative_accounts.mini_NoncurrentLiabilities or 0.0, has_comp) }}
         </tr>
         <tr class="total-row">
             <td>Total Liabilities</td>
-            <td>
-                <ix:nonFraction name="mini:Liabilities" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
-                    {{ accounts.mini_Liabilities }}
-                </ix:nonFraction>
-            </td>
+            {{ instant_cell('Liabilities', accounts.mini_Liabilities, has_comp and comparative_accounts.mini_Liabilities or 0.0, has_comp) }}
         </tr>
-        
-        <tr><td colspan="2">&#160;</td></tr>
+
+        <tr><td colspan="{{ colspan }}">&#160;</td></tr>
 
         <tr>
             <td>Paid in Capital</td>
-            <td>
-                <ix:nonFraction name="mini:PaidInCapital" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
-                    {{ accounts.mini_PaidInCapital }}
-                </ix:nonFraction>
-            </td>
+            {{ instant_cell('PaidInCapital', accounts.mini_PaidInCapital, has_comp and comparative_accounts.mini_PaidInCapital or 0.0, has_comp) }}
         </tr>
         <tr>
             <td>Retained Earnings</td>
-            <td>
-                <ix:nonFraction name="mini:RetainedEarnings" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
-                    {{ accounts.mini_RetainedEarnings }}
-                </ix:nonFraction>
-            </td>
+            {{ instant_cell('RetainedEarnings', accounts.mini_RetainedEarnings, has_comp and comparative_accounts.mini_RetainedEarnings or 0.0, has_comp) }}
         </tr>
         <tr class="total-row">
             <td>Total Equity</td>
-            <td>
-                <ix:nonFraction name="mini:Equity" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
-                    {{ accounts.mini_Equity }}
-                </ix:nonFraction>
-            </td>
+            {{ instant_cell('Equity', accounts.mini_Equity, has_comp and comparative_accounts.mini_Equity or 0.0, has_comp) }}
         </tr>
         <tr class="total-row" style="border-bottom: 3px double black;">
             <td>TOTAL LIABILITIES &amp; EQUITY</td>
-            <td>
-                <ix:nonFraction name="mini:LiabilitiesAndEquity" contextRef="ctx-instant" unitRef="unit-aud" decimals="2">
-                    {{ accounts.mini_LiabilitiesAndEquity }}
-                </ix:nonFraction>
-            </td>
+            {{ instant_cell('LiabilitiesAndEquity', accounts.mini_LiabilitiesAndEquity, has_comp and comparative_accounts.mini_LiabilitiesAndEquity or 0.0, has_comp) }}
         </tr>
     </table>
 
     {% if translation_evidence %}
-    <h1>Translation Note — Multi-Currency Provenance</h1>
-    <p>The following table lists every non-reporting-currency fact contributed by a member entity, the FX rate applied, and the resulting reporting-currency contribution. Source values are recorded as ingested from each member's ledger; FX rates are sourced from the group manifest's <code>fx_rate_source</code>. Each row is auditable evidence emitted by <code>engine/consolidation.pl::consolidation_evidence/6</code> &#8212; the Prolog provenance predicate &#8212; not by the Python rendering layer.</p>
+    <h1>Translation Note &#8212; Multi-Currency Provenance</h1>
+    <p>The following table lists every non-reporting-currency fact contributed by a member entity in the <strong>current period ({{ period.PeriodLabel }})</strong>, the FX rate applied, and the resulting reporting-currency contribution. Source values are recorded as ingested from each member's ledger; FX rates are sourced from the group manifest's <code>fx_rate_source</code>. Each row is auditable evidence emitted by <code>engine/consolidation.pl::consolidation_evidence/6</code> &#8212; the Prolog provenance predicate &#8212; not by the Python rendering layer.</p>
     <table>
         <tr class="header-row">
             <td>Member Entity</td>
             <td>Concept</td>
             <td>Source Currency</td>
-            <td style="text-align:right">Source Value</td>
-            <td style="text-align:right">FX Rate</td>
-            <td style="text-align:right">Reporting Value (AUD)</td>
+            <td class="num">Source Value</td>
+            <td class="num">FX Rate</td>
+            <td class="num">Reporting Value (AUD)</td>
         </tr>
         {% for row in translation_evidence %}
         <tr>
             <td>{{ row.entity }}</td>
             <td>{{ row.concept }}</td>
             <td>{{ row.source_currency }}</td>
-            <td style="text-align:right">{{ "{:,.2f}".format(row.source_value) }}</td>
-            <td style="text-align:right">{{ "{:.4f}".format(row.fx_rate) }}</td>
-            <td style="text-align:right">{{ "{:,.2f}".format(row.contribution) }}</td>
+            <td class="num">{{ "{:,.2f}".format(row.source_value) }}</td>
+            <td class="num">{{ "{:.4f}".format(row.fx_rate) }}</td>
+            <td class="num">{{ "{:,.2f}".format(row.contribution) }}</td>
         </tr>
         {% endfor %}
         <tr class="total-row">
-            <td colspan="5">Total Translated Contribution</td>
-            <td style="text-align:right">{{ "{:,.2f}".format(translation_evidence_total) }}</td>
+            <td colspan="5">Total Translated Contribution &#8212; {{ period.PeriodLabel }}</td>
+            <td class="num">{{ "{:,.2f}".format(translation_evidence_total) }}</td>
         </tr>
     </table>
+    {% if comparative_translation_evidence_total is not none %}
+    <p style="font-size:9pt;color:#555"><em>Prior period ({{ comparative_period.PeriodLabel }}) total translated contribution: AUD {{ "{:,.2f}".format(comparative_translation_evidence_total) }}. Per-row prior-period provenance is omitted from this Translation Note (S5b option c); see the comparator-period iXBRL artifact for the full FY{{ comparative_period.PeriodLabel[2:] }} provenance trail.</em></p>
+    {% endif %}
     <p style="font-size:9pt;color:#555"><em>Provenance source: <code>sbrm_consolidation:consolidation_evidence/6</code> in <code>engine/consolidation.pl</code>. Each row corresponds to a single <code>evidence/6</code> term emitted by the Prolog engine. The Python renderer does not compute these values; it only displays them.</em></p>
     {% endif %}
 
     <h1>Statement of Comprehensive Income</h1>
     <table>
-        <tr class="header-row"><td colspan="2">PROFIT AND LOSS</td></tr>
+        <tr class="header-row"><td colspan="{{ colspan }}">PROFIT AND LOSS</td></tr>
+        {% if has_comp %}
+        <tr class="period-hdr">
+            <td></td>
+            <td>{{ period.PeriodLabel }} (current)</td>
+            <td>{{ comparative_period.PeriodLabel }} (prior)</td>
+        </tr>
+        {% endif %}
         <tr>
             <td>Sales / Revenues</td>
-            <td>
-                <ix:nonFraction name="mini:Sales" contextRef="ctx-duration" unitRef="unit-aud" decimals="2">
-                    {{ accounts.mini_Sales }}
-                </ix:nonFraction>
-            </td>
+            {{ duration_cell('Sales', accounts.mini_Sales, has_comp and comparative_accounts.mini_Sales or 0.0, has_comp) }}
         </tr>
         <tr>
             <td>Cost of Goods Sold</td>
-            <td>
-                <ix:nonFraction name="mini:CostOfGoodsSold" contextRef="ctx-duration" unitRef="unit-aud" decimals="2">
-                    {{ accounts.mini_CostOfGoodsSold }}
-                </ix:nonFraction>
-            </td>
+            {{ duration_cell('CostOfGoodsSold', accounts.mini_CostOfGoodsSold, has_comp and comparative_accounts.mini_CostOfGoodsSold or 0.0, has_comp) }}
         </tr>
         <tr>
             <td>Operating Expenses</td>
-            <td>
-                <ix:nonFraction name="mini:OperatingExpenses" contextRef="ctx-duration" unitRef="unit-aud" decimals="2">
-                    {{ accounts.mini_OperatingExpenses }}
-                </ix:nonFraction>
-            </td>
+            {{ duration_cell('OperatingExpenses', accounts.mini_OperatingExpenses, has_comp and comparative_accounts.mini_OperatingExpenses or 0.0, has_comp) }}
         </tr>
         <tr class="total-row">
             <td>NET INCOME (LOSS)</td>
-            <td>
-                <ix:nonFraction name="mini:NetIncomeLoss" contextRef="ctx-duration" unitRef="unit-aud" decimals="2">
-                    {{ accounts.mini_NetIncomeLoss }}
-                </ix:nonFraction>
-            </td>
+            {{ duration_cell('NetIncomeLoss', accounts.mini_NetIncomeLoss, has_comp and comparative_accounts.mini_NetIncomeLoss or 0.0, has_comp) }}
         </tr>
     </table>
 </body>

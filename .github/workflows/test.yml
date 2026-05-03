@@ -79,6 +79,10 @@ jobs:
       - name: Run pipeline.py against all sample ledgers
         run: |
           set -e
+          # S5b: clear stale outputs first so a renamed/removed sample
+          # ledger does not leave a stale .html behind that would fail the
+          # context-count assertion below.
+          rm -rf outputs
           python3 pipeline.py | tee pipeline.log
           # Pipeline returns exit code 0 even when audit fails; we have to
           # parse the summary line to fail the job on any aborted ledger.
@@ -104,13 +108,56 @@ jobs:
             exit 1
           fi
           # Translation Note must NOT appear in single-currency outputs.
-          for f in outputs/GL_01_*.html outputs/GL_02_*.html outputs/GL_05_*.html outputs/Input_A.html; do
+          for f in outputs/GL_01_*.html outputs/GL_02_*.html outputs/GL_05_Sydney_Cafe_Co_Pty_Ltd_FY25.html outputs/Input_A.html; do
             if [ -f "$f" ] && grep -q "Translation Note" "$f"; then
               echo "❌ Translation Note leaked into single-currency output: $f"
               exit 1
             fi
           done
           echo "✅ Translation Note correctly scoped to multi-currency groups."
+
+      - name: Assert iXBRL comparative-period contexts (S5b)
+        run: |
+          set -e
+          # S5b: outputs that carry a comparative period MUST emit exactly
+          # 4 distinct xbrli:context blocks (instant + duration; current +
+          # prior). Single-period outputs MUST emit exactly 2 (instant +
+          # duration). Catches accidental duplication, accidental omission,
+          # or stale comparative contexts leaking into single-period output.
+          python3 - <<'PY'
+          import sys, glob
+          import xml.etree.ElementTree as ET
+          NS_XBRLI = '{http://www.xbrl.org/2003/instance}'
+          # Files that MUST carry comparatives (have a sibling _FY24 ledger
+          # or a manifest comparative block).
+          comparative_outputs = {
+              'outputs/GL_05_Sydney_Cafe_Co_Pty_Ltd_FY25.html',
+              'outputs/AcmeGroup_consolidated.html',
+          }
+          fails = []
+          for path in sorted(glob.glob('outputs/*.html')):
+              tree = ET.parse(path)
+              ctxs = sorted(c.get('id') for c in tree.iter(NS_XBRLI + 'context'))
+              if path in comparative_outputs:
+                  expected = ['ctx-duration', 'ctx-duration-prior',
+                              'ctx-instant',  'ctx-instant-prior']
+                  if ctxs != expected:
+                      fails.append((path, expected, ctxs))
+                      print(f'❌ {path}: expected {expected}, got {ctxs}')
+                      continue
+                  print(f'✅ {path}: comparative contexts present ({len(ctxs)})')
+              else:
+                  expected = ['ctx-duration', 'ctx-instant']
+                  if ctxs != expected:
+                      fails.append((path, expected, ctxs))
+                      print(f'❌ {path}: expected {expected}, got {ctxs}')
+                      continue
+                  print(f'✅ {path}: single-period contexts ({len(ctxs)})')
+          if fails:
+              print()
+              print(f'{len(fails)} iXBRL artifact(s) failed S5b context-count assertion.')
+              sys.exit(1)
+          PY
 
       - name: Assert iXBRL output is XML well-formed
         run: |
