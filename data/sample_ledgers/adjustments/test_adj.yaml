@@ -17,10 +17,10 @@ adjustment:
       direction: credit
       description: Retained earnings balancing figure
   approved_status: pending
-  human_approver: null
-  approved_at: null
   source_provenance:
     trace_id: "f47ac10b58cc4372a5670e02b2c3d479"
+    human_approver: null
+    approved_at: null
     service_endpoint: null
     service: aider-gpt-orchestrator/v1
     service_version: "1.0.0"
