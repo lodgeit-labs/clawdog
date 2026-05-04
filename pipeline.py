@@ -7,6 +7,7 @@ from jinja2 import Template
 from pyswip import Prolog
 
 from engine.heuristic_mapper import map_account_to_mini
+from engine.yaml_adjustments import parse_adjustment
 from engine.jurisdiction_periods import (
     DEFAULT_JURISDICTION as _DEFAULT_JURISDICTION,
     period_meta_for_label as _jurisdiction_period_meta,
@@ -167,6 +168,18 @@ def _derive_equity_rollforward_scalars(csv_file):
                 divs += amt
     return opening_eq, cap_inj, divs
 
+def _load_and_validate_adjustments(adjustments_dir):
+    """Load and validate YAML adjustments from the specified directory."""
+    adjustments = []
+    for file in os.listdir(adjustments_dir):
+        if file.endswith('.yaml'):
+            with open(os.path.join(adjustments_dir, file), 'r') as f:
+                adjustment = yaml.safe_load(f)
+                # Validate the adjustment using the existing logic
+                validated_adjustment = parse_adjustment(adjustment)
+                adjustments.append(validated_adjustment)
+    return adjustments
+
 def _run_prolog_audit(accounts, csv_file, client_name,
                      entity='client', period='current'):
     # NOTE (S5b / Standing Rule #6): callers may pass a real period label
@@ -185,7 +198,19 @@ def _run_prolog_audit(accounts, csv_file, client_name,
     to no-silent-zero at the mini layer is a separate sprint (would
     require json_ld emission to fail loudly on missing concepts too).
     """
+    # Load and validate adjustments
+    adjustments = _load_and_validate_adjustments('data/sample_ledgers/adjustments')
+
     prolog = Prolog()
+
+    # Assert adjustments into Prolog
+    for adj in adjustments:
+        if adj.entity == client_name and adj.period == period:
+            for posting in adj.postings:
+                prolog.assertz(
+                    f"sbrm_consolidation:sbrm_fact('{entity_atom}',"
+                    f"'{period}','{posting.concept}',{posting.amount},"
+                    f"'ADJ','{posting.direction}')")
     _ensure_audit_loaded(prolog)
 
     # Use a per-client entity atom so concurrent ledgers can coexist in
