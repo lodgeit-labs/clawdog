@@ -198,6 +198,10 @@ def _run_prolog_audit(accounts, csv_file, client_name,
     to no-silent-zero at the mini layer is a separate sprint (would
     require json_ld emission to fail loudly on missing concepts too).
     """
+    # Use a per-client entity atom so concurrent ledgers can coexist in
+    # the shared Prolog database without leakage. Sanitise to atoms.
+    entity_atom = re.sub(r'[^A-Za-z0-9_]', '_', client_name)
+
     # Load and validate adjustments
     adjustments = _load_and_validate_adjustments('data/sample_ledgers/adjustments')
 
