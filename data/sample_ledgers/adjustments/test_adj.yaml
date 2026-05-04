@@ -20,7 +20,7 @@ adjustment:
   source_provenance:
     trace_id: "f47ac10b58cc4372a5670e02b2c3d479"
     human_approver: "System Admin"
-    approved_at: null
+    approved_at: "2026-05-04T10:32:00Z"
     service_endpoint: null
     service: aider-gpt-orchestrator/v1
     service_version: "1.0.0"
