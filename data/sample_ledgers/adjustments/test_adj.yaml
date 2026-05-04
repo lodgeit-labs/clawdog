@@ -1,4 +1,4 @@
-adj_id: adj_{{uuid4_hex}}
+adj_id: adj_f47ac10b58cc4372a5670e02b2c3d479
 entity: Bluey_Builders_Pty_Ltd
 period: FY26
 event: Ledger migration to ClawDog for book-to-tax depreciation transition
