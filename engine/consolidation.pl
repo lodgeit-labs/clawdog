@@ -31,6 +31,7 @@
           , verify_temporal_equity/5
           , consolidation_evidence/6
           , sbrm_fact/6
+          , sbrm_adjustment/6
           , sbrm_edge/4
           , sbrm_edge/5
           , fx_rate/4
@@ -40,9 +41,14 @@
 :- use_module(library(lists)).
 
 %% Multifile so external injectors can `assertz(sbrm_fact(...))` directly
-%% and the engine here will see those facts.
-:- multifile sbrm_fact/6, sbrm_edge/4, sbrm_edge/5, fx_rate/4.
-:- dynamic   sbrm_fact/6, sbrm_edge/4, sbrm_edge/5, fx_rate/4.
+%% and the engine here will see those facts. sbrm_adjustment/6 is the
+%% Sprint A1 schema for agentic adjusting journals (locked 2026-05-04;
+%% Brain canon GLOBAL_NOTES/CLAWDOG/108_LAST_MILE_ARCHITECTURE.md § 4.2.1).
+%% Schema-centralisation discipline: data shapes live here; rules over
+%% the schema live in engine/audit.pl (sbrm_fact/6) and engine/adjustments.pl
+%% (sbrm_adjustment/6). See 108 § 4.2.4 (B1 ruling).
+:- multifile sbrm_fact/6, sbrm_adjustment/6, sbrm_edge/4, sbrm_edge/5, fx_rate/4.
+:- dynamic   sbrm_fact/6, sbrm_adjustment/6, sbrm_edge/4, sbrm_edge/5, fx_rate/4.
 
 % ---- tunable ---------------------------------------------------------------
 %% Tolerance for the equity-roll-forward equality check. FX float drift

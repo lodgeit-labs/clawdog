@@ -1,0 +1,50 @@
+# Sample agentic adjusting journal — Sprint A2 Wind Tunnel fixture.
+#
+# Purpose: provide a realistic, human-readable, schema-locked example of
+# a depreciation tax-adjustment journal authored by an external service
+# (the future hosted depreciation API). The ClawDog Wind Tunnel can load
+# this file via engine.yaml_adjustments.load_adjustment_yaml() and inject
+# the resulting facts into sbrm_consolidation:sbrm_adjustment/6 for local
+# Prolog-engine testing without any HTTP round-trip.
+#
+# The journal balances by construction (1250 debit + 1250 credit = 0).
+# audit_AccumulatedTaxDepreciation is a Phase II audit_* concept (canonical
+# at the composed-state layer per Brain canon 108 § 4.2.1 — audit_*-namespaced
+# concepts are audit-only inputs that don't claim to be SBRM ontology surface).
+#
+# Brain canon: GLOBAL_NOTES/CLAWDOG/108_LAST_MILE_ARCHITECTURE.md § 4.2.2
+# Schema lock: 2026-05-04 01:57 UTC (Andrew's A1 ruling)
+
+adjustment:
+  adj_id: "adj_a3f8c1d2e7b59f4a8c1e3b6d9f2a5c7e"
+  entity: "Bluey_Builders_Pty_Ltd"
+  period: "FY25"
+  description: "Tax depreciation adjustment for FY25 (Div 40 vs accounting)"
+  approved_status: "proven"
+
+  postings:
+    - concept: "mini_DepreciationAndAmortization"
+      amount: 1250.00
+      direction: "debit"
+      description: "Tax-flavored depreciation under Div 40 (replaces accounting depreciation)"
+
+    - concept: "audit_AccumulatedTaxDepreciation"
+      amount: 1250.00
+      direction: "credit"
+      description: "Counter-entry to accounting depreciation; audit-only concept"
+
+  source_provenance:
+    trace_id: "dep_api_2026Q1_a3f8c1d2"
+    authored_at: "2026-05-04T01:50:00Z"
+    service: "lodgeit-depreciation-api/v1"
+    service_endpoint: "https://depreciation.lodgeit.org/v1/calculate"
+    service_version: "1.4.2"
+    service_commit: null
+    human_approver: "andrew@lodgeit.org"
+    approved_at: "2026-05-04T01:52:00Z"
+
+  audit_trail:
+    injected_at: null
+    balance_check: null
+    six_point_recheck: null
+    rejected_reason: null
