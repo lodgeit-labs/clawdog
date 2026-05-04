@@ -53,7 +53,12 @@ jobs:
           set -e
           swipl -g run_tests -t halt engine/tests/test_audit.pl
 
-      - name: Set up Python (for engine.jurisdiction_periods unittests)
+      - name: Run engine/tests/test_adjustments.pl (Sprint A2)
+        run: |
+          set -e
+          swipl -g run_tests -t halt engine/tests/test_adjustments.pl
+
+      - name: Set up Python (for engine.jurisdiction_periods + engine.yaml_adjustments unittests)
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -67,6 +72,20 @@ jobs:
           # requirements.txt. Per Lesson #29: every Kit gate verifies
           # what it claims to gate, and Gate 1 owns engine/* regression.
           python3 -m unittest engine.tests.test_jurisdiction_periods -v
+
+      - name: Install PyYAML (for engine.yaml_adjustments tests)
+        run: |
+          set -e
+          # engine.yaml_adjustments imports yaml; the rest of the module is
+          # stdlib-only (Lesson #19 — stdlib + minimal pinned deps where
+          # third-party is genuinely required). PyYAML is already in
+          # requirements.txt; install only it here to keep Gate 1 light.
+          python3 -m pip install --no-deps --upgrade "PyYAML==6.0.1"
+
+      - name: Run engine/tests/test_yaml_adjustments.py (Sprint A2)
+        run: |
+          set -e
+          python3 -m unittest engine.tests.test_yaml_adjustments -v
 
   pipeline-integration:
     name: Gate 2 — Pipeline integration (7-point audit)
