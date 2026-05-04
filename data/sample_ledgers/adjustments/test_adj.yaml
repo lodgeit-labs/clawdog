@@ -7,12 +7,15 @@ adjustment:
     - concept: mini_PropertyPlantAndEquipmentGross
       amount: 15000.00
       direction: debit
+      description: Initial recognition of gross PP&E for tax transition
     - concept: audit_AccumulatedTaxDepreciation
       amount: 6250.00
       direction: credit
+      description: Accumulated tax depreciation offset
     - concept: mini_RetainedEarnings
       amount: 8750.00
       direction: credit
+      description: Retained earnings balancing figure
   source_provenance:
     service_endpoint: null
     service: aider-gpt-orchestrator/v1
