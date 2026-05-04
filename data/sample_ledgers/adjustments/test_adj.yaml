@@ -20,6 +20,6 @@ adjustment:
     trace_id: "f47ac10b58cc4372a5670e02b2c3d479"
     service_endpoint: null
     service: aider-gpt-orchestrator/v1
-  approved_status: pending
+    authored_at: "2026-05-04T10:25:34Z"
   human_approver: null
   approved_at: null
