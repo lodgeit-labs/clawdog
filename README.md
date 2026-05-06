@@ -27,6 +27,10 @@ When you run `pipeline.py`:
 4. **Audit:** It runs the Thermodynamic Safeguard (Assets = Liabilities + Equity).
 5. **Output:** It drops the fully audited `.json` and `_ixbrl.html` files into the `outputs/` folder.
 
+## Wiring an LLM-driven adjustment-journal producer into ClawDog?
+
+See [`docs/INTEGRATOR_README.md`](docs/INTEGRATOR_README.md) — the Master Configuration Template and 18+2 documented rejection modes for the post-classification audit shim. Empirically validated zero-shot against the production engine.
+
 ## Multi-Period Multi-Currency Consolidation (`engine/consolidation.pl`)
 
 The legacy `engine/rules.pl` handles mono-period mono-currency rollups via `node_value/2` and `calculation_arc/3`. The companion module `engine/consolidation.pl` is a strict semantic superset that adds:
