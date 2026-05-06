@@ -223,3 +223,67 @@ jobs:
           print()
           print(f'✅ All {len(glob.glob("outputs/*.html"))} iXBRL artifacts are XML well-formed.')
           PY
+
+  integrator-pack-projection-byte-check:
+    name: Gate 3 — Integrator pack projection byte-check (Brain canon drift)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify docs/INTEGRATOR_README.md body bytes match declared body_sha256
+        # Per `clawdog-brain` CLAWDOG/141 §6.2 (Sister Kit PR contract):
+        # docs/INTEGRATOR_README.md is the Kit-side projection of Brain canon
+        # node CLAWDOG/141 INTEGRATOR_READINESS_PACK. The body bytes are
+        # verbatim from Brain canon; the frontmatter declares `body_sha256`,
+        # `source_brain_node_hash`, and `source_brain_canon_commit`.
+        #
+        # This gate enforces Lesson #32 option (iii): the load-bearing
+        # artifact (the publicly-rendered integrator pack) is preserved
+        # while drift between the declared body_sha256 and the actual
+        # body bytes is caught loud at PR time.
+        #
+        # When Brain canon at GLOBAL_NOTES/CLAWDOG/141_INTEGRATOR_READINESS_PACK.md
+        # is amended (helm_mutations append + new content_hash), the Kit
+        # projection must be re-synced: copy new body, recompute body_sha256,
+        # update source_brain_node_hash + source_brain_canon_commit + the
+        # last_synced_with_brain_canon timestamp. CI fails until all four
+        # frontmatter fields agree with the body bytes and Brain canon.
+        run: |
+          set -e
+          python3 - <<'PY'
+          import hashlib, re, sys, pathlib
+          path = pathlib.Path('docs/INTEGRATOR_README.md')
+          if not path.exists():
+              print(f'❌ {path} missing')
+              sys.exit(1)
+          content = path.read_text()
+          # Extract declared body_sha256 from frontmatter
+          m = re.search(r'^body_sha256:\s*"([0-9a-f]{64})"', content, re.MULTILINE)
+          if not m:
+              print(f'❌ frontmatter missing or malformed body_sha256 in {path}')
+              sys.exit(1)
+          declared = m.group(1)
+          # Locate body — first H1 matching the Brain canon's title
+          body_m = re.search(r'^# CLAWDOG/141', content, re.MULTILINE)
+          if not body_m:
+              print(f'❌ {path} missing body H1 "# CLAWDOG/141"')
+              sys.exit(1)
+          body = content[body_m.start():]
+          actual = hashlib.sha256(body.encode('utf-8')).hexdigest()
+          if declared != actual:
+              print(f'❌ DRIFT: body_sha256 declared {declared}')
+              print(f'         actual body bytes hash {actual}')
+              print(f'         Body length: {len(body)} bytes')
+              print()
+              print('   Either:')
+              print('   (a) The body was edited directly. Reverse the edit (Standing Rule #7:')
+              print('       Kit-side mutation of Brain canon projection is unowned drift).')
+              print('   (b) Brain canon was re-synced but body_sha256 frontmatter not updated.')
+              print('       Update body_sha256 to the actual hash and refresh source_brain_*')
+              print('       fields to match the Brain canon revision used.')
+              sys.exit(1)
+          print(f'✅ docs/INTEGRATOR_README.md body bytes hash to declared body_sha256')
+          print(f'   = {actual}')
+          print(f'   ({len(body)} bytes verified verbatim against Brain canon projection)')
+          PY
