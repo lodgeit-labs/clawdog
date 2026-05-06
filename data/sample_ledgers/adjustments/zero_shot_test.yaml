@@ -1,17 +1,17 @@
 adjustment:
-  adj_id: adj_1234567890abcdef1234567890abcdef
-  entity: Example_Entity
-  period: 2026-Q2
-  description: Example adjustment for demonstration
+  adj_id: adj_abcdef1234567890abcdef1234567890
+  entity: Bluey Builders Pty Ltd
+  period: FY26
+  description: Consulting fee payment to subcontractor
   postings:
-    - concept: mini_ExampleConcept
-      amount: 100.0
+    - concept: mini_ConsultingExpense
+      amount: 4500.0
       direction: debit
-      description: Debit for ExampleConcept
-    - concept: mini_ExampleConcept
-      amount: 100.0
+      description: Consulting fee paid to subcontractor
+    - concept: mini_RetainedEarnings
+      amount: 4500.0
       direction: credit
-      description: Credit for ExampleConcept
+      description: Reduction in retained earnings for consulting fee
   approved_status: pending
   source_provenance:
     service: clawdog-orchestrator
