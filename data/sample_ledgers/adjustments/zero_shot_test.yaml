@@ -14,7 +14,7 @@ adjustment:
       description: Reduction in retained earnings for consulting fee
   approved_status: pending
   source_provenance:
-    service: clawdog-orchestrator
+    service: clawdog/orchestrator
     service_version: "1.0.0"
     trace_id: 1234567890abcdef1234567890abcdef
     authored_at: "2026-05-06T10:00:34Z"
