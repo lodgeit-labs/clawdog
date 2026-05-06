@@ -1,0 +1,22 @@
+adjustment:
+  adj_id: adj_1234567890abcdef1234567890abcdef
+  entity: Example_Entity
+  period: 2026-Q2
+  description: Example adjustment for demonstration
+  postings:
+    - concept: mini_ExampleConcept
+      amount: 100.0
+      direction: debit
+      description: Debit for ExampleConcept
+    - concept: mini_ExampleConcept
+      amount: 100.0
+      direction: credit
+      description: Credit for ExampleConcept
+  approved_status: pending
+  source_provenance:
+    service: clawdog-orchestrator
+    service_version: "1.0.0"
+    trace_id: 1234567890abcdef1234567890abcdef
+    authored_at: "2026-05-06T10:00:34Z"
+    human_approver: "System Admin"
+    approved_at: "2026-05-06T10:00:34Z"
