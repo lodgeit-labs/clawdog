@@ -2,13 +2,13 @@
 status: published
 brain_canon_node: "GLOBAL_NOTES/CLAWDOG/141_INTEGRATOR_READINESS_PACK.md"
 brain_canon_repo: "futureWA/clawdog-brain"
-source_brain_node_hash: "71c680c448c705df0e8dd2b51e11d9684a944b2714e97e80e3f276aba5d0f810"
-source_brain_canon_commit: "c9ef69412f7526071aef87dcb74ed6b401398916"
-body_sha256: "d3a9192eef7b3dec42c4d3845e7f06d179608d664b733cd1fd3ff8d200a03304"
+source_brain_node_hash: "ece491ef543cb1c5713e75391abb43972e95f034bf9538f325542aca427a6a50"
+source_brain_canon_commit: "19467aabfccfc62e5d2b5c2148d6b0ee1d0a9f06"
+body_sha256: "755865200d8177b159b71b2c2af71a6e14a5679f49ae39ea8af5466351546447"
 body_sha256_scope: "SHA-256 of all bytes from the first occurrence of '# CLAWDOG/141' (the body H1) through end of file. Recompute and update on each Brain canon re-sync. Kit Gate-3 CI verifies this matches the actual body bytes — drift fails loud at PR time (Lesson #32 option iii)."
-ladder_position: "Kit projection of Brain canonical pack; sister to CLAWDOG/141 Brain PR #132 (merged 2026-05-06 05:24:38 UTC)"
-last_synced_with_brain_canon: "2026-05-06T05:30:00Z"
-projection_discipline: "Body bytes below are verbatim from Brain canon at source_brain_node_hash. Kit-side edits are not permitted; amendments round-trip through Brain canon (Standing Rule #7 containment rule). The Kit Gate-3 CI assertion (.github/workflows/test.yml) verifies the body bytes hash to a value consistent with source_brain_node_hash."
+ladder_position: "Kit projection of Brain canonical pack (mc23 re-sync); sister to CLAWDOG/141 Brain PR #133 (merged 2026-05-06 06:35:19 UTC at 19467aa). Replaces the mc22 projection from Kit PR #11 (merged 0e3ec10 05:36:46 UTC); the mc22 publication carried fabricated §3.1 / §4 / §6.2 content that the production engine would have rejected on every field — see helm_mutations entry in the Brain canon for the full forensic record."
+last_synced_with_brain_canon: "2026-05-06T06:45:00Z"
+projection_discipline: "Body bytes below are verbatim from Brain canon at source_brain_node_hash. Kit-side edits are not permitted; amendments round-trip through Brain canon (Standing Rule #7 containment rule). The Kit Gate-3 CI assertion (.github/workflows/test.yml) verifies the body bytes hash to a value consistent with body_sha256."
 ---
 
 <!--
@@ -29,13 +29,16 @@ To amend the integrator pack:
           (everything after this comment block).
        b. Update `source_brain_node_hash` and `source_brain_canon_commit` in
           frontmatter to the new Brain values.
-       c. Update `last_synced_with_brain_canon` to the current UTC timestamp.
+       c. Recompute body_sha256 over the body bytes (everything from '# CLAWDOG/141'
+          to EOF) and update frontmatter.
+       d. Update `last_synced_with_brain_canon` to the current UTC timestamp.
   3. Open a Kit PR. The Gate-3 byte-check CI assertion confirms the new
-     declared hash is consistent with the body bytes.
+     declared body_sha256 matches the body bytes.
 
 Brain canon source: https://github.com/futureWA/clawdog-brain
                     GLOBAL_NOTES/CLAWDOG/141_INTEGRATOR_READINESS_PACK.md
-Sister Brain PR:    #132 (merged 2026-05-06 05:24:38 UTC at c9ef694)
+mc22 (initial publication):    Brain PR #132 / Kit PR #11.
+mc23 (factual correction):     Brain PR #133 (merged at 19467aa) / THIS Kit PR.
 ================================================================================
 -->
 
@@ -130,70 +133,148 @@ If an integrator's workflow produces YAML adjustments that go directly to the au
 
 > **What this is.** A copy-pasteable LLM system-prompt fragment that, when wired into a probabilistic adjustment-journal producer, causes the producer's YAML output to pass the audit shim's ingestion firewall zero-shot on first attempt. Empirically validated against `lodgeit-labs/clawdog@bcdfad6` with `gpt-4o`-via-Aider on 5 of 5 sample General Ledgers (evidence: branch `clawdog/probe-thermodynamic-firewall-20260506`, tip `ac87f9f`).
 
-### §3.1 Template (copy verbatim)
+### §3.1 Template (lifted byte-identical from CLAWDOG/140 §1.4)
 
-> **Authoritative source.** This template is lifted byte-identical from CLAWDOG/140 §1.4 (the empirical record). If an integrator finds a discrepancy between this template and CLAWDOG/140's record, CLAWDOG/140 wins — file an issue and this node will be amended via `helm_mutations` per Standing Rule #3.
+> **Authoritative source.** The YAML template below is **byte-identical** to CLAWDOG/140 §1.4 (the empirical record). The mc23 amendment (this revision) byte-diffed the lifted text against CLAWDOG/140's source before content-hash-locking. If a future integrator finds a discrepancy between this template and CLAWDOG/140's record, CLAWDOG/140 wins — file an issue and this node will be amended via `helm_mutations` per Standing Rule #3.
+
+```yaml
+adjustment:
+  adj_id: adj_<generate_unique_hex>
+  entity: <Target_Entity_Name_Snake_Case_Only>
+  period: <Target_Period>
+  description: <Overall event description>
+  postings:
+    - concept: mini_<ConceptName>
+      amount: <Float>
+      direction: <debit or credit>
+      description: <Specific line item narration>
+  approved_status: pending
+  source_provenance:
+    service: clawdog/orchestrator
+    service_version: "1.0.0"
+    trace_id: <generate_32_char_hex>
+    authored_at: "2026-05-06T10:00:34Z"
+    human_approver: "System Admin"
+    approved_at: "2026-05-06T10:00:34Z"
+```
+
+### §3.1.1 LLM system-prompt framing for the template
+
+The template above is the *contract*. Integrators wiring an LLM-driven adjustment-journal producer typically embed the contract inside an LLM system prompt with framing prose. A minimal sufficient framing (empirically validated by the CLAWDOG/140 probe with `gpt-4o`-via-Aider, 5/5 GLs PASS):
 
 ```text
 You are an SBRM (Standard Business Reporting Model) adjustment-journal producer
 operating downstream of a deterministic Prolog audit shim. Your output is YAML
-matching the strict ingestion firewall described below. Output that does not
-match the firewall is rejected without partial credit.
+matching the exact template below. Output that does not match is rejected
+without partial credit.
 
-CONTRACT (the firewall enforces these atomically):
+TEMPLATE (substitute the angle-bracketed placeholders only; preserve every
+other token, including whitespace and key ordering):
 
-1. Top-level structure is exactly:
-     adjustments:
-       - <adjustment-record-1>
-       - <adjustment-record-2>
-       - ...
+<insert the §3.1 template here verbatim>
 
-2. Every adjustment record has exactly these fields, in this order:
-     ledger_id:        # string, MUST match an existing GL identifier (GL_NN_*)
-     period:           # string, MUST match the form FY<NN>; e.g. "FY25"
-     account_path:     # string, slash-delimited; e.g. "Expenses/Indirect Costs/..."
-     amount:           # number; positive = increase, negative = decrease
-     polarity:         # string, exactly one of: "debit" | "credit"
-     justification:    # string, single-line, human-readable, NO embedded newlines
+FIELD CONSTRAINTS:
 
-3. Numeric amount is bare YAML number (no quotes, no thousand separators, no
-   currency symbol). Use "." as decimal separator. Negative numbers prefixed
-   with "-".
+1. Top-level structure is `adjustment:` (singular dict), NOT `adjustments:`
+   (plural list). One adjustment per YAML document.
 
-4. Polarity is enforced as a string, NOT a boolean and NOT an integer. The
-   exact tokens "debit" and "credit" are the only accepted values. Aliases
-   such as "Dr"/"Cr", "DEBIT"/"CREDIT", or 1/-1 are rejected.
+2. `adj_id` is the literal prefix `adj_` followed by a generated unique hex
+   string. The recommended generator is a 32-character hex of cryptographically
+   random bytes (CLAWDOG/140 §3.B requires `trace_id` to be 32 hex chars; an
+   `adj_id` of similar shape avoids ambiguity at the integration boundary).
 
-5. account_path uses forward slashes "/" with NO leading or trailing slash and
-   NO double slashes. Each segment is the human-readable SBRM ontology label
-   verbatim, including spaces. The audit shim resolves the path against the
-   live SBRM ontology; a path that does not resolve is rejected.
+3. `entity` is snake_case ONLY. Spaces, hyphens, and CamelCase fail the Prolog
+   atom regex `^[A-Za-z_][A-Za-z0-9_]*$` and crash the audit shim.
+   `Bluey Builders Pty Ltd` -> `Bluey_Builders_Pty_Ltd`. (CLAWDOG/140 §3.A.4)
 
-6. justification is a single physical line in the YAML. If the justification
-   contains a newline character, the audit shim rejects the record. Long
-   justifications must be folded into a single line with appropriate
-   punctuation.
+4. `period` is your deployment's canonical period token (e.g. `FY25`, `Q1_2025`,
+   `2024-25`). The exact form is set by the engine deployment; consult the
+   deployment's period registry. The audit shim treats `period` as an opaque
+   string; mismatches surface as `(ledger_id, period) pair not found` errors
+   downstream.
 
-7. ledger_id and period together identify the General Ledger context for the
-   adjustment. The audit shim uses this pair to look up the GL's existing
-   trial balance; an adjustment against a non-existent (ledger_id, period)
-   pair is rejected.
+5. `postings:` is a YAML list of posting records. Each posting has exactly
+   four keys: `concept`, `amount`, `direction`, `description`. Every single
+   posting MUST carry a `description` (line-level narration); the Prolog
+   engine treats postings without `description` as phantom entries and
+   crashes. (CLAWDOG/140 §3.A.3)
 
-OUTPUT (when an adjustment is requested):
+6. `concept` values match the SBRM mini-taxonomy: `mini_<ConceptName>`,
+   CamelCase ConceptName. Examples: `mini_PropertyPlantAndEquipmentGross`,
+   `mini_RetainedEarnings`, `mini_CashAndCashEquivalents`. Audit-tier and
+   custom concepts use other prefixes (e.g. `audit_AccumulatedTaxDepreciation`).
+   The audit shim resolves `concept` against the live SBRM ontology; an
+   unresolved concept is rejected.
 
-   - Emit ONLY the YAML document. No prose preamble, no commentary, no code
-     fences, no markdown.
-   - Begin with the literal token "adjustments:" at column zero.
-   - End with a final newline character.
-   - Indent with two spaces per level (NOT tabs).
+7. `amount` is a bare YAML float (no quotes, no thousand separators, no
+   currency symbol). Use `.` as decimal separator. Use positive numbers only;
+   debits and credits are distinguished by `direction`, not by sign.
 
-REJECTION SYMPTOMS YOU MAY OBSERVE:
+8. `direction` is exactly one of the lowercase string tokens `debit` or
+   `credit`. Aliases (`Dr`/`Cr`, `DEBIT`/`CREDIT`, booleans, integers) are
+   rejected.
 
-   The audit shim emits one of 18 documented rejection modes (see §4 of the
-   integrator readiness pack). Each mode names the exact firewall rule
-   triggered. Treat any rejection as a signal to re-read the contract above;
-   do NOT attempt to "fix" the YAML by guessing what the shim wants.
+9. `description` (both the root-level adjustment-wide one AND the per-posting
+   one) is a single physical line of YAML. Multi-line descriptions corrupt
+   subsequent record parsing; fold long descriptions into one line.
+
+10. `approved_status` sits at the root `adjustment:` level (NOT nested inside
+    `source_provenance:`). Permitted tokens: `pending`, `proven`. The
+    placement trap is documented in CLAWDOG/140 §3.C — indentation collapse
+    onto `source_provenance` is the failure mode the engine surfaces with a
+    misleading error message.
+
+11. `source_provenance:` is mandatory. All sub-fields below are mandatory.
+    No `null` values are permitted on `human_approver`, `authored_at`,
+    `approved_at` even when the adjustment is `pending` (use `"System Admin"`
+    and an explicit ISO-8601 UTC timestamp). (CLAWDOG/140 §3.C — the Null Trap)
+
+12. `service` matches the regex `\w+/\w+` (word-chars, forward slash,
+    word-chars). `clawdog/orchestrator` passes; `clawdog-orchestrator` fails;
+    `myorg/my_producer` passes; `my-org/my-producer` fails. (CLAWDOG/140 §3.B —
+    Service Regex)
+
+13. `service_version` is a quoted semver string (e.g. `"1.0.0"`) OR
+    `service_commit` is a 40-char git SHA. At least one is mandatory; the
+    audit shim rejects "anonymous or untraceable logic." (CLAWDOG/140 §3.B —
+    Version Control)
+
+14. `trace_id` is a 32-character hex string generated for every action.
+    (CLAWDOG/140 §3.B — Trace ID)
+
+15. `authored_at` and `approved_at` are explicit ISO-8601 UTC strings
+    (e.g. `"2026-05-06T10:00:34Z"`). Loose date formats (e.g. `2026-05-06`)
+    or `null` are rejected. (CLAWDOG/140 §3.C — Strict ISO-8601 UTC)
+
+DOUBLE-ENTRY ALGEBRA:
+
+Within a single adjustment, the sum of `debit` posting amounts MUST equal
+the sum of `credit` posting amounts. The audit shim enforces this as part
+of the 6-Point Thermodynamic Safeguard; an unbalanced adjustment is rejected.
+
+OUTPUT FORMAT:
+
+- Emit ONLY the YAML document. No prose preamble, no commentary, no code
+  fences, no markdown.
+- Begin with the literal token `adjustment:` at column zero.
+- End with a final newline character.
+- Indent with two spaces per level (NOT tabs).
+
+REJECTION HANDLING:
+
+The audit shim emits one of 10 documented schema-rejection categories
+(§4) plus the double-entry balance check (§4.D). Each category names
+the firewall rule triggered. Treat any rejection as a signal to re-read this
+contract; do NOT "fix" the YAML by guessing what the shim wants. Re-read,
+then re-emit.
 ```
+
+The contract above is empirical: it codifies the failure modes the
+`gpt-4o`-via-Aider probe encountered before converging on 5/5 PASS at evidence
+branch tip `ac87f9f`. An LLM agent given this contract and a concrete
+business-context instruction (e.g. *"the company received an unrecorded
+invoice for office supplies of $487.50; produce the adjustment"*) should
+produce engine-acceptable YAML zero-shot.
 
 ### §3.2 Empirical evidence anchor
 
@@ -228,123 +309,82 @@ The branch is declared `archived_evidence_branch` — it will not be deleted, re
 
 ---
 
-## §4 The 18 documented rejection modes (integrator gotchas)
+## §4 The documented rejection modes (integrator gotchas)
 
-> **What this is.** Each entry restates one of CLAWDOG/140 §3.A/B/C's documented rejection modes from the integrator's perspective: *what your output must / must not contain*, *the engine-side rule that triggers rejection*, and *the symptom you'll observe*.
+> **What this is.** CLAWDOG/140 §3 documents the schema vulnerabilities the `gpt-4o`-via-Aider failure-loop probe encountered before converging on 5/5 PASS. Three category groups (A, B, C) totalling **10 distinct vulnerabilities**, plus the double-entry algebra check (§4.D below). Each entry below restates one CLAWDOG/140 vulnerability from the integrator's perspective: *what your output must / must not contain*, *the engine-side rule that triggers rejection*, and *the symptom you'll observe*. Source: CLAWDOG/140 §3.A/B/C verbatim, mapped onto integrator-facing language.
 
-The modes are grouped by firewall layer (A: structural, B: type, C: semantic). Within each group they are independent — the audit shim emits the *first* rejection it encounters and stops; an output that triggers two modes will surface only the first one in the firewall's evaluation order.
+The categories are independent — the audit shim emits the *first* rejection it encounters and stops; an output that triggers two simultaneously will surface only the first in the engine's evaluation order. Beyond these 10 schema-level checks, the engine also enforces double-entry balance (§4.D), which fires after schema checks pass.
 
-### §4.A — Structural rejection modes (audit shim refuses to parse the document)
+### §4.A — Structural integrity (4 vulnerabilities)
 
-**A1 — Missing top-level `adjustments:` key.**
-What you must do: begin the document with the literal token `adjustments:` at column zero.
-Engine-side rule: the YAML loader requires the top-level mapping to contain exactly the key `adjustments`; any other top-level shape (a list, a different mapping key, scalar, null) is rejected.
-Symptom: shim emits `STRUCTURAL_TOP_LEVEL_KEY_MISSING`.
+**A.1 — Root key missing or wrong.**
+What you must do: top-level structure is `adjustment:` (singular dict). LLMs default to flat YAML lists or to plural `adjustments:`; both are rejected.
+Engine-side rule: `engine/yaml_adjustments.py::parse_adjustment` requires the top-level mapping to contain exactly the key `adjustment` mapping to a dict.
+Symptom: `KeyError: 'adjustment'` or `TypeError: 'adjustment' must map to a mapping`.
 
-**A2 — Top-level `adjustments:` value is not a YAML sequence.**
-What you must do: the value of `adjustments:` is a YAML sequence (`-` items), even when there is exactly one adjustment record.
-Engine-side rule: `isinstance(parsed["adjustments"], list)` check; mappings, scalars, and `null` are rejected.
-Symptom: shim emits `STRUCTURAL_ADJUSTMENTS_NOT_LIST`.
+**A.2 — Hallucinated key names.**
+What you must do: use the exact CLAWDOG/140 §1.4 schema keys (`adj_id`, `entity`, `period`, `description`, `postings`, `approved_status`, `source_provenance`). The model may attempt synonyms (e.g. `event:` instead of `description:`); these are rejected.
+Engine-side rule: schema keys are immutable; the loader's allow-list rejects unknown keys.
+Symptom: `UnknownFieldError: <field-name>` or silent omission of the substituted key from the parsed adjustment, surfacing later as a missing-required-field error.
 
-**A3 — Adjustment record is not a YAML mapping.**
-What you must do: each item under `adjustments:` is a mapping (key/value pairs), not a scalar or sub-list.
-Engine-side rule: each list element is `isinstance(item, dict)`-checked.
-Symptom: shim emits `STRUCTURAL_RECORD_NOT_DICT`.
+**A.3 — Line-level narration missing.**
+What you must do: every single posting in the `postings:` array carries its own `description:` key. The Prolog engine treats postings without line-level narration as phantom entries.
+Engine-side rule: per-posting `description` field is required; absence triggers a fatal audit shim crash.
+Symptom: Prolog engine crash with a phantom-entry diagnostic.
 
-**A4 — Adjustment record has unknown fields.**
-What you must do: include exactly the six required fields (`ledger_id`, `period`, `account_path`, `amount`, `polarity`, `justification`); no extras.
-Engine-side rule: strict allow-list; unknown keys raise `KeyError`-like rejection. (This is intentional — the audit shim refuses to silently ignore fields whose semantics it does not understand.)
-Symptom: shim emits `STRUCTURAL_UNKNOWN_FIELD: <field-name>`.
+**A.4 — Atom-shape identifier violation.**
+What you must do: `entity` is snake_case ONLY. Spaces, hyphens, and CamelCase fail the Prolog atom regex `^[A-Za-z_][A-Za-z0-9_]*$`. `Bluey Builders Pty Ltd` -> `Bluey_Builders_Pty_Ltd`.
+Engine-side rule: the engine's Prolog adapter constructs an atom from `entity` and crashes on any character outside `[A-Za-z0-9_]`.
+Symptom: SWI-Prolog crash with `Type error: 'atom' expected, found ...`.
 
-**A5 — Adjustment record is missing a required field.**
-What you must do: emit all six fields even when the value is the obvious default (e.g. positive amount on a credit polarity).
-Engine-side rule: strict requirement; absence raises rejection rather than defaulting.
-Symptom: shim emits `STRUCTURAL_MISSING_FIELD: <field-name>`.
+### §4.B — Provenance layer (cryptographic & version control, 3 vulnerabilities)
 
-**A6 — Field values are emitted in the wrong order.**
-What you must do: emit fields in the canonical order (`ledger_id`, `period`, `account_path`, `amount`, `polarity`, `justification`).
-Engine-side rule: ordering itself is not enforced by the YAML parser, but the audit shim's downstream Prolog adapter pattern-matches on positional structure. Out-of-order emission *can* succeed silently in YAML round-trip but fails subsequent semantic checks with a confusing error. Following the canonical order avoids this class of false-success.
-Symptom: in current engine version (v3.4.0 / `bcdfad6`), out-of-order *may* succeed structurally and fail semantically with a misleading message. Future engine versions may enforce ordering directly.
+**B.1 — `trace_id` missing or wrong shape.**
+What you must do: `source_provenance.trace_id` is mandatory. Generate a 32-character hex string for every action.
+Engine-side rule: `trace_id` field is required; the audit shim rejects anonymous logic.
+Symptom: `MissingProvenance: trace_id is required`.
 
-### §4.B — Type rejection modes (fields exist but have wrong type)
+**B.2 — Version control declaration missing.**
+What you must do: declare release state. Either `service_version` (e.g. `"1.0.0"` quoted semver) or `service_commit` (40-char git SHA) is strictly required. Both may be present.
+Engine-side rule: at least one of the two fields must be non-null; the audit shim rejects untraceable logic.
+Symptom: `MissingProvenance: service_version or service_commit required`.
 
-**B1 — `amount` is quoted as a string.**
-What you must do: emit `amount: 1234.56` (no quotes), not `amount: "1234.56"`.
-Engine-side rule: type coercion is intentionally absent; `str` values for `amount` are rejected to prevent silent locale/format drift.
-Symptom: shim emits `TYPE_AMOUNT_NOT_NUMERIC`.
+**B.3 — Service regex violation.**
+What you must do: `service` matches the regex `\w+/\w+`. `clawdog/orchestrator` passes; `clawdog-orchestrator` fails (hyphen instead of slash).
+Engine-side rule: the engine validates `service` with a forward-slash separator regex; hyphens cause fatal audit failures.
+Symptom: `ServiceFormatError: service must match \w+/\w+, got <value>`. (CLAWDOG/140 §3.B.3 — the precise vulnerability bound by Lesson #36 on the original probe: identity-on-the-atom, not interpretation-on-the-atom.)
 
-**B2 — `amount` carries thousand separators or currency symbols.**
-What you must do: emit `1234.56` or `-1234.56`; no `1,234.56`, no `$1234.56`, no `1.234,56`.
-Engine-side rule: bare YAML numeric literal; any non-`[0-9.\-]` character causes the loader to fall back to string and trigger B1.
-Symptom: same as B1 (`TYPE_AMOUNT_NOT_NUMERIC`).
+### §4.C — Temporal & approval exactness (the Null Trap, 3 vulnerabilities)
 
-**B3 — `polarity` is a boolean.**
-What you must do: emit `polarity: "debit"` or `polarity: credit` (string), never `polarity: true` / `polarity: false`.
-Engine-side rule: explicit string-equality check against the literal tokens `"debit"` and `"credit"`.
-Symptom: shim emits `TYPE_POLARITY_NOT_STRING` or `SEMANTIC_POLARITY_INVALID_TOKEN`.
+**C.1 — Null values on mandatory provenance strings.**
+What you must do: even when an adjustment is `pending`, `human_approver`, `authored_at`, and `approved_at` cannot be `null`. Use a string (e.g. `"System Admin"`) and an explicit ISO-8601 UTC timestamp.
+Engine-side rule: the schema's type-checker strictly enforces string types to prevent downstream Prolog typing errors.
+Symptom: `TypeError: human_approver must be string, got NoneType`.
 
-**B4 — `polarity` is an integer.**
-What you must do: as B3.
-Engine-side rule: as B3.
-Symptom: as B3.
+**C.2 — Loose date format.**
+What you must do: `authored_at` and `approved_at` are explicit ISO-8601 UTC strings (e.g. `"2026-05-06T10:00:34Z"`). Do not use loose formats (`2026-05-06`, `"2026-05-06 10:00:34"`, `null`).
+Engine-side rule: explicit ISO-8601 UTC parsing; loose formats reject.
+Symptom: `DateFormatError: expected ISO-8601 UTC, got <value>`.
 
-**B5 — `polarity` is uppercase or alias.**
-What you must do: lowercase tokens only; no `"DEBIT"`, no `"Dr"`, no `"Cr."`.
-Engine-side rule: case-sensitive string equality.
-Symptom: `SEMANTIC_POLARITY_INVALID_TOKEN`.
+**C.3 — Indentation trap (`approved_status` placement).**
+What you must do: `approved_status` sits at the root `adjustment:` level (NOT nested inside `source_provenance`). `human_approver` and `approved_at`, conversely, MUST nest inside `source_provenance`. The AI repeatedly collapsed `approved_status` into `source_provenance`; that placement is rejected.
+Engine-side rule: parse-tree position check; `approved_status` at the wrong tree depth fails an explicit field-location assertion.
+Symptom: `SchemaPlacementError: approved_status must be at root, found nested under source_provenance` (or, in some engine versions, a misleading downstream error from the Prolog adapter that doesn't immediately reveal the placement was wrong).
 
-**B6 — `period` is not in the canonical form.**
-What you must do: emit `"FY25"` (or `"FY24"`, etc.); no `"2024-25"`, no `"FY2025"`, no `"FY 25"`.
-Engine-side rule: regex `^FY[0-9]{2}$` enforced on the period string.
-Symptom: `TYPE_PERIOD_FORMAT_INVALID`.
+### §4.D — Double-entry algebra (post-schema check)
 
-**B7 — `ledger_id` is not in the canonical form.**
-What you must do: emit `"GL_06_AcmeGroup_consolidated"`-shaped strings (`GL_NN_*`). The exact form depends on the integrator's deployment, but the audit shim looks up the ledger_id against a registered set.
-Engine-side rule: lookup against the deployment's ledger registry; unregistered strings reject.
-Symptom: `SEMANTIC_LEDGER_ID_NOT_REGISTERED`.
+After all 10 schema vulnerabilities above are satisfied, the engine runs the 6-Point Thermodynamic Safeguard's double-entry balance check:
 
-### §4.C — Semantic rejection modes (fields are well-typed but logically inconsistent)
-
-**C1 — `account_path` does not resolve in the SBRM ontology.**
-What you must do: emit a slash-delimited path whose segments match SBRM ontology labels verbatim, including spacing and capitalisation.
-Engine-side rule: live ontology resolution; missing segments reject.
-Symptom: `SEMANTIC_ACCOUNT_PATH_UNRESOLVED: <path>`.
-
-**C2 — `account_path` has leading/trailing slash.**
-What you must do: no `"/Expenses/..."` and no `"Expenses/.../"`.
-Engine-side rule: empty path segments after split-on-`"/"` are rejected.
-Symptom: `STRUCTURAL_ACCOUNT_PATH_EMPTY_SEGMENT`.
-
-**C3 — `account_path` has double slashes.**
-What you must do: no `"Expenses//Indirect Costs/..."`.
-Engine-side rule: as C2 (empty segment).
-Symptom: as C2.
-
-**C4 — `justification` contains an embedded newline.**
-What you must do: fold long justifications into a single physical line.
-Engine-side rule: the audit shim's downstream Prolog adapter is line-oriented; an embedded newline corrupts subsequent record parsing.
-Symptom: `STRUCTURAL_JUSTIFICATION_MULTILINE`.
-
-**C5 — `(ledger_id, period)` pair does not identify an existing GL.**
-What you must do: confirm the GL exists in the integrator's deployment before emitting an adjustment against it.
-Engine-side rule: combined lookup; absence rejects.
-Symptom: `SEMANTIC_GL_CONTEXT_NOT_FOUND`.
-
-### §4.D — Compositional rejection modes (record is locally well-formed but globally inconsistent)
-
-**D1 — Adjustment violates double-entry algebra.**
-What you must do: ensure that within a single batch of adjustments against the same `(ledger_id, period)` pair, debits and credits balance.
-Engine-side rule: post-ingestion algebraic check.
-Symptom: `COMPOSITIONAL_DOUBLE_ENTRY_VIOLATION`.
-
-**D2 — Adjustment polarity contradicts SBRM ontology natural balance.**
-What you must do: confirm polarity matches the account's natural balance (e.g. expense accounts increase on debit; revenue accounts increase on credit). Note: polarity is the *direction of the adjustment*, not the account's natural balance. An expense-decrease is `polarity: credit, amount: <positive>`.
-Engine-side rule: SBRM ontology lookup + polarity consistency rule.
-Symptom: `SEMANTIC_POLARITY_CONTRADICTS_ACCOUNT_NATURE`.
+**D.1 — Sum of debits MUST equal sum of credits within a single adjustment.**
+What you must do: across all entries in `postings:`, the total `amount` where `direction: debit` equals the total `amount` where `direction: credit`. Mathematical equality, not approximate.
+Engine-side rule: arithmetic check on the parsed adjustment; tolerance is zero (no floating-point slop allowed; the engine treats unbalanced adjustments as a fatal integrity violation).
+Symptom: `BalanceCheckFailure: debits=<X> credits=<Y> delta=<X-Y>`.
 
 ### §4.E — Note on rejection-mode count
 
-The original CLAWDOG/140 §3.A/B/C catalogue documented 18 rejection modes from the failure-loop probe. This pack restates them grouped by firewall layer (A: 6, B: 7, C: 5; total 18) plus 2 additional compositional modes (D) that the probe encountered but were grouped under a generic "post-ingestion check failed" symptom in CLAWDOG/140. The 18-mode count in CLAWDOG/140 § Performance Summary remains the canonical figure for the **ingestion firewall in isolation**; the additional D-modes are post-ingestion and strictly speaking are a separate perimeter (semantic-algebra layer, not strict-format ingestion). External integrators encounter all 20 in practice, so the pack documents all 20.
+CLAWDOG/140's prose (§2) refers to **"18 documented schema rejections"** — that figure counts the *crashes* in the failure loop, not the catalogue of distinct vulnerability *categories*. Some vulnerabilities trigger multiple crashes during convergence (e.g. the indentation trap C.3 fired several times before the agent learned the placement). The catalogue of distinct schema vulnerabilities at CLAWDOG/140 §3.A/B/C totals **10** (4 + 3 + 3), and that 10 is what §4.A/B/C above documents. The double-entry balance check (§4.D) is a post-schema algebraic check, not a schema vulnerability — we list it because integrators encounter it as an additional rejection class.
+
+*Historical note on this section:* the mc22 original revision of this pack incorrectly stated "18 modes (A:6, B:7, C:5) plus 2 D-modes for 20." That counting was inflated to match CLAWDOG/140's prose figure, and the 2 D-modes were invented. The mc23 amendment (this revision) restates the catalogue from CLAWDOG/140 §3.A/B/C verbatim, with the real counts. The reasoning behind the original error is documented in the helm_mutations entry above for forensic transparency.
 
 ---
 
@@ -391,28 +431,52 @@ last_synced_with_brain_canon: "<ISO-8601 UTC timestamp of the publication commit
 
 ### §6.2 The Kit CI assertion (Lesson #32 option iii)
 
-The Kit's existing two-gate CI workflow (per Lesson #29) is augmented with a third assertion specific to this docs file:
+The Kit's existing two-gate CI workflow (per Lesson #29) is augmented with a third assertion specific to this docs file. **The actual shipped assertion** (on `lodgeit-labs/clawdog` PR #11, merged at `0e3ec10`, 2026-05-06 05:36:46 UTC) is a **body-bytes SHA-256 byte-check** that does NOT require live access to the Brain repo:
 
 ```yaml
-# In .github/workflows/test.yml (Kit-side), augmenting Gate 2 or as a new Gate 3:
+# In .github/workflows/test.yml (Kit-side), as Gate 3:
 
-- name: Verify docs/INTEGRATOR_README.md byte-checks against Brain canon
+- name: Verify docs/INTEGRATOR_README.md body bytes match declared body_sha256
   run: |
-    # Fetch the source_brain_node_hash declared in the Kit doc's frontmatter
-    declared_hash=$(python3 -c "import re; print(re.search(r'source_brain_node_hash:\\s*\"([0-9a-f]+)\"', open('docs/INTEGRATOR_README.md').read()).group(1))")
-    # Fetch the live content_hash from the Brain canon node (read-only API call)
-    actual_hash=$(curl -sS "https://raw.githubusercontent.com/futureWA/clawdog-brain/master/GLOBAL_NOTES/CLAWDOG/141_INTEGRATOR_READINESS_PACK.md" | python3 -c "import sys, re; print(re.search(r'content_hash:\\s*\"([0-9a-f]+)\"', sys.stdin.read()).group(1))")
-    if [ "$declared_hash" != "$actual_hash" ]; then
-      echo "❌ DRIFT: Kit doc declares source_brain_node_hash=$declared_hash but Brain canon is at $actual_hash"
-      echo "   Re-sync the Kit projection from the current Brain canon, then update source_brain_node_hash."
-      exit 1
-    fi
-    echo "✅ Kit projection byte-checks against Brain canon at $actual_hash"
+    set -e
+    python3 - <<'PY'
+    import hashlib, re, sys, pathlib
+    path = pathlib.Path('docs/INTEGRATOR_README.md')
+    content = path.read_text()
+    # Extract declared body_sha256 from Kit-side frontmatter
+    m = re.search(r'^body_sha256:\s*"([0-9a-f]{64})"', content, re.MULTILINE)
+    if not m:
+        print(f'❌ frontmatter missing or malformed body_sha256 in {path}')
+        sys.exit(1)
+    declared = m.group(1)
+    # Locate body — first H1 matching the Brain canon's title
+    body_m = re.search(r'^# CLAWDOG/141', content, re.MULTILINE)
+    if not body_m:
+        print(f'❌ {path} missing body H1 "# CLAWDOG/141"')
+        sys.exit(1)
+    body = content[body_m.start():]
+    actual = hashlib.sha256(body.encode('utf-8')).hexdigest()
+    if declared != actual:
+        print(f'❌ DRIFT: declared body_sha256={declared}; actual={actual}')
+        sys.exit(1)
+    print(f'✅ body bytes hash to declared body_sha256: {actual}')
+    PY
 ```
 
-If the Brain canon node is amended (a new changelog row, a clarification in §4, etc.), its `content_hash` rolls. The Kit CI assertion immediately fails on the next Kit PR, surfacing the drift loud at PR time. The fix is to re-sync the Kit projection from the new Brain canon and update `source_brain_node_hash`.
+The Kit-side frontmatter declares four agreement points: `source_brain_node_hash` (Brain canon's `content_hash`), `source_brain_canon_commit` (the merge SHA on `clawdog-brain` master), `body_sha256` (SHA-256 of all body bytes from the H1 to EOF), and `last_synced_with_brain_canon` (ISO-8601 UTC timestamp). The Gate-3 assertion checks `body_sha256` against the actual body bytes; the other three fields are agreement record only.
 
-This is Lesson #32's option (iii) — failure-mode preserves the load-bearing artifact (the Kit's `docs/INTEGRATOR_README.md` continues to exist; users continue to find it at the canonical URL) while surfacing the drift loudly enough that the next PR cycle catches it.
+**What this catches:**
+
+- (a) Direct edits to the Kit doc's body — anyone editing the body content produces a `body_sha256` mismatch.
+- (b) Re-sync without frontmatter update — if a contributor copies a new Brain canon body but forgets to recompute and update `body_sha256`, the mismatch fails CI.
+
+**What this does NOT catch:**
+
+- (c) Brain canon mutated AND Kit body correctly synced AND `body_sha256` updated AND `source_brain_node_hash` left declaring an old Brain hash. That requires a Brain-side mutation announcement mechanism (webhook, RSS, or scheduled comparison job), which is a follow-up not yet implemented.
+
+This is Lesson #32's option (iii) — failure-mode preserves the load-bearing artifact (the Kit's `docs/INTEGRATOR_README.md` continues to exist; users continue to find it at the canonical URL) while surfacing schema drift loudly enough that the next PR cycle catches it.
+
+*Historical note on this section:* the mc22 original revision of this pack illustrated the assertion with a `curl` against `raw.githubusercontent.com` fetching the Brain canon's `content_hash` live. That literal would not work in CI: `futureWA/clawdog-brain` is private, so `raw.githubusercontent.com` returns 404 to unauthenticated fetches, and the Kit runs in a different org without ambient access to a Brain RO PAT. The byte-check approach above is what shipped on Kit PR #11; the mc23 amendment (this revision) corrects the literal example to match the shipped pattern. The reasoning behind the original error is documented in the helm_mutations entry above for forensic transparency.
 
 ### §6.3 README pointer
 
