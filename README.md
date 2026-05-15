@@ -1,6 +1,8 @@
 # ClawDog Pipeline
 
-This repository contains the standalone, stripped-down ClawDog pipeline. It demonstrates the neurosemantic approach to financial reporting: taking raw General Ledger CSV files, mapping them to the SBRM taxonomy, running them through a strict Prolog physics engine (to ensure double-entry accounting math holds true), and rendering the final output to JSON-LD and iXBRL format.
+This repository contains the standalone, stripped-down ClawDog **Wind Tunnel** — a development harness that demonstrates the neurosemantic approach to financial reporting: taking raw General Ledger CSV files, mapping them to the SBRM taxonomy, running them through a strict Prolog physics engine (to ensure double-entry accounting math holds true), and rendering the final output to JSON-LD and iXBRL format.
+
+> **Wind Tunnel vs Production.** The code under `wind_tunnel/` is a *local development harness* for proving Prolog logic against small CSV ledgers. It is **not** the production ingestion path. Production uses the `fano-classifier` Cloud Run service → SBRM atoms → `clawdog-calculator-api` (Cloud Run) → per-calculator engines + MCP parallel client. See Brain canon [`GLOBAL_NOTES/CLAWDOG/114_WIND_TUNNEL_VS_PRODUCTION.md`](https://github.com/futureWA/clawdog-brain/blob/master/GLOBAL_NOTES/CLAWDOG/114_WIND_TUNNEL_VS_PRODUCTION.md) (content_hash `5d8b39a773fcc8db0db58623cd9f7e6812d330843701db8253e261c0957b2d73`) for the production-vs-harness boundary.
 
 ## Setup
 
@@ -15,14 +17,14 @@ This repository contains the standalone, stripped-down ClawDog pipeline. It demo
 To run the full thermodynamic lifecycle on the sample trial balances:
 
 ```bash
-python pipeline.py
+python -m wind_tunnel.wind_tunnel
 ```
 
 ## What Happens?
 
-When you run `pipeline.py`:
+When you run the Wind Tunnel harness:
 1. **Ingest:** It reads the raw Trial Balance CSVs from `data/sample_ledgers/`.
-2. **Map:** `engine/heuristic_mapper.py` maps the raw string names to SBRM URIs.
+2. **Map:** `wind_tunnel/heuristic_mapper.py` maps the raw string names to SBRM URIs. This is a *stand-in* for the production Fano classifier — do not lift these heuristics into the deterministic engine.
 3. **Prolog Engine:** It loads `engine/rules.pl` and evaluates all equations to ensure total mathematical integrity.
 4. **Audit:** It runs the Thermodynamic Safeguard (Assets = Liabilities + Equity).
 5. **Output:** It drops the fully audited `.json` and `_ixbrl.html` files into the `outputs/` folder.

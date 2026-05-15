@@ -4,7 +4,7 @@ name: Kit Test Gates
 #
 # Per `clawdog-brain` Standing Rule #7 (Repository Topology) the Kit is an
 # Egress Interface: direct-to-`main` is authorised for additive-isolated
-# work and PR-mode is required for critical-path mutations to `pipeline.py`
+# work and PR-mode is required for critical-path mutations to `wind_tunnel/wind_tunnel.py`
 # or `engine/`. Either way, both gates below must pass before merge:
 #
 #   Gate 1 — Prolog regression suite. Proves engine/consolidation.pl and any
@@ -13,7 +13,7 @@ name: Kit Test Gates
 #            truth for SBRM consolidation semantics.
 #
 #   Gate 2 — Pipeline integration. Proves the full Python+Prolog pipeline
-#            (pipeline.py + heuristic_mapper + ixbrl_template) still passes
+#            (wind_tunnel/wind_tunnel.py + heuristic_mapper + ixbrl_template) still passes
 #            the 7-point thermodynamic audit across all sample ledgers,
 #            including multi-currency consolidation. Required because the
 #            pipeline is what users actually run.
@@ -110,14 +110,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run pipeline.py against all sample ledgers
+      - name: Run Wind Tunnel harness against all sample ledgers
         run: |
           set -e
           # S5b: clear stale outputs first so a renamed/removed sample
           # ledger does not leave a stale .html behind that would fail the
           # context-count assertion below.
           rm -rf outputs
-          python3 pipeline.py | tee pipeline.log
+          python3 -m wind_tunnel.wind_tunnel | tee pipeline.log
           # Pipeline returns exit code 0 even when audit fails; we have to
           # parse the summary line to fail the job on any aborted ledger.
           if grep -E "^ PIPELINE COMPLETE \| .* \| ❌ 0 Aborted" pipeline.log >/dev/null; then
