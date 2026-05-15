@@ -1,3 +1,10 @@
+"""Wind Tunnel — development harness for proving Prolog logic locally
+against small CSV ledgers. NOT the production ingestion path.
+
+Production uses Fano classifier (Cloud Run) -> SBRM atoms -> calculator-api
+(Cloud Run) -> per-calculator engines + MCP parallel client. See Brain
+canon CLAWDOG/114 (content_hash 5d8b39a773fcc8db0db58623cd9f7e6812d330843701db8253e261c0957b2d73).
+"""
 import os
 import re
 import glob
@@ -6,7 +13,7 @@ import yaml
 from jinja2 import Template
 from pyswip import Prolog
 
-from engine.heuristic_mapper import map_account_to_mini
+from wind_tunnel.heuristic_mapper import map_account_to_mini
 from engine.jurisdiction_periods import (
     DEFAULT_JURISDICTION as _DEFAULT_JURISDICTION,
     period_meta_for_label as _jurisdiction_period_meta,

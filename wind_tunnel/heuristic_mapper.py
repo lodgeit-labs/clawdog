@@ -1,3 +1,8 @@
+# Stand-in for the Fano classifier. Production uses the live `fano-classifier`
+# Cloud Run service. Do not lift these heuristics into the deterministic engine
+# — see Lesson #37 / CLAWDOG/114.
+
+
 def map_account_to_mini(acc_name):
     acc = acc_name.lower()
     
